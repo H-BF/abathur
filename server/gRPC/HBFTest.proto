@@ -1,0 +1,18 @@
+import "google/protobuf/empty.proto";
+
+syntax = "proto3";
+
+package HBFTest;
+
+service HBFTest {
+    rpc ping(google.protobuf.Empty) returns (pingResponse);
+}
+
+message pingResponse {
+    string msg = 1;
+    string src_ip = 2;
+    string src_port = 3;
+    string dst_ip = 4;
+    string dst_port = 5;
+    string protocol = 6;
+}

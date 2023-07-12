@@ -1,0 +1,13 @@
+client/build
+server/build
+reporter/build
+control/build
+client/node_modules
+server/node_modules
+reporter/node_modules
+control/node_modules
+apiserver.crt
+apiserver.key
+Docker-compose.yaml
+reset.sh
+minikube_start.sh

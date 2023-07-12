@@ -1,0 +1,27 @@
+{
+  "name": "abathur",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./build/index.js",
+  "scripts": {
+    "build": "rimraf ./build && tsc",
+    "abathur": "node ./build/index.js"
+  },
+  "author": "Ari Insomnia",
+  "license": "ISC",
+  "dependencies": {
+    "@grpc/grpc-js": "^1.8.17",
+    "@grpc/proto-loader": "^0.7.7",
+    "@kubernetes/client-node": "^0.18.1",
+    "axios": "^1.4.0",
+    "ip": "^1.1.8",
+    "mustache": "^4.2.0",
+    "rimraf": "^5.0.1",
+    "tslib": "^2.6.0"
+  },
+  "devDependencies": {
+    "@types/ip": "^1.1.0",
+    "@types/mustache": "^4.2.2",
+    "typescript": "^5.1.6"
+  }
+}

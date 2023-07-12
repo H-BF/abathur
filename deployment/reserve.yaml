@@ -1,0 +1,7 @@
+apiVersion: projectcalico.org/v3
+kind: IPReservation
+metadata:
+  name: my-ipreservation-1
+spec:
+  reservedCIDRs:
+    - 10.150.0.0/16
