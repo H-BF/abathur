@@ -24,11 +24,11 @@ spec:
           subPath: nginx.conf
 
     - name: server
-      image: hbftest_server
+      image: abathur_server
       imagePullPolicy: Never
 
     - name: client
-      image: hbftest_client
+      image: abathur_client
       imagePullPolicy: Never
     
     - name: hbf-client
@@ -78,11 +78,11 @@ spec:
           subPath: nginx.conf
 
     - name: server
-      image: hbftest_server
+      image: abathur_server
       imagePullPolicy: Never
 
     - name: client
-      image: hbftest_client
+      image: abathur_client
       imagePullPolicy: Never
 
     - name: hbf-client
@@ -133,11 +133,11 @@ spec:
           subPath: nginx.conf
 
     - name: server
-      image: hbftest_server
+      image: abathur_server
       imagePullPolicy: Never
 
     - name: client
-      image: hbftest_client
+      image: abathur_client
       imagePullPolicy: Never
 
     - name: hbf-client
@@ -188,11 +188,11 @@ spec:
           subPath: nginx.conf
 
     - name: server
-      image: hbftest_server
+      image: abathur_server
       imagePullPolicy: Never
 
     - name: client
-      image: hbftest_client
+      image: abathur_client
       imagePullPolicy: Never
 
     - name: hbf-client
@@ -243,11 +243,11 @@ spec:
           subPath: nginx.conf
 
     - name: server
-      image: hbftest_server
+      image: abathur_server
       imagePullPolicy: Never
 
     - name: client
-      image: hbftest_client
+      image: abathur_client
       imagePullPolicy: Never
 
     - name: hbf-client
@@ -298,11 +298,11 @@ spec:
           subPath: nginx.conf
 
     - name: server
-      image: hbftest_server
+      image: abathur_server
       imagePullPolicy: Never
 
     - name: client
-      image: hbftest_client
+      image: abathur_client
       imagePullPolicy: Never
 
     - name: hbf-client
@@ -353,11 +353,11 @@ spec:
           subPath: nginx.conf
 
     - name: server
-      image: hbftest_server
+      image: abathur_server
       imagePullPolicy: Never
 
     - name: client
-      image: hbftest_client
+      image: abathur_client
       imagePullPolicy: Never
 
     - name: hbf-client
@@ -408,11 +408,11 @@ spec:
           subPath: nginx.conf
 
     - name: server
-      image: hbftest_server
+      image: abathur_server
       imagePullPolicy: Never
 
     - name: client
-      image: hbftest_client
+      image: abathur_client
       imagePullPolicy: Never
 
     - name: hbf-client
@@ -463,11 +463,11 @@ spec:
           subPath: nginx.conf
 
     - name: server
-      image: hbftest_server
+      image: abathur_server
       imagePullPolicy: Never
 
     - name: client
-      image: hbftest_client
+      image: abathur_client
       imagePullPolicy: Never
 
     - name: hbf-client
@@ -518,11 +518,11 @@ spec:
           subPath: nginx.conf
 
     - name: server
-      image: hbftest_server
+      image: abathur_server
       imagePullPolicy: Never
 
     - name: client
-      image: hbftest_client
+      image: abathur_client
       imagePullPolicy: Never
 
     - name: hbf-client
@@ -567,7 +567,7 @@ spec:
     spec:
       containers:
         - name: report-server
-          image: hbftest_report_server
+          image: abathur_report_server
           imagePullPolicy: Never
         
 ---

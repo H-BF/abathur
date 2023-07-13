@@ -1,9 +1,8 @@
 import { CLIENT_NGINX_IP, CLIENT_NGINX_PORT } from "../config"
 import { HbfTestClient } from "./grpc/HBFTestClient"
 import { delay, evalutePorts } from "./helper"
-import { Metadata } from "@grpc/grpc-js"
+import { Metadata, ServiceError, status } from "@grpc/grpc-js"
 import { IData, IResult, IResults } from "./interfaces"
-
 
 export class TestClient {
 
@@ -53,11 +52,21 @@ export class TestClient {
                         continue
                     }
                 }
-    
-                console.log(`Посылаем запрос c порта ${data.srcPort}`)
-                const res = await this.client.ping(data.data)
-                this.testResults.push(res as IResult)
-                console.log(res)
+                let result: IResult = this.client.getFromMetadata(data.data);
+
+                try {
+                    console.log(`Посылаем запрос c порта ${data.srcPort || 'any'} на порт ${data.data.get('dst-port')}`)
+                    const res = await this.client.ping(data.data)
+                    result.msg = res?.msg!
+                } catch (err) {
+                    const grpcError = err as ServiceError;
+                    if (grpcError.code == 13 && grpcError.details == 'Received RST_STREAM with code 0') {
+                        result.msg = 'FAIL'
+                    }
+                }
+                console.log(result)
+                this.testResults.push(result)
+
                 if (data.srcPort != "") {
                     reqTime[data.srcPort] = Date.now()
                 }
