@@ -5,6 +5,8 @@ import { ProtoGrpcType } from '../../gRPC/HBFTest'
 import { HBFTestClient } from '../../gRPC/HBFTest/HBFTest'
 import { pingResponse__Output } from '../../gRPC/HBFTest/pingResponse'
 import { HBF_TEST_PROTO_PATH } from '../../config'
+import { Metadata } from '@grpc/grpc-js'
+import { IResult } from '../interfaces'
 
 export class HbfTestClient {
 
@@ -23,21 +25,16 @@ export class HbfTestClient {
         )
     }
 
-    async ping(metadata: grpc.Metadata): Promise<pingResponse__Output | undefined> {
-        try {
-            return await new Promise<pingResponse__Output | undefined>((resolve, reject) => {
-                this.client.ping({}, metadata, (err, res) => {
-                    if (err) {
-                        reject(err)
-                    } else {
-                        resolve(res)
-                    }
-                })
+    async ping(metadata: Metadata): Promise<pingResponse__Output | undefined> {
+        return await new Promise<pingResponse__Output | undefined>((resolve, reject) => {
+            this.client.ping({}, metadata, (err, res) => {
+                if (err) {
+                    reject(err)
+                } else {
+                    resolve(res)
+                }
             })
-        } catch (err) {
-            console.log(err)
-            throw new Error(`${err}`)
-        }
+        })
     }
 
     collectMetadata(
@@ -53,5 +50,16 @@ export class HbfTestClient {
         metadata.add("dst-port", `${dstPort}`)
         metadata.add("protocol", "tcp")
         return metadata
+    }
+
+    getFromMetadata(data: grpc.Metadata): IResult {
+        return {
+            srcIp: data.get("src-ip")[0].toString() || "any",
+            srcPort: data.get("src-port")[0].toString(),
+            dstIp: data.get("dst-ip")[0].toString(),
+            dstPort: data.get("dst-port")[0].toString(),
+            protocol: data.get("protocol")[0].toString(),
+            msg: ''
+        }
     }
 }

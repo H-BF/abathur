@@ -14,14 +14,7 @@ const serverTCP = new grpc.Server();
 
 serverTCP.addService(grpcObj.HBFTest.HBFTest.service, {
     ping: (res: any, req: Function) => {
-        req(null, {  
-            msg: "OK",
-            src_ip: res.metadata.get("src-ip")[0],
-            src_port: res.metadata.get("src-port")[0] || "any",
-            dst_ip: res.metadata.get("dst-ip")[0],
-            dst_port: res.metadata.get("dst-port")[0],
-            protocol: res.metadata.get("protocol")[0]
-        })
+        req(null, { msg: "OK" })
     }
 });
 
