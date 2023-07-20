@@ -18,6 +18,7 @@ message sendDataRequest {
         string protocol = 6;
 
     };
-    string node = 1;
-    repeated Result results = 2;
+    int64 duration = 1;
+    string node = 2;
+    repeated Result results = 3;
 }
