@@ -1,7 +1,7 @@
 import { CLIENT_NGINX_IP, CLIENT_NGINX_PORT } from "../config"
 import { HbfTestClient } from "./grpc/HBFTestClient"
 import { delay, evalutePorts } from "./helper"
-import { Metadata, ServiceError, status } from "@grpc/grpc-js"
+import { Metadata, ServiceError } from "@grpc/grpc-js"
 import { IData, IResult, IResults } from "./interfaces"
 
 export class TestClient {
@@ -10,6 +10,7 @@ export class TestClient {
     private client: HbfTestClient
     private testData: {srcPort: string, data: Metadata}[] = [];
     private testResults: IResult[] = [];
+    private duration: number = 0;
 
     constructor(scrIp: string) {
         this.srcIp = scrIp
@@ -42,6 +43,9 @@ export class TestClient {
     }
 
     async runTests() {
+
+        const startTime = Date.now()
+
         let reqTime: Record<string, number> = {};
         while(this.testData.length != 0) {
             for (let i = 0; i < this.testData.length; i++) {
@@ -60,6 +64,7 @@ export class TestClient {
                     result.msg = res?.msg!
                 } catch (err) {
                     const grpcError = err as ServiceError;
+                    console.log(err)
                     if (grpcError.code == 13 && grpcError.details == 'Received RST_STREAM with code 0') {
                         result.msg = 'FAIL'
                     }
@@ -77,10 +82,13 @@ export class TestClient {
                 await delay(120000)
             }
         }
+
+        this.duration = Date.now() - startTime
     }
 
     getResults() {
         let r: IResults = {
+            duration: this.duration,
             node: this.srcIp,
             results: []
         }

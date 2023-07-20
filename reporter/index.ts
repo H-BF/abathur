@@ -38,8 +38,12 @@ reportServer.addService(grpcObj.reporter.Reporter.service, {
 
     await waitForArraySize(report)
 
+
+    const { ok, fail } = calcStatus()
     console.log("Bce отчеты получены!\n")
-    console.log(report)
+    console.log(`Длительность: ${ (Math.max(...report.map( e => e.duration))) / 60000 } мин`)
+    console.log(`OK: ${ok}`)
+    console.log(`FAIL: ${fail}`)
 
 })();
 
@@ -53,4 +57,24 @@ function waitForArraySize(foo: any[]) {
             }
         }, 60000)
     })
+}
+
+function calcStatus(): {ok: number, fail: number} {
+    let ok: number = 0
+    let fail: number = 0
+    report.forEach(r => {
+        r.results.forEach(e => {
+            switch(e.msg) {
+                case "OK": { 
+                    ok++
+                    break
+                }
+                case "FAIL": {
+                    fail++
+                    break
+                } 
+            }
+        })
+    })
+    return { ok, fail }
 }

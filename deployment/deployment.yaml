@@ -23,6 +23,13 @@ spec:
           mountPath: /etc/nginx/nginx.conf
           subPath: nginx.conf
 
+    - name: monitor
+      image: abathur_server
+      securityContext:
+        privileged: true
+      imagePullPolicy: Never
+      command: ['xtables-monitor', '--trace']
+
     - name: server
       image: abathur_server
       imagePullPolicy: Never
@@ -76,6 +83,13 @@ spec:
         - name: nginx
           mountPath: /etc/nginx/nginx.conf
           subPath: nginx.conf
+
+    - name: monitor
+      image: abathur_server
+      securityContext:
+        privileged: true
+      imagePullPolicy: Never
+      command: ['xtables-monitor', '--trace']
 
     - name: server
       image: abathur_server
@@ -132,6 +146,13 @@ spec:
           mountPath: /etc/nginx/nginx.conf
           subPath: nginx.conf
 
+    - name: monitor
+      image: abathur_server
+      securityContext:
+        privileged: true
+      imagePullPolicy: Never
+      command: ['xtables-monitor', '--trace']
+
     - name: server
       image: abathur_server
       imagePullPolicy: Never
@@ -186,6 +207,13 @@ spec:
         - name: nginx
           mountPath: /etc/nginx/nginx.conf
           subPath: nginx.conf
+
+    - name: monitor
+      image: abathur_server
+      securityContext:
+        privileged: true
+      imagePullPolicy: Never
+      command: ['xtables-monitor', '--trace']
 
     - name: server
       image: abathur_server
@@ -242,6 +270,13 @@ spec:
           mountPath: /etc/nginx/nginx.conf
           subPath: nginx.conf
 
+    - name: monitor
+      image: abathur_server
+      securityContext:
+        privileged: true
+      imagePullPolicy: Never
+      command: ['xtables-monitor', '--trace']
+
     - name: server
       image: abathur_server
       imagePullPolicy: Never
@@ -296,6 +331,13 @@ spec:
         - name: nginx
           mountPath: /etc/nginx/nginx.conf
           subPath: nginx.conf
+
+    - name: monitor
+      image: abathur_server
+      securityContext:
+        privileged: true
+      imagePullPolicy: Never
+      command: ['xtables-monitor', '--trace']
 
     - name: server
       image: abathur_server
@@ -352,6 +394,13 @@ spec:
           mountPath: /etc/nginx/nginx.conf
           subPath: nginx.conf
 
+    - name: monitor
+      image: abathur_server
+      securityContext:
+        privileged: true
+      imagePullPolicy: Never
+      command: ['xtables-monitor', '--trace']
+
     - name: server
       image: abathur_server
       imagePullPolicy: Never
@@ -406,6 +455,13 @@ spec:
         - name: nginx
           mountPath: /etc/nginx/nginx.conf
           subPath: nginx.conf
+
+    - name: monitor
+      image: abathur_server
+      securityContext:
+        privileged: true
+      imagePullPolicy: Never
+      command: ['xtables-monitor', '--trace']
 
     - name: server
       image: abathur_server
@@ -462,6 +518,13 @@ spec:
           mountPath: /etc/nginx/nginx.conf
           subPath: nginx.conf
 
+    - name: monitor
+      image: abathur_server
+      securityContext:
+        privileged: true
+      imagePullPolicy: Never
+      command: ['xtables-monitor', '--trace']
+
     - name: server
       image: abathur_server
       imagePullPolicy: Never
@@ -516,6 +579,13 @@ spec:
         - name: nginx
           mountPath: /etc/nginx/nginx.conf
           subPath: nginx.conf
+
+    - name: monitor
+      image: abathur_server
+      securityContext:
+        privileged: true
+      imagePullPolicy: Never
+      command: ['xtables-monitor', '--trace']
 
     - name: server
       image: abathur_server

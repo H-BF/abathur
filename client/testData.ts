@@ -1,6 +1,8 @@
 import { TestData } from "./src/interfaces";
 
 export const testData: TestData = {
+
+    //sg-0 -> sg-1
     "10.150.0.220": [{
         protocol: "TCP",
         dstIps: ["10.150.0.223"],
@@ -34,6 +36,7 @@ export const testData: TestData = {
         ]
     }],
 
+    //sg-1 -> sg-2
     "10.150.0.223": [{
         protocol: "TCP",
         dstIps: ["10.150.0.224"],
@@ -45,32 +48,34 @@ export const testData: TestData = {
         ]
     }],
 
+    //sg-2 -> sg-1
     "10.150.0.224": [{
         protocol: "TCP",
         dstIps: ["10.150.0.223"],
         rules: [
             {
-                srcPorts: ["43000", "43001", "43002-43004"],
+                srcPorts: ["43000", "43002", "43004-43006"],
                 dstPorts: ["53005"]   
             },
             {
-                srcPorts: ["43006", "43007", "43008-43010"],
+                srcPorts: ["43008", "43010", "43012-43014"],
                 dstPorts: ["53011-53013"]   
             },
             {
-                srcPorts: ["43014", "43015", "43016-43018"],
+                srcPorts: ["43016", "43017", "43018-43020"],
                 dstPorts: ["53019", "53020", "53021-53023"]   
             }
         ]
     }],
 
+    //sg-3 -> sg-5
     "10.150.0.225": [{
         protocol: "TCP",
         dstIps: ["10.150.0.228", "10.150.0.229"],
         rules: [
             {
                 srcPorts: [""],
-                dstPorts: ["50004", "50005", "50006-50008"]
+                dstPorts: ["50004", "50006", "50008-50010"]
             }
         ]
     }],
@@ -81,11 +86,12 @@ export const testData: TestData = {
         rules: [
             {
                 srcPorts: [""],
-                dstPorts: ["50004", "50005", "50006-50008"]
+                dstPorts: ["50004", "50006", "50008-50010"]
             }
         ]
     }],
 
+    //sg-4 -> sg-0
     "10.150.0.227": [{
         protocol: "TCP",
         dstIps: ["10.150.0.220", "10.150.0.221", "10.150.0.222"],
@@ -100,11 +106,12 @@ export const testData: TestData = {
             },
             {
                 srcPorts: ["41006"],
-                dstPorts: ["51007", "51008", "51009-51011"]
+                dstPorts: ["51007", "51009", "51011-51013"]
             }
         ]
     }],
 
+    //sg-5 -> sg-2
     "10.150.0.228": [{
         protocol: "TCP",
         dstIps: ["10.150.0.224"],
@@ -119,7 +126,7 @@ export const testData: TestData = {
             },
             {
                 srcPorts: ["42010-42012"],
-                dstPorts: ["52013", "52014", "52015-52017"]
+                dstPorts: ["52013", "52015", "52017-52019"]
             }
         ]
     }],
@@ -138,7 +145,7 @@ export const testData: TestData = {
             },
             {
                 srcPorts: ["42010-42012"],
-                dstPorts: ["52013", "52014", "52015-52017"]
+                dstPorts: ["52013", "52015", "52017-52019"]
             }
         ]
     }]

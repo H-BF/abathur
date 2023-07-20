@@ -12,6 +12,7 @@ export interface IRule {
 }
 
 export interface IResults{
+    duration: number
     node: string
     results: IResult[]
 }
