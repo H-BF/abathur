@@ -1,12 +1,12 @@
 export type TestData = Record<string, IData[]>
 
 export interface IData {
-    protocol: string
+    transport: string
     dstIps: string[]
-    rules: IRule[]
+    ports: IPorts[]
 }
 
-export interface IRule {
+export interface IPorts {
     srcPorts: string[]
     dstPorts: string[]
 }

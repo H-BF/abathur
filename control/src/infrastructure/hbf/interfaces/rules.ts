@@ -8,13 +8,13 @@ export interface IRules {
 }
 
 export interface IRule {
-    ports: [
-        {
-            d: string
-            s: string
-        }
-    ]
+    ports: IRulePorts[]
     sgFrom: string
     sgTo: string
     transport: string
+}
+
+export interface IRulePorts {
+    d: string
+    s: string
 }

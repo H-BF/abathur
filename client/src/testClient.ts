@@ -20,10 +20,10 @@ export class TestClient {
     evolveTestData(data: IData[]) {
         for (const node of data) {
             for (const dstIp of node.dstIps) {
-                for (const rule of node.rules) {
+                for (const ports of node.ports) {
         
-                    const srcPorts = evalutePorts(rule.srcPorts)
-                    const dstPorts = evalutePorts(rule.dstPorts)
+                    const srcPorts = evalutePorts(ports.srcPorts)
+                    const dstPorts = evalutePorts(ports.dstPorts)
 
                     console.log(srcPorts)
                     console.log(dstPorts)
