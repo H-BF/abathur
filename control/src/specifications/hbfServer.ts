@@ -1,11 +1,10 @@
 import { V1Pod, V1Service, V1ConfigMap } from "@kubernetes/client-node";
-import fs from 'fs';
 
 const specPod = {
     metadata: {
-        name: "hbf-server",
+        name: `${process.env.PIPELINE_ID}-hbf-server`,
         labels: {
-            "app.kubernetes.io/name": "hbf-server",
+            component: "hbf-server",
             instance: `${process.env.PIPELINE_ID}`
         }
     },
@@ -25,13 +24,25 @@ const specPod = {
                 ports: [{
                     name: "hbf-server",
                     containerPort: 9006
-                }]
+                }],
+                readinessProbe: {
+                    initialDelaySeconds: 1,
+                    periodSeconds: 2,
+                    timeoutSeconds: 1,
+                    successThreshold: 1,
+                    failureThreshold: 1,
+                    httpGet: {
+                        scheme: "HTTP",
+                        path: "/v1/sync/status",
+                        port: 9006
+                    }
+                }
             }
         ],
         volumes: [{
             name: "hbf-server",
             configMap: {
-                name: "hbf-server"
+                name: `${process.env.PIPELINE_ID}-hbf-server`
             }
         }]
     }
@@ -39,7 +50,7 @@ const specPod = {
 
 const specSrv: V1Service = {
     metadata: {
-        name: "hbf-server",
+        name: `${process.env.PIPELINE_ID}-hbf-server`,
         labels: {
             name: "hbf-server",
             instance: `${process.env.PIPELINE_ID}`
@@ -47,7 +58,8 @@ const specSrv: V1Service = {
     },
     spec: {
         selector: {
-            "app.kubernetes.io/name": "hbf-server"
+            component: "hbf-server",
+            instance: `${process.env.PIPELINE_ID}`
         },
         ports: [{
             port: 80,
@@ -58,7 +70,7 @@ const specSrv: V1Service = {
 
 const specConfMap: V1ConfigMap = {
     metadata: {
-        name: "hbf-server",
+        name: `${process.env.PIPELINE_ID}-hbf-server`,
         labels: {
             name: "hbf-server",
             instance: `${process.env.PIPELINE_ID}`

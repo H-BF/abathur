@@ -1,12 +1,11 @@
-import { V1Pod, V1ConfigMap } from "@kubernetes/client-node";
+import { V1ConfigMap } from "@kubernetes/client-node";
 import parse from 'json-templates';
-import fs from 'fs';
 
 const specPod = parse({
     metadata: {
-        name: "{{podName}}",
+        name: `${process.env.PIPELINE_ID}-{{podName}}`,
         labels: {
-            name: "{{labelName}}",
+            component: "{{component}}",
             instance: `${process.env.PIPELINE_ID}`
         },
         annotations: {
@@ -26,7 +25,19 @@ const specPod = parse({
             {
                 name: "server",
                 image: "abathur_server",
-                imagePullPolicy: "Never"
+                imagePullPolicy: "Never",
+                readinessProbe: {
+                    initialDelaySeconds: 1,
+                    periodSeconds: 2,
+                    timeoutSeconds: 1,
+                    successThreshold: 1,
+                    failureThreshold: 1,
+                    httpGet: {
+                        scheme: "HTTP",
+                        path: "/status",
+                        port: 9091
+                    }
+                }
             },
             {
                 name: "client",
@@ -55,19 +66,19 @@ const specPod = parse({
             {
                 name: "nginx",
                 configMap: {
-                    name: "nginx"
+                    name: `${process.env.PIPELINE_ID}-nginx`
                 }
             }, 
             {
                 name: "hbf-client",
                 configMap: {
-                    name: "hbf-client"
+                    name: `${process.env.PIPELINE_ID}-hbf-client`
                 }
             },
             {
                 name: "test-data",
                 configMap: {
-                    name: "{{testData}}"
+                    name: `${process.env.PIPELINE_ID}-{{testData}}`
                 }
             }
         ]
@@ -76,9 +87,9 @@ const specPod = parse({
 
 const specConfMapHbfClient: V1ConfigMap = {
     metadata: {
-        name: "hbf-client",
+        name: `${process.env.PIPELINE_ID}-hbf-client`,
         labels: {
-            name: "hbf-client",
+            component: "hbf-client",
             instance: `${process.env.PIPELINE_ID}`
         }
     },
@@ -102,9 +113,9 @@ const specConfMapHbfClient: V1ConfigMap = {
 
 const specConfMapNginx: V1ConfigMap = {
     metadata: {
-        name: "nginx",
+        name: `${process.env.PIPELINE_ID}-nginx`,
         labels: {
-            name: "nginx",
+            component: "nginx",
             instance: `${process.env.PIPELINE_ID}`
         }
     },
@@ -177,9 +188,9 @@ const specConfMapNginx: V1ConfigMap = {
 
 const testData = parse({
     metadata: {
-        name: "{{name}}",
+        name: `${process.env.PIPELINE_ID}-{{name}}`,
         labels: {
-            name: "{{lname}}",
+            component: "{{component}}",
             instance: `${process.env.PIPELINE_ID}`
         }
     },

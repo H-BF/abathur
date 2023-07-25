@@ -1,9 +1,7 @@
-import { HbfTestClient } from './src/grpc/HBFTestClient';
 import { ReportClient } from './src/grpc/ReporterClient';
 import { delay, getMyIp } from './src/helper';
 import { IData } from './src/interfaces';
 import { TestClient } from './src/testClient';
-// import { testData } from './testData';
 import fs from 'fs';
 
 (async () => {

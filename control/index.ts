@@ -1,15 +1,24 @@
-import { V1ConfigMap, V1Pod, V1Service } from "@kubernetes/client-node";
-import { HBFDataCollector, HBFServer } from "./src/domain/hbf";
-import { K8sClient } from "./src/infrastructure/k8s/k8sClient";
-import { abaTestPod } from "./src/specifications/abaTestPod";
+import { HBFDataCollector } from "./src/domain/hbf";
+import { PSCFabric } from "./src/domain/k8s/PSCFabric";
+import { PodStatus } from "./src/domain/k8s/enums";
+import { PodInformer } from "./src/domain/k8s/podInformer";
 import { testData } from "./src/domain/testData/generator";
 
 (async () => {
     console.log("Hi!")
     
-    const hbfServer = new HBFServer()
+    const manager = new PSCFabric()
+    const podInf = new PodInformer()
 
-    await hbfServer.start()
+    await podInf.create()
+    podInf.start()
+
+    await manager.createSharedConfigMaps()
+    await manager.createHBFServer()
+
+    await podInf.waitStatus('hbf-server', PodStatus.RUNNING)
+
+    console.log("Дождались!")
 
     await delay(10000)
     await testData.generate()
@@ -17,29 +26,14 @@ import { testData } from "./src/domain/testData/generator";
     const hbf = new HBFDataCollector()
     const hbfData =  await hbf.collect()
 
-    const client = new K8sClient('default')
-    await client.createConfigMap(abaTestPod.specConfMapHbfClient)
-    await client.createConfigMap(abaTestPod.specConfMapNginx)
-
     const keys = Object.keys(hbfData)
-
     for (let i = 0; i < keys.length; i++) {
-        await client.createConfigMap(abaTestPod.testData({
-            name: `test-data-${i}`,
-            lname: `test-data-${i}`,
-            testData: JSON.stringify(hbfData[keys[i]])
-        }) as V1ConfigMap)
-
-        const pod = abaTestPod.specPod({
-            podName: `test-pod-${i}`,
-            labelName: `test-pod-${i}`,
-            ip: keys[i],
-            testData: `test-data-${i}`
-        }) as V1Pod
-        await client.createPod(pod)
+        await manager.createTestPod(i, keys[i], JSON.stringify(hbfData[keys[i]]))
     }
 
-    // await hbfServer.stop()
+    await delay(60000)
+
+    await manager.destroyAllByInstance()
 })();
 
 function delay(time: number) {
