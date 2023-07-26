@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package control;
+
+service Control {
+    rpc stream(stream Req) returns (stream Res);
+}
+
+message Req {
+    string ip = 1;
+    string status = 2;
+}
+
+message Res {
+    string msg = 1;
+}

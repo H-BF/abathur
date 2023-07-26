@@ -3,7 +3,7 @@ import parse from 'json-templates';
 
 const specPod = parse({
     metadata: {
-        name: `${process.env.PIPELINE_ID}-{{podName}}`,
+        name: `p${process.env.PIPELINE_ID}-{{podName}}`,
         labels: {
             component: "{{component}}",
             instance: `${process.env.PIPELINE_ID}`
@@ -26,18 +26,6 @@ const specPod = parse({
                 name: "server",
                 image: "abathur_server",
                 imagePullPolicy: "Never",
-                readinessProbe: {
-                    initialDelaySeconds: 1,
-                    periodSeconds: 2,
-                    timeoutSeconds: 1,
-                    successThreshold: 1,
-                    failureThreshold: 1,
-                    httpGet: {
-                        scheme: "HTTP",
-                        path: "/status",
-                        port: 9091
-                    }
-                }
             },
             {
                 name: "client",
@@ -50,7 +38,7 @@ const specPod = parse({
             },
             {
                 name: "hbf-client",
-                image: `fraima/hbf-client:${process.env.HBF_CLIENT_VERSION}`,
+                image: `fraima/hbf-client:${process.env.HBF_VERSION}`,
                 securityContext: {
                     privileged: true
                 },
@@ -66,19 +54,19 @@ const specPod = parse({
             {
                 name: "nginx",
                 configMap: {
-                    name: `${process.env.PIPELINE_ID}-nginx`
+                    name: `p${process.env.PIPELINE_ID}-nginx`
                 }
             }, 
             {
                 name: "hbf-client",
                 configMap: {
-                    name: `${process.env.PIPELINE_ID}-hbf-client`
+                    name: `p${process.env.PIPELINE_ID}-hbf-client`
                 }
             },
             {
                 name: "test-data",
                 configMap: {
-                    name: `${process.env.PIPELINE_ID}-{{testData}}`
+                    name: `p${process.env.PIPELINE_ID}-{{testData}}`
                 }
             }
         ]
@@ -87,7 +75,7 @@ const specPod = parse({
 
 const specConfMapHbfClient: V1ConfigMap = {
     metadata: {
-        name: `${process.env.PIPELINE_ID}-hbf-client`,
+        name: `p${process.env.PIPELINE_ID}-hbf-client`,
         labels: {
             component: "hbf-client",
             instance: `${process.env.PIPELINE_ID}`
@@ -113,7 +101,7 @@ const specConfMapHbfClient: V1ConfigMap = {
 
 const specConfMapNginx: V1ConfigMap = {
     metadata: {
-        name: `${process.env.PIPELINE_ID}-nginx`,
+        name: `p${process.env.PIPELINE_ID}-nginx`,
         labels: {
             component: "nginx",
             instance: `${process.env.PIPELINE_ID}`
@@ -188,7 +176,7 @@ const specConfMapNginx: V1ConfigMap = {
 
 const testData = parse({
     metadata: {
-        name: `${process.env.PIPELINE_ID}-{{name}}`,
+        name: `p${process.env.PIPELINE_ID}-{{name}}`,
         labels: {
             component: "{{component}}",
             instance: `${process.env.PIPELINE_ID}`

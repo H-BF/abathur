@@ -6,7 +6,8 @@
   "scripts": {
     "build": "rimraf ./build && tsc",
     "abathur": "rimraf ./build && tsc && node ./build/index.js",
-    "local": "rimraf ./build && tsc && node -r dotenv/config ./build/index.js dotenv_config_path=./.env"
+    "local": "rimraf ./build && tsc && node -r dotenv/config ./build/index.js dotenv_config_path=./.env",
+    "proto:control": "proto-loader-gen-types --grpcLib=@grpc/grpc-js --outDir=./gRPC ./gRPC/control.proto"
   },
   "author": "Ari Insomnia",
   "license": "ISC",

@@ -46,6 +46,8 @@ export class HBFDataCollector {
             }
 
             const data: IData = {
+                sgFrom: rule.sgFrom,
+                sgTo: rule.sgTo,
                 transport: rule.transport,
                 dstIps: ipsTo,
                 ports: this.transformPorts(rule.ports)

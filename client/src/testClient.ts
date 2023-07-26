@@ -33,7 +33,7 @@ export class TestClient {
                         for (const srcPort of srcPorts) {
                             this.testData.push({
                                 srcPort: srcPort,
-                                data: this.client.collectMetadata(this.srcIp, srcPort, dstIp, dstPort)
+                                data: this.client.collectMetadata(node.sgFrom, node.sgTo, this.srcIp, srcPort, dstIp, dstPort)
                             })
                         }
                     }

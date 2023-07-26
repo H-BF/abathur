@@ -1,6 +1,8 @@
 export type IHBFData = Record<string, IData[]>
 
 export interface IData {
+    sgFrom: string
+    sgTo: string
     transport: string
     dstIps: string[]
     ports: IPorts[]

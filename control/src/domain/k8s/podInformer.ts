@@ -35,9 +35,11 @@ export class PodInformer extends BaseInformer {
         frequency: number = 1000
     ): Promise<void> {
         return new Promise( (resolve, reject) => {
+            console.log(`Ждем у Pod'а ${name} статус ${status}`)
             const startTime = Date.now()
             const interval = setInterval(() => {
                 if(this.statusRecord[name] === status) {
+                    console.log(`Дождались!`)
                     clearInterval(interval)
                     resolve()
                 } else if (Date.now() - startTime >= timeout) {

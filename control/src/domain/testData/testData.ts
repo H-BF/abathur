@@ -66,6 +66,12 @@ export const networks = {
           "network": {
               "CIDR": "10.150.0.230/32"
           }
+        },
+        {
+          "name":  "infra/abathur-control",
+          "network": {
+            "CIDR": "10.150.0.231/32"
+          }
         }
       ]
     },
@@ -116,6 +122,12 @@ export const sg = {
           "networks": [
               "infra/report-server"
           ]
+        },
+        {
+          "name": "infra/abathur-control",
+          "networks": [
+            "infra/abathur-control"
+          ]
         }
       ]
     },
@@ -123,154 +135,231 @@ export const sg = {
   }
 
 export const rules = {
-    "sgRules": {
-      "rules": [
-        {
-          "ports": [
-            {
-              "s": "",
-              "d": "50000"
-            }
-          ],
-          "sgFrom": "sg-0",
-          "sgTo": "sg-1",
-          "transport": "TCP"
-        },
-        {
-          "ports": [
-            {
-              "s": "",
-              "d": "50001-50003"
-            }
-          ],
-          "sgFrom": "sg-1",
-          "sgTo": "sg-2",
-          "transport": "TCP"
-        },
-         {
-          "ports": [
-            {
-              "s": "",
-              "d": "50004, 50006, 50008-50010"
-            }
-          ],
-          "sgFrom": "sg-3",
-          "sgTo": "sg-5",
-          "transport": "TCP"
-        },
-        {
-          "ports": [
-            {
-              "s": "41000",
-              "d": "51001"
-            },
-            {
-              "s": "41002",
-              "d": "51003-51005"
-            },
-            {
-              "s": "41006",
-              "d": "51007, 51009, 51011-51013"
-            }
-          ],
-          "sgFrom": "sg-4",
-          "sgTo": "sg-0",
-          "transport": "TCP"
-        },
-        {
-          "ports": [
-            {
-              "s": "42000-42002",
-              "d": "52003"
-            },
-            {
-              "s": "42004-42006",
-              "d": "52007-52009"
-            },
-            {
-              "s": "42010-42012",
-              "d": "52013, 52015, 52017-52019"
-            }
-          ],
-          "sgFrom": "sg-5",
-          "sgTo": "sg-2",
-          "transport": "TCP"
-        },
-        {
-          "ports": [
-            {
-              "s": "43000, 43002, 43004-43006",
-              "d": "53005"
-            },
-            {
-              "s": "43008, 43010, 43012-43014",
-              "d": "53011-53013"
-            },
-            {
-              "s": "43016, 43017, 43018-43020",
-              "d": "53019, 53020, 53021-53023"
-            }
-          ],
-          "sgFrom": "sg-2",
-          "sgTo": "sg-1",
-          "transport": "TCP"
-        },
-        {
-          "ports": [
-            {
-              "s": "",
-              "d": "9091"
-            }
-          ],
-          "sgFrom": "sg-1",
-          "sgTo": "infra/report-server",
-          "transport": "TCP"
-        },
-        {
-          "ports": [
-            {
-              "s": "",
-              "d": "9091"
-            }
-          ],
-          "sgFrom": "sg-2",
-          "sgTo": "infra/report-server",
-          "transport": "TCP"
-        },
-        {
-          "ports": [
-            {
-              "s": "",
-              "d": "9091"
-            }
-          ],
-          "sgFrom": "sg-3",
-          "sgTo": "infra/report-server",
-          "transport": "TCP"
-        },
-        {
-          "ports": [
-            {
-              "s": "",
-              "d": "9091"
-            }
-          ],
-          "sgFrom": "sg-4",
-          "sgTo": "infra/report-server",
-          "transport": "TCP"
-        },
-        {
-          "ports": [
-            {
-              "s": "",
-              "d": "9091"
-            }
-          ],
-          "sgFrom": "sg-5",
-          "sgTo": "infra/report-server",
-          "transport": "TCP"
-        }
-      ]
-    },
-    "syncOp": "FullSync"
+  "sgRules": {
+    "rules": [
+      {
+        "ports": [
+          {
+            "s": "",
+            "d": "50000"
+          }
+        ],
+        "sgFrom": "sg-0",
+        "sgTo": "sg-1",
+        "transport": "TCP"
+      },
+      {
+        "ports": [
+          {
+            "s": "",
+            "d": "50001-50003"
+          }
+        ],
+        "sgFrom": "sg-1",
+        "sgTo": "sg-2",
+        "transport": "TCP"
+      },
+       {
+        "ports": [
+          {
+            "s": "",
+            "d": "50004, 50006, 50008-50010"
+          }
+        ],
+        "sgFrom": "sg-3",
+        "sgTo": "sg-5",
+        "transport": "TCP"
+      },
+      {
+        "ports": [
+          {
+            "s": "41000",
+            "d": "51001"
+          },
+          {
+            "s": "41002",
+            "d": "51003-51005"
+          },
+          {
+            "s": "41006",
+            "d": "51007, 51009, 51011-51013"
+          }
+        ],
+        "sgFrom": "sg-4",
+        "sgTo": "sg-0",
+        "transport": "TCP"
+      },
+      {
+        "ports": [
+          {
+            "s": "42000-42002",
+            "d": "52003"
+          },
+          {
+            "s": "42004-42006",
+            "d": "52007-52009"
+          },
+          {
+            "s": "42010-42012",
+            "d": "52013, 52015, 52017-52019"
+          }
+        ],
+        "sgFrom": "sg-5",
+        "sgTo": "sg-2",
+        "transport": "TCP"
+      },
+      {
+        "ports": [
+          {
+            "s": "43000, 43002, 43004-43006",
+            "d": "53005"
+          },
+          {
+            "s": "43008, 43010, 43012-43014",
+            "d": "53011-53013"
+          },
+          {
+            "s": "43016, 43017, 43018-43020",
+            "d": "53019, 53020, 53021-53023"
+          }
+        ],
+        "sgFrom": "sg-2",
+        "sgTo": "sg-1",
+        "transport": "TCP"
+      },
+  {
+        "ports": [
+          {
+            "s": "",
+            "d": "9091"
+          }
+        ],
+        "sgFrom": "sg-0",
+        "sgTo": "infra/report-server",
+        "transport": "TCP"
+      },
+      {
+        "ports": [
+          {
+            "s": "",
+            "d": "9091"
+          }
+        ],
+        "sgFrom": "sg-1",
+        "sgTo": "infra/report-server",
+        "transport": "TCP"
+      },
+      {
+        "ports": [
+          {
+            "s": "",
+            "d": "9091"
+          }
+        ],
+        "sgFrom": "sg-2",
+        "sgTo": "infra/report-server",
+        "transport": "TCP"
+      },
+      {
+        "ports": [
+          {
+            "s": "",
+            "d": "9091"
+          }
+        ],
+        "sgFrom": "sg-3",
+        "sgTo": "infra/report-server",
+        "transport": "TCP"
+      },
+      {
+        "ports": [
+          {
+            "s": "",
+            "d": "9091"
+          }
+        ],
+        "sgFrom": "sg-4",
+        "sgTo": "infra/report-server",
+        "transport": "TCP"
+      },
+      {
+        "ports": [
+          {
+            "s": "",
+            "d": "9091"
+          }
+        ],
+        "sgFrom": "sg-5",
+        "sgTo": "infra/report-server",
+        "transport": "TCP"
+      },
+  {
+        "ports": [
+          {
+            "s": "",
+            "d": "9091"
+          }
+        ],
+        "sgFrom": "sg-0",
+        "sgTo": "infra/abathur-control",
+        "transport": "TCP"
+      },
+      {
+        "ports": [
+          {
+            "s": "",
+            "d": "9091"
+          }
+        ],
+        "sgFrom": "sg-1",
+        "sgTo": "infra/abathur-control",
+        "transport": "TCP"
+      },
+      {
+        "ports": [
+          {
+            "s": "",
+            "d": "9091"
+          }
+        ],
+        "sgFrom": "sg-2",
+        "sgTo": "infra/abathur-control",
+        "transport": "TCP"
+      },
+      {
+        "ports": [
+          {
+            "s": "",
+            "d": "9091"
+          }
+        ],
+        "sgFrom": "sg-3",
+        "sgTo": "infra/abathur-control",
+        "transport": "TCP"
+      },
+      {
+        "ports": [
+          {
+            "s": "",
+            "d": "9091"
+          }
+        ],
+        "sgFrom": "sg-4",
+        "sgTo": "infra/abathur-control",
+        "transport": "TCP"
+      },
+      {
+        "ports": [
+          {
+            "s": "",
+            "d": "9091"
+          }
+        ],
+        "sgFrom": "sg-5",
+        "sgTo": "infra/abathur-control",
+        "transport": "TCP"
+      }
+    ]
+  },
+  "syncOp": "FullSync"
 }

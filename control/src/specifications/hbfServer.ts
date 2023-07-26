@@ -1,8 +1,8 @@
-import { V1Pod, V1Service, V1ConfigMap } from "@kubernetes/client-node";
+import { V1Service, V1ConfigMap } from "@kubernetes/client-node";
 
 const specPod = {
     metadata: {
-        name: `${process.env.PIPELINE_ID}-hbf-server`,
+        name: `p${process.env.PIPELINE_ID}-hbf-server`,
         labels: {
             component: "hbf-server",
             instance: `${process.env.PIPELINE_ID}`
@@ -12,7 +12,7 @@ const specPod = {
         containers: [
             {
                 name: "hbf-server",
-                image: `fraima/hbf-server:${process.env.HBF_SERVER_VERSION}`,
+                image: `fraima/hbf-server:${process.env.HBF_VERSION}`,
                 securityContext: {
                     privileged: true
                 },
@@ -24,25 +24,13 @@ const specPod = {
                 ports: [{
                     name: "hbf-server",
                     containerPort: 9006
-                }],
-                readinessProbe: {
-                    initialDelaySeconds: 1,
-                    periodSeconds: 2,
-                    timeoutSeconds: 1,
-                    successThreshold: 1,
-                    failureThreshold: 1,
-                    httpGet: {
-                        scheme: "HTTP",
-                        path: "/v1/sync/status",
-                        port: 9006
-                    }
-                }
+                }]
             }
         ],
         volumes: [{
             name: "hbf-server",
             configMap: {
-                name: `${process.env.PIPELINE_ID}-hbf-server`
+                name: `p${process.env.PIPELINE_ID}-hbf-server`
             }
         }]
     }
@@ -50,7 +38,7 @@ const specPod = {
 
 const specSrv: V1Service = {
     metadata: {
-        name: `${process.env.PIPELINE_ID}-hbf-server`,
+        name: `p${process.env.PIPELINE_ID}-hbf-server`,
         labels: {
             name: "hbf-server",
             instance: `${process.env.PIPELINE_ID}`
@@ -70,7 +58,7 @@ const specSrv: V1Service = {
 
 const specConfMap: V1ConfigMap = {
     metadata: {
-        name: `${process.env.PIPELINE_ID}-hbf-server`,
+        name: `p${process.env.PIPELINE_ID}-hbf-server`,
         labels: {
             name: "hbf-server",
             instance: `${process.env.PIPELINE_ID}`
