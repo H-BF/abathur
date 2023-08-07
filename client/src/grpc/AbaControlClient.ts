@@ -1,7 +1,6 @@
 import path from 'path'
 import * as protoLoader from '@grpc/proto-loader'
 import * as grpc from '@grpc/grpc-js'
-import { ControlClient } from '../../gRPC/control/Control'
 import { ProtoGrpcType } from '../../gRPC/control';
 import { CONTROL_IP, CONTROL_PORT, CONTROL_PROTO_PATH } from '../../config';
 import { Res } from '../../gRPC/control/Res';
@@ -10,8 +9,12 @@ import { Req } from '../../gRPC/control/Req';
 export class AbaControlClient {
 
     private call: any
+    private ip: string
 
-    constructor(options?: protoLoader.Options) {
+    constructor( ip: string, options?: protoLoader.Options) {
+
+        this.ip = ip
+
         const packageDef = protoLoader.loadSync(
             path.resolve(__dirname, CONTROL_PROTO_PATH),
             options
@@ -24,7 +27,10 @@ export class AbaControlClient {
             grpc.credentials.createInsecure()
         )
 
-        this.call = client.stream()
+        const meta = new grpc.Metadata()
+        meta.add('id', this.ip)
+
+        this.call = client.stream(meta)
     }
 
     sendMsg(msg: Req) {

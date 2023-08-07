@@ -41,7 +41,7 @@ export class HBFDataCollector {
             const ipsFrom = this.getIPs(rule.sgFrom) 
             const ipsTo = this.getIPs(rule.sgTo)
 
-            if (ipsTo.length === 1 && ipsTo[0] === "10.150.0.230") {
+            if (ipsTo.length === 1 && (ipsTo[0] === "10.150.0.230" || ipsTo[0] === "10.150.0.231")) {
                 return
             }
 

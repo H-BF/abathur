@@ -18,7 +18,8 @@ export class PSCFabric {
      * - конфиг Nginx
      */
     async createSharedConfigMaps() {
-        await this.k8sClient.createConfigMap(hbfServer.specConfMap)
+        await this.k8sClient.createConfigMap(hbfServer.hbfConfMap)
+        await this.k8sClient.createConfigMap(hbfServer.pgConfMap)
         await this.k8sClient.createConfigMap(abaTestPod.specConfMapHbfClient)
         await this.k8sClient.createConfigMap(abaTestPod.specConfMapNginx)
     }
@@ -64,8 +65,8 @@ export class PSCFabric {
      * Данный лейбл заполняется номером запустившего тесты пайплайны из env
      */
     async destroyAllByInstance() {
-        await this.k8sClient.deleteAllsvcBylabel(`instance=${process.env.PIPELINE_ID}`)
-        await this.k8sClient.deleteAllPodByLabel(`instance=${process.env.PIPELINE_ID}`)
-        await this.k8sClient.deleteAllConfMapBylabel(`instance=${process.env.PIPELINE_ID}`)
+        await this.k8sClient.deleteAllsvcBylabel(`instance=p${process.env.PIPELINE_ID}`)
+        await this.k8sClient.deleteAllPodByLabel(`instance=p${process.env.PIPELINE_ID}`)
+        await this.k8sClient.deleteAllConfMapBylabel(`instance=p${process.env.PIPELINE_ID}`)
     }
 }

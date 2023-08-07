@@ -1,6 +1,6 @@
 
-export async function waitRecordSize(
-    data: Record<any, any>,
+export async function waitSetSize(
+    data: Set<any>,
     size: number,
     timeout: number = 60000,
     frequency: number = 1000
@@ -8,9 +8,8 @@ export async function waitRecordSize(
     return new Promise<void>((resolve, reject) => {
         const startTime = Date.now()
         const interval = setInterval(() => {
-            const keys = Object.keys(data)
-            console.log(`Ждем пока размер массива станет ${size}. Текущий: ${keys.length}`)
-            if (keys.length === size) {
+            console.log(`Ждем пока размер массива станет ${size}. Текущий: ${data.size}`)
+            if (data.size === size) {
                 clearInterval(interval)
                 resolve()
             } else if(Date.now() - startTime >= timeout) {

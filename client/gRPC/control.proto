@@ -7,8 +7,7 @@ service Control {
 }
 
 message Req {
-    string ip = 1;
-    string status = 2;
+    string status = 1;
 }
 
 message Res {

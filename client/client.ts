@@ -12,18 +12,16 @@ import fs from 'fs';
     
     const test = new TestClient(myIp);
     const reporter = new ReportClient();
-    const control = new AbaControlClient()
+    const control = new AbaControlClient(myIp)
 
-    control.sendMsg({ip: myIp, status: "Ready"})
+    control.sendMsg({ status: "READY" })
     await control.listen()
     
     test.evolveTestData(data)
     await test.runTests()
   
-    console.log("Yeep!!!")
     console.log(test.getResults())
     reporter.sendReport(test.getResults())
 
-    control.sendMsg({ip: myIp, status: "Finish"})
     control.endStream()
 })();

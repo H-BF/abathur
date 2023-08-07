@@ -1,10 +1,9 @@
 import { ControlServer } from "./src/domain/grpc/control";
 import { HBFDataCollector } from "./src/domain/hbf";
-import { allRecordsValueIs } from "./src/domain/helpers";
+import { waitSetSize } from "./src/domain/helpers";
 import { PSCFabric } from "./src/domain/k8s/PSCFabric";
 import { PodStatus } from "./src/domain/k8s/enums";
 import { PodInformer } from "./src/domain/k8s/podInformer";
-import { testData } from "./src/domain/testData/generator";
 
 (async () => {
     console.log("Hi!")
@@ -18,8 +17,7 @@ import { testData } from "./src/domain/testData/generator";
     await manager.createHBFServer()
 
     await podInf.waitStatus(`p${process.env.PIPELINE_ID}-hbf-server`, PodStatus.RUNNING)
-    await delay(2000)
-    await testData.generate()
+    await delay(10000)
 
     const hbf = new HBFDataCollector()
     const hbfData =  await hbf.collect()
@@ -32,7 +30,9 @@ import { testData } from "./src/domain/testData/generator";
         await manager.createTestPod(i, keys[i], JSON.stringify(hbfData[keys[i]]))
     }
 
-    await allRecordsValueIs(control.getStreamList(), "Finish", 3_600_000, 300_000)
+    console.log(control.getStreamList())
+
+    await waitSetSize(control.getStreamList(), 0, 3_600_000, 300_000)
     
     await manager.destroyAllByInstance()
 })();

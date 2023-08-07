@@ -25,7 +25,8 @@ export class ReportClient {
     }
 
 
-    sendReport(results: IResults) {
+    async sendReport(results: IResults) {
+        console.log("Отправляем отчет")
         this.reporter.sendData(results, (err) => {
             if (err) {
                 throw new Error(`${err}`)

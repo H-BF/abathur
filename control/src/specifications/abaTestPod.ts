@@ -6,13 +6,49 @@ const specPod = parse({
         name: `p${process.env.PIPELINE_ID}-{{podName}}`,
         labels: {
             component: "{{component}}",
-            instance: `${process.env.PIPELINE_ID}`
+            instance: `p${process.env.PIPELINE_ID}`
         },
         annotations: {
             "cni.projectcalico.org/ipAddrs": "[\"{{ip}}\"]"
         }
     },
     spec: {
+        securityContext: {
+            sysctls: [
+                {
+                    name: "net.ipv4.tcp_fin_timeout",
+                    value: "15"
+                },
+                {
+                    name: "net.ipv4.tcp_tw_reuse",
+                    value: "1"
+                }
+            ]
+        },
+        initContainers: [
+            {
+                name: "hbf-client",
+                image: `harbor.wildberries.ru/swarm/swarm/swarm/sgroups/to-nft:${process.env.HBF_VERSION}`,
+                securityContext: {
+                    privileged: true,
+                    allowPrivilegeEscalation: true,
+                    runAsUser: 0
+                },
+                volumeMounts: [{
+                    name: "hbf-client",
+                    mountPath: "/app/hack/configs"
+                }],
+                command: [ "./bin/to-nft", "-config", "/app/hack/configs/to-nft.yaml" ]
+            }
+        // {
+        //     name: "kernel-config",
+        //     image: "busybox",
+        //     command: ["sh", "-c", "sysctl -w net.ipv4.tcp_fin_timeout=15 && sysctl -w net.ipv4.tcp_tw_reuse=1"],
+        //     securityContext: {
+        //         privileged: true
+        //     }
+        // }
+        ],
         containers: [
             {
                 name: "nginx",
@@ -36,18 +72,6 @@ const specPod = parse({
                 }],
                 imagePullPolicy: "Never"
             },
-            {
-                name: "hbf-client",
-                image: `fraima/hbf-client:${process.env.HBF_VERSION}`,
-                securityContext: {
-                    privileged: true
-                },
-                volumeMounts: [{
-                    name: "hbf-client",
-                    mountPath: "/app/hack/configs"
-                }],
-                command: [ "./bin/to-nft", "-config", "/app/hack/configs/to-nft.yaml" ]
-            }
         ],
         restartPolicy: "Never",
         volumes: [
@@ -78,22 +102,23 @@ const specConfMapHbfClient: V1ConfigMap = {
         name: `p${process.env.PIPELINE_ID}-hbf-client`,
         labels: {
             component: "hbf-client",
-            instance: `${process.env.PIPELINE_ID}`
+            instance: `p${process.env.PIPELINE_ID}`
         }
     },
     data: {
         "to-nft.yaml":
             `
+            exit-on-success: true
             graceful-shutdown: 10s
             logger:
-                level: INFO
+                level: DEBUG
 
             extapi:
                 svc:
                     def-daial-duration: 10s
                     sgroups:
                         dial-duration: 3s
-                        address: tcp://193.32.219.99:9000
+                        address: p${process.env.PIPELINE_ID}-hbf-server:80
                         check-sync-status: 5s
             `
     }
@@ -104,7 +129,7 @@ const specConfMapNginx: V1ConfigMap = {
         name: `p${process.env.PIPELINE_ID}-nginx`,
         labels: {
             component: "nginx",
-            instance: `${process.env.PIPELINE_ID}`
+            instance: `p${process.env.PIPELINE_ID}`
         }
     },
     data: {
@@ -179,7 +204,7 @@ const testData = parse({
         name: `p${process.env.PIPELINE_ID}-{{name}}`,
         labels: {
             component: "{{component}}",
-            instance: `${process.env.PIPELINE_ID}`
+            instance: `p${process.env.PIPELINE_ID}`
         }
     },
     data: {

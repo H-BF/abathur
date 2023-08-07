@@ -34,9 +34,13 @@ spec:
   containers:
     - name: control
       image: abathur_control
+      resources:
+        limits:
+          cpu: "1"
+          memory: "1Gi"
       env:
         - name: HBF_VERSION
-          value: '1.1.3'
+          value: 'feature-postgres-5ce3cf72'
         - name: PIPELINE_ID
           value: '123456'
       ports:
@@ -63,4 +67,8 @@ spec:
     - name: report-server
       image: abathur_report_server
       imagePullPolicy: Never
+      resources:
+        limits:
+          cpu: "1"
+          memory: "1Gi"
   restartPolicy: Never

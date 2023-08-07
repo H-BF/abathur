@@ -3,14 +3,13 @@ import * as grpc from '@grpc/grpc-js'
 import * as protoLoader from '@grpc/proto-loader'
 import { ProtoGrpcType } from '../../../gRPC/control'
 import { Req } from '../../../gRPC/control/Req'
-import { allRecordsValueIs, waitRecordSize } from '../helpers'
 
 export class ControlServer {
 
     private controlServer: grpc.Server;
     private testPodNumbers: number;
     private launchUuid: string;
-    private streamsRecord: Record<string, string> = {};
+    private streamsList: Set<string> = new Set;
 
     constructor(launchUuid: string, testPodNumbers: number) {
         this.launchUuid = launchUuid
@@ -23,29 +22,35 @@ export class ControlServer {
         const grpcObj = (grpc.loadPackageDefinition(packageDef) as unknown) as ProtoGrpcType
 
         this.controlServer.addService(grpcObj.control.Control.service, {
-            stream: this.stream
+            stream: this.stream.bind(this)
         })
     }
 
     private stream(call: any) {
+        const streamID = call.metadata.get("id")[0]
+        this.streamsList.add(streamID)
 
-        this.streamsRecord = {};
-        console.log()
+        console.log(`Начат стрим ${streamID}`)
 
-        call.on("data", async (request: Req) => {
-            if(!request.ip) 
-                throw new Error('Обязательное поле ip отсутствует')
-            
+        call.on("data", (request: Req) => {
             if(!request.status) 
                 throw new Error('Обязательное поле status отсутствует')
 
-            console.log(this.streamsRecord)
-            console.log(`Пришло сообщение: ${request.ip} : ${request.status}`)
-            this.streamsRecord[request.ip] = request.status
+            switch(request.status) {
+                case "READY": 
+                    const interval = setInterval(() => {
+                        if (this.streamsList.size == this.testPodNumbers) {
+                            clearInterval(interval)
+                            call.write({ msg: this.launchUuid })
+                        }
+                    })
+                    break;
+            } 
         })
 
         call.on("end", () => {
-            console.log("Стрим завершен!")
+            this.streamsList.delete(streamID)
+            console.log(`Стрим c ${streamID} завершен!`)
         })
         
         call.on("error", (err: any) => {
@@ -68,7 +73,7 @@ export class ControlServer {
         )
     }
 
-    getStreamList(): Record<string, string> {
-        return this.streamsRecord
+    getStreamList(): Set<string> {
+        return this.streamsList
     }
 }
