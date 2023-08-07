@@ -9,6 +9,8 @@ export interface _reporter_sendDataRequest_Result {
   'dstIp'?: (string);
   'dstPort'?: (string);
   'protocol'?: (string);
+  'sgFrom'?: (string);
+  'sgTo'?: (string);
 }
 
 export interface _reporter_sendDataRequest_Result__Output {
@@ -18,6 +20,8 @@ export interface _reporter_sendDataRequest_Result__Output {
   'dstIp'?: (string);
   'dstPort'?: (string);
   'protocol'?: (string);
+  'sgFrom'?: (string);
+  'sgTo'?: (string);
 }
 
 export interface sendDataRequest {

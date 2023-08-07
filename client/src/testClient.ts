@@ -20,10 +20,10 @@ export class TestClient {
     evolveTestData(data: IData[]) {
         for (const node of data) {
             for (const dstIp of node.dstIps) {
-                for (const rule of node.rules) {
+                for (const ports of node.ports) {
         
-                    const srcPorts = evalutePorts(rule.srcPorts)
-                    const dstPorts = evalutePorts(rule.dstPorts)
+                    const srcPorts = evalutePorts(ports.srcPorts)
+                    const dstPorts = evalutePorts(ports.dstPorts)
 
                     console.log(srcPorts)
                     console.log(dstPorts)
@@ -33,7 +33,7 @@ export class TestClient {
                         for (const srcPort of srcPorts) {
                             this.testData.push({
                                 srcPort: srcPort,
-                                data: this.client.collectMetadata(this.srcIp, srcPort, dstIp, dstPort)
+                                data: this.client.collectMetadata(node.sgFrom, node.sgTo, this.srcIp, srcPort, dstIp, dstPort)
                             })
                         }
                     }
@@ -51,8 +51,8 @@ export class TestClient {
             for (let i = 0; i < this.testData.length; i++) {
                 const data = this.testData[i]
                 if (reqTime[data.srcPort] != undefined) {
-                    if (Date.now() - reqTime[data.srcPort] <= 120000) {
-                        console.log(`Порт ${data.srcPort} использовался менее 2 минут назад. Пропускаем!`)
+                    if (Date.now() - reqTime[data.srcPort] <= 65000) {
+                        console.log(`Порт ${data.srcPort} использовался менее 65 секунд назад. Пропускаем!`)
                         continue
                     }
                 }
@@ -79,7 +79,7 @@ export class TestClient {
             }
             this.testData = this.testData.filter(Boolean)
             if (this.testData.length != 0) {
-                await delay(120000)
+                await delay(65000)
             }
         }
 

@@ -6,8 +6,13 @@ client/node_modules
 server/node_modules
 reporter/node_modules
 control/node_modules
+control/.env
 apiserver.crt
 apiserver.key
 Docker-compose.yaml
 reset.sh
+delete.sh
 minikube_start.sh
+test.yaml
+pool2.yaml
+deploy.yaml

@@ -38,7 +38,6 @@ reportServer.addService(grpcObj.reporter.Reporter.service, {
 
     await waitForArraySize(report)
 
-
     const { ok, fail } = calcStatus()
     console.log("Bce отчеты получены!\n")
     console.log(`Длительность: ${ (Math.max(...report.map( e => e.duration))) / 60000 } мин`)

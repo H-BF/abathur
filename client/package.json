@@ -9,7 +9,8 @@
     "start:prod": "node ./build/client.js",
     "start:client": "rimraf ./build && tsc && node ./build/client.js",
     "proto:hbf": "proto-loader-gen-types --grpcLib=@grpc/grpc-js --outDir=./gRPC ./gRPC/HBFTest.proto",
-    "proto:reporter": "proto-loader-gen-types --grpcLib=@grpc/grpc-js --outDir=./gRPC ./gRPC/reporter.proto"
+    "proto:reporter": "proto-loader-gen-types --grpcLib=@grpc/grpc-js --outDir=./gRPC ./gRPC/reporter.proto",
+    "proto:control": "proto-loader-gen-types --grpcLib=@grpc/grpc-js --outDir=./gRPC ./gRPC/control.proto"
   },
   "author": "Ari Insomnia",
   "license": "ISC",

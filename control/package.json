@@ -5,7 +5,9 @@
   "main": "./build/index.js",
   "scripts": {
     "build": "rimraf ./build && tsc",
-    "abathur": "node ./build/index.js"
+    "abathur": "rimraf ./build && tsc && node ./build/index.js",
+    "local": "rimraf ./build && tsc && node -r dotenv/config ./build/index.js dotenv_config_path=./.env",
+    "proto:control": "proto-loader-gen-types --grpcLib=@grpc/grpc-js --outDir=./gRPC ./gRPC/control.proto"
   },
   "author": "Ari Insomnia",
   "license": "ISC",
@@ -15,13 +17,14 @@
     "@kubernetes/client-node": "^0.18.1",
     "axios": "^1.4.0",
     "ip": "^1.1.8",
-    "mustache": "^4.2.0",
+    "json-templates": "^5.0.0",
     "rimraf": "^5.0.1",
     "tslib": "^2.6.0"
   },
   "devDependencies": {
     "@types/ip": "^1.1.0",
-    "@types/mustache": "^4.2.2",
+    "@types/json-templates": "^3.0.0",
+    "dotenv": "^16.3.1",
     "typescript": "^5.1.6"
   }
 }

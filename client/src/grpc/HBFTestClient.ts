@@ -38,12 +38,16 @@ export class HbfTestClient {
     }
 
     collectMetadata(
+        sgFrom: string,
+        sgTo: string,
         srcIp: string,
         srcPort: string,
         dstIp: string,
         dstPort: string
     ): grpc.Metadata {
         let metadata = new grpc.Metadata()
+        metadata.add("sg-from", sgFrom)
+        metadata.add("sg-to", sgTo)
         metadata.add("src-ip", srcIp)
         metadata.add("src-port", `${srcPort}`)
         metadata.add("dst-ip", `${dstIp}`)
@@ -54,6 +58,8 @@ export class HbfTestClient {
 
     getFromMetadata(data: grpc.Metadata): IResult {
         return {
+            sgFrom: data.get("sg-from")[0].toString(),
+            sgTo: data.get("sg-to")[0].toString(),
             srcIp: data.get("src-ip")[0].toString() || "any",
             srcPort: data.get("src-port")[0].toString(),
             dstIp: data.get("dst-ip")[0].toString(),

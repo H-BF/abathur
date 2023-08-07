@@ -16,6 +16,8 @@ message sendDataRequest {
         string dst_ip = 4;
         string dst_port = 5;
         string protocol = 6;
+        string sg_from = 7;
+        string sg_to = 8;
 
     };
     int64 duration = 1;

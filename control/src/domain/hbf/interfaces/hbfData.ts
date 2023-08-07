@@ -1,11 +1,14 @@
-export interface IHBFData {
+export type IHBFData = Record<string, IData[]>
+
+export interface IData {
     sgFrom: string
-    cidrFrom: string[]
     sgTo: string
-    ciderTo: string[]
     transport: string
-    ports: {
-        s: string
-        d: string
-    }[]
+    dstIps: string[]
+    ports: IPorts[]
+}
+
+export interface IPorts {
+    srcPorts: string[]
+    dstPorts: string[]
 }
