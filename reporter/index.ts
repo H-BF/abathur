@@ -40,7 +40,8 @@ reportServer.addService(grpcObj.reporter.Reporter.service, {
 
     const { ok, fail } = calcStatus()
     console.log("Bce отчеты получены!\n")
-    console.log(`Длительность: ${ (Math.max(...report.map( e => e.duration))) / 60000 } мин`)
+    console.log(report)
+    console.log(`Длительность: ${ (Math.max(...report.map( e => e.duration))) / 1000 } сек`)
     console.log(`OK: ${ok}`)
     console.log(`FAIL: ${fail}`)
 
@@ -54,7 +55,7 @@ function waitForArraySize(foo: any[]) {
                 clearInterval(interval);
                 resolve()
             }
-        }, 60000)
+        }, 1000)
     })
 }
 
@@ -63,7 +64,7 @@ function calcStatus(): {ok: number, fail: number} {
     let fail: number = 0
     report.forEach(r => {
         r.results.forEach(e => {
-            switch(e.msg) {
+            switch(e.status) {
                 case "OK": { 
                     ok++
                     break

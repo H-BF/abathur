@@ -1,4 +1,4 @@
-export type IHBFData = Record<string, IData[]>
+export type IHBFTestData = Record<string, IData[]>
 
 export interface IData {
     sgFrom: string

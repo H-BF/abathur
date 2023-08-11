@@ -1,94 +1,64 @@
-import { CLIENT_NGINX_IP, CLIENT_NGINX_PORT } from "../config"
-import { HbfTestClient } from "./grpc/HBFTestClient"
-import { delay, evalutePorts } from "./helper"
-import { Metadata, ServiceError } from "@grpc/grpc-js"
+import { evalutePorts } from "./helper"
 import { IData, IResult, IResults } from "./interfaces"
+import { SocketClient } from "./socket";
 
 export class TestClient {
 
     private srcIp: string
-    private client: HbfTestClient
-    private testData: {srcPort: string, data: Metadata}[] = [];
     private testResults: IResult[] = [];
-    private duration: number = 0;
 
     constructor(scrIp: string) {
         this.srcIp = scrIp
-        this.client = new HbfTestClient(CLIENT_NGINX_IP, CLIENT_NGINX_PORT)
     }
 
-    evolveTestData(data: IData[]) {
+   async runTests(data: IData[]) {
         for (const node of data) {
             for (const dstIp of node.dstIps) {
                 for (const ports of node.ports) {
-        
                     const srcPorts = evalutePorts(ports.srcPorts)
                     const dstPorts = evalutePorts(ports.dstPorts)
-
-                    console.log(srcPorts)
-                    console.log(dstPorts)
-                    console.log('\n')
-    
+                    
                     for (const dstPort of dstPorts) {
                         for (const srcPort of srcPorts) {
-                            this.testData.push({
+
+                            let msgErr: string | undefined
+                            let status = "FAIL"
+                            
+                            const client = new SocketClient()
+                            try {
+                                await client.check(
+                                    Number(srcPort),
+                                    dstIp,
+                                    Number(dstPort)
+                                )
+                                status = "OK"
+                            } catch (err) {
+                                msgErr = `${err}`
+                                console.log(`${err}`)
+                            }
+
+
+                            this.testResults.push({
+                                sgFrom: node.sgFrom,
+                                sgTo: node.sgTo,
+                                srcIp: this.srcIp,
                                 srcPort: srcPort,
-                                data: this.client.collectMetadata(node.sgFrom, node.sgTo, this.srcIp, srcPort, dstIp, dstPort)
+                                dstIp: dstIp,
+                                dstPort: dstPort,
+                                protocol: node.transport,
+                                status: status,
+                                msgErr: msgErr
                             })
                         }
                     }
                 }
-            }
+            }   
         }
-    }
-
-    async runTests() {
-
-        const startTime = Date.now()
-
-        let reqTime: Record<string, number> = {};
-        while(this.testData.length != 0) {
-            for (let i = 0; i < this.testData.length; i++) {
-                const data = this.testData[i]
-                if (reqTime[data.srcPort] != undefined) {
-                    if (Date.now() - reqTime[data.srcPort] <= 65000) {
-                        console.log(`Порт ${data.srcPort} использовался менее 65 секунд назад. Пропускаем!`)
-                        continue
-                    }
-                }
-                let result: IResult = this.client.getFromMetadata(data.data);
-
-                try {
-                    console.log(`Посылаем запрос c порта ${data.srcPort || 'any'} на порт ${data.data.get('dst-port')}`)
-                    const res = await this.client.ping(data.data)
-                    result.msg = res?.msg!
-                } catch (err) {
-                    const grpcError = err as ServiceError;
-                    console.log(err)
-                    if (grpcError.code == 13 && grpcError.details == 'Received RST_STREAM with code 0') {
-                        result.msg = 'FAIL'
-                    }
-                }
-                console.log(result)
-                this.testResults.push(result)
-
-                if (data.srcPort != "") {
-                    reqTime[data.srcPort] = Date.now()
-                }
-                delete this.testData[i]
-            }
-            this.testData = this.testData.filter(Boolean)
-            if (this.testData.length != 0) {
-                await delay(65000)
-            }
-        }
-
-        this.duration = Date.now() - startTime
     }
 
     getResults() {
         let r: IResults = {
-            duration: this.duration,
+            duration: 0,
             node: this.srcIp,
             results: []
         }

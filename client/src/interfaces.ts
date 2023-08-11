@@ -8,6 +8,7 @@ export interface IData {
     ports: IPorts[]
 }
 
+
 export interface IPorts {
     srcPorts: string[]
     dstPorts: string[]
@@ -27,5 +28,6 @@ export interface IResult {
     dstIp: string
     dstPort: string
     protocol: string
-    msg: string
+    status: string
+    msgErr?: string
 }

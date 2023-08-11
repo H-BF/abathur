@@ -10,5 +10,6 @@ export interface IResult {
     dstIp: string
     dstPort: string
     protocol: string
-    msg: string
+    status: string
+    msgErr?: string
 }

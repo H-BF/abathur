@@ -6,7 +6,7 @@ import { TestClient } from './src/testClient';
 import fs from 'fs';
 
 (async () => {
-
+    const startTime = Date.now()
     const myIp = getMyIp()
     const data: IData[] = JSON.parse(fs.readFileSync('./testData/testData.json', 'utf-8'))
     
@@ -17,11 +17,14 @@ import fs from 'fs';
     control.sendMsg({ status: "READY" })
     await control.listen()
     
-    test.evolveTestData(data)
-    await test.runTests()
+    await test.runTests(data)
   
+
+    let a = test.getResults()
+    a.duration = Date.now() - startTime
+
     console.log(test.getResults())
-    reporter.sendReport(test.getResults())
+    reporter.sendReport(a)
 
     control.endStream()
 })();
