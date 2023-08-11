@@ -21,7 +21,6 @@ export class PSCFabric {
         await this.k8sClient.createConfigMap(hbfServer.hbfConfMap)
         await this.k8sClient.createConfigMap(hbfServer.pgConfMap)
         await this.k8sClient.createConfigMap(abaTestPod.specConfMapHbfClient)
-        await this.k8sClient.createConfigMap(abaTestPod.specConfMapNginx)
     }
 
     /**
@@ -41,22 +40,34 @@ export class PSCFabric {
      * @param podNumber - уникальный индитефикатор пода
      * @param ip - присваемый поду IP
      * @param testData - тестовые данные, которые надо поместить в ConfigMap
+     * @param ports - список портов на которых нужно поднять сервер на данном поде
      */
     async createTestPod(
         podNumber: number,
         ip: string, 
-        testData: string
+        testData: string,
+        ports: string
     ) {
+        //Создаем configMap с тестовыми данными
         await this.k8sClient.createConfigMap(abaTestPod.testData({
             name: `test-data-${podNumber}`,
             component: `test-data-${podNumber}`,
             testData: testData
         }) as V1ConfigMap)
+
+        //Создаем configMap с портами на открытие
+        await this.k8sClient.createConfigMap(abaTestPod.ports({
+            name: `test-ports-${podNumber}`,
+            component: `test-ports-${podNumber}`,
+            ports: ports
+        }) as V1ConfigMap)
+
         await this.k8sClient.createPod(abaTestPod.specPod({
             podName: `test-pod-${podNumber}`,
             component: `test-pod-${podNumber}`,
             ip: ip,
-            testData: `test-data-${podNumber}`
+            testData: `test-data-${podNumber}`,
+            ports: `test-ports-${podNumber}`
         }) as V1Pod)
     }
 

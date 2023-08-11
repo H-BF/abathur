@@ -1,0 +1,1 @@
+export type IPortForServer = Record<string, string[]>

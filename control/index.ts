@@ -6,8 +6,6 @@ import { PodStatus } from "./src/domain/k8s/enums";
 import { PodInformer } from "./src/domain/k8s/podInformer";
 
 (async () => {
-    console.log("Hi!")
-    
     const manager = new PSCFabric()
     const podInf = new PodInformer()
     podInf.create()
@@ -20,19 +18,20 @@ import { PodInformer } from "./src/domain/k8s/podInformer";
     await delay(10000)
 
     const hbf = new HBFDataCollector()
-    const hbfData =  await hbf.collect()
-    const keys = Object.keys(hbfData)
+    await hbf.collect()
+    const hbfTestData =  hbf.getTestData()
+    const ports = hbf.gePortsForServer()
 
+    const keys = Object.keys(hbfTestData)
     const control = new ControlServer("b05ac270-6635-4895-9271-8094989b2ccd", keys.length)
     control.start()
 
     for (let i = 0; i < keys.length; i++) {
-        await manager.createTestPod(i, keys[i], JSON.stringify(hbfData[keys[i]]))
+        await manager.createTestPod(i, keys[i], JSON.stringify(hbfTestData[keys[i]]), JSON.stringify(ports[keys[i]]))
     }
 
-    console.log(control.getStreamList())
-
-    await waitSetSize(control.getStreamList(), 0, 3_600_000, 300_000)
+    await waitSetSize(control.getStreamList(), keys.length, 3_600_000, 5)
+    await waitSetSize(control.getStreamList(), 0, 3_600_000, 1_000)
     
     await manager.destroyAllByInstance()
 })();

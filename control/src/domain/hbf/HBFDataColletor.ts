@@ -2,7 +2,7 @@ import { HBFClient, ISecurityGroup } from "../../infrastructure";
 import { INetwork } from "../../infrastructure/hbf/interfaces/networks";
 import { IRule, IRulePorts } from "../../infrastructure/hbf/interfaces/rules";
 import { Networks } from "../networks";
-import { IData, IHBFData, IPorts } from "./interfaces";
+import { IData, IHBFTestData, IPortForServer, IPorts } from "./interfaces";
 
 export class HBFDataCollector {
 
@@ -15,7 +15,7 @@ export class HBFDataCollector {
         this.HBFClient = new HBFClient()
     }
 
-    async collect(): Promise<IHBFData> {
+    async collect(): Promise<void> {
         this.sg = (await this.HBFClient.getSecurityGroups()).groups
 
         this.networks = (await this.HBFClient.getNetworks({
@@ -28,12 +28,10 @@ export class HBFDataCollector {
                 sgTo: []
             })
         ).rules
-
-        return this.transform()
     }
 
-    private transform(): IHBFData {
-        const results: IHBFData = {}
+    getTestData(): IHBFTestData {
+        const results: IHBFTestData = {}
 
         if (!this.rules) throw new Error("Rules is undefined")
 
@@ -57,8 +55,32 @@ export class HBFDataCollector {
                 results[ipFrom] = results[ipFrom] ? [...results[ipFrom], data] : [data]
             })
         })
-
         return results
+    }
+
+    gePortsForServer(): IPortForServer {
+        const result: IPortForServer = {} 
+
+        if (!this.rules) throw new Error("Rules is undefined")
+        
+        this.rules.forEach(rule => {
+            const ipsTo = this.getIPs(rule.sgTo)
+            const portsTo = this.transformPorts(rule.ports)
+
+            if (ipsTo.length === 1 && (ipsTo[0] === "10.150.0.230" || ipsTo[0] === "10.150.0.231")) {
+                return
+            }
+
+            ipsTo.forEach(ip => {
+                if (ip in result) {
+                    result[ip] = result[ip].concat(portsTo.map(item => item.dstPorts).flat())
+                } else {
+                    result[ip] = portsTo.map(item => item.dstPorts).flat()
+                }
+            })
+        })
+
+        return result
     }
 
     private getCIDRs(sgName: string): string[] {

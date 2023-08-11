@@ -3,7 +3,7 @@
 import type { Long } from '@grpc/proto-loader';
 
 export interface _reporter_sendDataRequest_Result {
-  'msg'?: (string);
+  'status'?: (string);
   'srcIp'?: (string);
   'srcPort'?: (string);
   'dstIp'?: (string);
@@ -11,10 +11,11 @@ export interface _reporter_sendDataRequest_Result {
   'protocol'?: (string);
   'sgFrom'?: (string);
   'sgTo'?: (string);
+  'msgErr'?: (string);
 }
 
 export interface _reporter_sendDataRequest_Result__Output {
-  'msg'?: (string);
+  'status'?: (string);
   'srcIp'?: (string);
   'srcPort'?: (string);
   'dstIp'?: (string);
@@ -22,6 +23,7 @@ export interface _reporter_sendDataRequest_Result__Output {
   'protocol'?: (string);
   'sgFrom'?: (string);
   'sgTo'?: (string);
+  'msgErr'?: (string);
 }
 
 export interface sendDataRequest {
