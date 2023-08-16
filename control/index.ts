@@ -19,7 +19,7 @@ import { PodInformer } from "./src/domain/k8s/podInformer";
 
     const hbf = new HBFDataCollector()
     await hbf.collect()
-    const hbfTestData =  hbf.getTestData()
+    const hbfTestData = hbf.getTestData()
     const ports = hbf.gePortsForServer()
 
     const keys = Object.keys(hbfTestData)
@@ -27,12 +27,17 @@ import { PodInformer } from "./src/domain/k8s/podInformer";
     control.start()
 
     for (let i = 0; i < keys.length; i++) {
-        await manager.createTestPod(i, keys[i], JSON.stringify(hbfTestData[keys[i]]), JSON.stringify(ports[keys[i]]))
+        await manager.createTestPod(
+            i,
+            keys[i],
+            JSON.stringify(hbfTestData[keys[i]]),
+            JSON.stringify(ports[keys[i]])
+        )
     }
 
     await waitSetSize(control.getStreamList(), keys.length, 3_600_000, 5)
     await waitSetSize(control.getStreamList(), 0, 3_600_000, 1_000)
-    
+
     await manager.destroyAllByInstance()
 })();
 

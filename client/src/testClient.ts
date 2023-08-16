@@ -55,7 +55,7 @@ export class TestClient {
             }   
         }
     }
-
+    
     getResults() {
         let r: IResults = {
             duration: 0,

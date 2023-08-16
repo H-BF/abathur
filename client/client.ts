@@ -9,16 +9,15 @@ import fs from 'fs';
     const startTime = Date.now()
     const myIp = getMyIp()
     const data: IData[] = JSON.parse(fs.readFileSync('./testData/testData.json', 'utf-8'))
-    
+
     const test = new TestClient(myIp);
     const reporter = new ReportClient();
     const control = new AbaControlClient(myIp)
 
     control.sendMsg({ status: "READY" })
     await control.listen()
-    
+
     await test.runTests(data)
-  
 
     let a = test.getResults()
     a.duration = Date.now() - startTime
