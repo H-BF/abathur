@@ -14,7 +14,7 @@ export interface IPorts {
     dstPorts: string[]
 }
 
-export interface IResults{
+export interface IResults {
     duration: number
     node: string
     results: IResult[]
