@@ -8,8 +8,6 @@
     "rebuild": "rimraf ./build && tsc",
     "start:prod": "node ./build/client.js",
     "start:client": "rimraf ./build && tsc && node ./build/client.js",
-    "proto:hbf": "proto-loader-gen-types --grpcLib=@grpc/grpc-js --outDir=./gRPC ./gRPC/HBFTest.proto",
-    "proto:reporter": "proto-loader-gen-types --grpcLib=@grpc/grpc-js --outDir=./gRPC ./gRPC/reporter.proto",
     "proto:control": "proto-loader-gen-types --grpcLib=@grpc/grpc-js --outDir=./gRPC ./gRPC/control.proto"
   },
   "author": "Ari Insomnia",
@@ -21,6 +19,7 @@
   "dependencies": {
     "@grpc/grpc-js": "^1.8.16",
     "@grpc/proto-loader": "^0.7.7",
+    "axios": "^1.4.0",
     "http-proxy-agent": "^7.0.0",
     "rimraf": "^5.0.1"
   }

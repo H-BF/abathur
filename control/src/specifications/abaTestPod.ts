@@ -58,8 +58,18 @@ const specPod = parse({
                     name: "test-data",
                     mountPath: "/usr/src/client/testData"
                 }],
-                imagePullPolicy: "Never"
-            },
+                imagePullPolicy: "Never",
+                env: [{
+                    name: "REPORTER_PROTOCOL",
+                    value: process.env.REPORTER_PROTOCOL
+                },{
+                    name: "REPORTER_HOST",
+                    value: process.env.REPORTER_HOST    
+                },{
+                    name: "REPORTER_PORT",
+                    value: process.env.REPORTER_PORT                   
+                }]
+            }
         ],
         restartPolicy: "Never",
         volumes: [

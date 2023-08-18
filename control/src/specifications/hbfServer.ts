@@ -715,7 +715,7 @@ const pgConfMap: V1ConfigMap = {
                     ('nw-7', '10.150.0.227/32', get_sg_id('sg-4')),
                     ('nw-8', '10.150.0.228/32', get_sg_id('sg-5')),
                     ('nw-9', '10.150.0.229/32', get_sg_id('sg-5')),
-                    ('infra/report-server', '10.150.0.230/32', get_sg_id('infra/report-server')),
+                    ('infra/report-server', '${process.env.REPORTER_HOST}/32', get_sg_id('infra/report-server')),
                     ('infra/abathur-control', '10.150.0.231/32', get_sg_id('infra/abathur-control'));
         
                 INSERT INTO
@@ -780,7 +780,7 @@ const pgConfMap: V1ConfigMap = {
                         get_sg_id('infra/report-server'),
                         'tcp',
                         ARRAY[
-                            ((int4multirange(int4range(NULL))), (int4multirange(int4range(9091, 9092))))
+                            ((int4multirange(int4range(NULL))), (int4multirange(int4range(9000, 9001))))
                         ]::sgroups.sg_rule_ports[]
                     ),
                     (
@@ -788,7 +788,7 @@ const pgConfMap: V1ConfigMap = {
                         get_sg_id('infra/report-server'),
                         'tcp',
                         ARRAY[
-                            ((int4multirange(int4range(NULL))), (int4multirange(int4range(9091, 9092))))
+                            ((int4multirange(int4range(NULL))), (int4multirange(int4range(9000, 9001))))
                         ]::sgroups.sg_rule_ports[]
                     ),
                     (
@@ -796,7 +796,7 @@ const pgConfMap: V1ConfigMap = {
                         get_sg_id('infra/report-server'),
                         'tcp',
                         ARRAY[
-                            ((int4multirange(int4range(NULL))), (int4multirange(int4range(9091, 9092))))
+                            ((int4multirange(int4range(NULL))), (int4multirange(int4range(9000, 9001))))
                         ]::sgroups.sg_rule_ports[]
                     ),
                     (
@@ -804,7 +804,7 @@ const pgConfMap: V1ConfigMap = {
                         get_sg_id('infra/report-server'),
                         'tcp',
                         ARRAY[
-                            ((int4multirange(int4range(NULL))), (int4multirange(int4range(9091, 9092))))
+                            ((int4multirange(int4range(NULL))), (int4multirange(int4range(9000, 9001))))
                         ]::sgroups.sg_rule_ports[]
                     ),
                     (
@@ -812,7 +812,7 @@ const pgConfMap: V1ConfigMap = {
                         get_sg_id('infra/report-server'),
                         'tcp',
                         ARRAY[
-                            ((int4multirange(int4range(NULL))), (int4multirange(int4range(9091, 9092))))
+                            ((int4multirange(int4range(NULL))), (int4multirange(int4range(9000, 9001))))
                         ]::sgroups.sg_rule_ports[]
                     ),
                     (
@@ -820,7 +820,7 @@ const pgConfMap: V1ConfigMap = {
                         get_sg_id('infra/report-server'),
                         'tcp',
                         ARRAY[
-                            ((int4multirange(int4range(NULL))), (int4multirange(int4range(9091, 9092))))
+                            ((int4multirange(int4range(NULL))), (int4multirange(int4range(9000, 9001))))
                         ]::sgroups.sg_rule_ports[]
                     ),
                     (

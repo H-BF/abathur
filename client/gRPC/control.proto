@@ -7,9 +7,15 @@ service Control {
 }
 
 message Req {
-    string status = 1;
+    Status status = 1;
+    string data = 2;
 }
 
 message Res {
     string msg = 1;
+}
+
+enum Status {
+    ready = 1;
+    finish = 2;
 }

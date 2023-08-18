@@ -1,11 +1,13 @@
-import { evalutePorts } from "./helper"
+import { evalutePorts } from "../helper"
 import { IData, IResult, IResults } from "./interfaces"
-import { SocketClient } from "./socket";
+import { SocketClient } from "../infrastructure/socket/socket";
 
 export class TestClient {
 
     private srcIp: string
     private testResults: IResult[] = [];
+    passCount: number = 0
+    failCount: number = 0
 
     constructor(scrIp: string) {
         this.srcIp = scrIp
@@ -22,7 +24,7 @@ export class TestClient {
                         for (const srcPort of srcPorts) {
 
                             let msgErr: string | undefined
-                            let status = "FAIL"
+                            let status = "fail"
                             
                             const client = new SocketClient()
                             try {
@@ -31,12 +33,20 @@ export class TestClient {
                                     dstIp,
                                     Number(dstPort)
                                 )
-                                status = "OK"
+                                status = "pass"
                             } catch (err) {
                                 msgErr = `${err}`
                                 console.log(`${err}`)
                             }
 
+                            switch(status) {
+                                case 'fail': 
+                                    this.failCount++
+                                    break
+                                case 'pass':
+                                    this.passCount++
+                                    break
+                            }
 
                             this.testResults.push({
                                 sgFrom: node.sgFrom,
@@ -56,17 +66,7 @@ export class TestClient {
         }
     }
     
-    getResults() {
-        let r: IResults = {
-            duration: 0,
-            node: this.srcIp,
-            results: []
-        }
-
-        this.testResults.forEach(res => {
-            r.results.push(res)
-        })
-
-        return r
+    getResults(): IResult[] {
+       return this.testResults
     }
 }
