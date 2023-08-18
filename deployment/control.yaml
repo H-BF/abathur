@@ -43,6 +43,12 @@ spec:
           value: 'feature-postgres-5ce3cf72'
         - name: PIPELINE_ID
           value: '123456'
+        - name: REPORTER_PROTOCOL
+          value: http
+        - name:  REPORTER_HOST
+          value: '172.25.143.81'  
+        - name: REPORTER_PORT
+          value: '9000'        
       ports:
         - containerPort: 80
           name: test
@@ -50,25 +56,4 @@ spec:
         privileged: true
       imagePullPolicy: Never
   serviceAccountName: abathur
-  restartPolicy: Never
-
----
-
-apiVersion: v1
-kind: Pod
-metadata:
-  name: "report-server"
-  labels:
-    name: "report-server"
-  annotations:
-    cni.projectcalico.org/ipAddrs: "[\"10.150.0.230\"]"
-spec:
-  containers:
-    - name: report-server
-      image: abathur_report_server
-      imagePullPolicy: Never
-      resources:
-        limits:
-          cpu: "1"
-          memory: "1Gi"
   restartPolicy: Never

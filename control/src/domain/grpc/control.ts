@@ -10,6 +10,9 @@ export class ControlServer {
     private testPodNumbers: number;
     private launchUuid: string;
     private streamsList: Set<string> = new Set;
+    passCount: number = 0
+    failCount: number = 0
+
 
     constructor(launchUuid: string, testPodNumbers: number) {
         this.launchUuid = launchUuid
@@ -37,13 +40,22 @@ export class ControlServer {
                 throw new Error('Обязательное поле status отсутствует')
 
             switch(request.status) {
-                case "READY": 
+                case 1:
+                    console.log("Попали в ветку ready") 
                     const interval = setInterval(() => {
                         if (this.streamsList.size == this.testPodNumbers) {
                             clearInterval(interval)
                             call.write({ msg: this.launchUuid })
                         }
                     })
+                    break;
+                case 2:
+                    console.log("Попали в ветку break")
+                    if(!request.data) 
+                        throw new Error('Обязательное data status отсутствует')
+                    const data = JSON.parse(request.data) as { fail: number, pass: number }
+                    this.passCount += data.pass
+                    this.failCount += data.fail
                     break;
             } 
         })

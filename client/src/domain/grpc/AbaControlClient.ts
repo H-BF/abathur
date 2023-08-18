@@ -1,10 +1,10 @@
 import path from 'path'
 import * as protoLoader from '@grpc/proto-loader'
 import * as grpc from '@grpc/grpc-js'
-import { ProtoGrpcType } from '../../gRPC/control';
-import { CONTROL_IP, CONTROL_PORT, CONTROL_PROTO_PATH } from '../../config';
-import { Res } from '../../gRPC/control/Res';
-import { Req } from '../../gRPC/control/Req';
+import { ProtoGrpcType } from '../../../gRPC/control';
+import { CONTROL_IP, CONTROL_PORT, CONTROL_PROTO_PATH } from '../../../config';
+import { Res } from '../../../gRPC/control/Res';
+import { Req } from '../../../gRPC/control/Req';
 
 export class AbaControlClient {
 
