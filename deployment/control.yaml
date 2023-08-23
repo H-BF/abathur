@@ -41,8 +41,12 @@ spec:
       env:
         - name: HBF_VERSION
           value: 'feature-postgres-5ce3cf72'
+        - name: ABATHUR_VERSION
+          value: 'feature-deploy-b2b4294b'
         - name: PIPELINE_ID
           value: '123456'
+        - name: JOB_ID
+          value: '9811'
         - name: REPORTER_PROTOCOL
           value: http
         - name:  REPORTER_HOST

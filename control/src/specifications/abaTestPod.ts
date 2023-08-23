@@ -44,7 +44,7 @@ const specPod = parse({
         containers: [
             {
                 name: "server",
-                image: "abathur_server",
+                image: `harbor.wildberries.ru/swarm/swarm/testops/abathur/aba-server:${process.env.ABATHUR_VERSION}`,
                 volumeMounts: [{
                     name: "test-ports",
                     mountPath: "/usr/src/server/ports"
@@ -53,7 +53,7 @@ const specPod = parse({
             },
             {
                 name: "client",
-                image: "abathur_client",
+                image: `harbor.wildberries.ru/swarm/swarm/testops/abathur/aba-client:${process.env.ABATHUR_VERSION}`,
                 volumeMounts: [{
                     name: "test-data",
                     mountPath: "/usr/src/client/testData"
