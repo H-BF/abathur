@@ -1,5 +1,6 @@
 export interface ICreateLaunchReq {
-    pipeline: number
+    pipeline: number,
+    job: number
 }
 
 export interface ICreateLaunchRes {

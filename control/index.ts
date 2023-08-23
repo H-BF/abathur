@@ -13,8 +13,11 @@ import { LaunchStatus } from "./src/infrastructure/reporter";
     if(!process.env.PIPELINE_ID)
         throw new MissEnvVariable('PIPELINE_ID')
 
+    if(!process.env.JOB_ID)
+        throw new MissEnvVariable('JOB_ID')
+
     const reporter = new Reporter()
-    await reporter.createLaunch(process.env.PIPELINE_ID)
+    await reporter.createLaunch(process.env.PIPELINE_ID, process.env.JOB_ID)
 
     try {
         const startTime = Date.now()
