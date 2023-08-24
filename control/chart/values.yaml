@@ -1,8 +1,8 @@
 abathurControl:
   image:
     imagePullPolicy: Never
-    repository: abathur_control
-    tag: latest
+    repository: harbor.wildberries.ru/swarm/swarm/testops/abathur/aba-control
+    tag: feature-storage-2cb8edb8
   ports:
     addressPort: 80
     addressPortAlias: aba-port
@@ -13,12 +13,12 @@ abathurControl:
 abathurClient:
   image:
     repository: harbor.wildberries.ru/swarm/swarm/testops/abathur/aba-client
-    tag: feature-deploy-b2b4294b
+    tag: feature-storage-2cb8edb8
 
 abathurServer:
   image:
     repository: harbor.wildberries.ru/swarm/swarm/testops/abathur/aba-server
-    tag: feature-deploy-b2b4294b
+    tag: feature-storage-2cb8edb8
 
 hbfServer:
   image:
