@@ -2,6 +2,7 @@ import { V1ConfigMap, V1Pod } from "@kubernetes/client-node";
 import { K8sClient } from "../../infrastructure/k8s/k8sClient";
 import { abaTestPod } from "../../specifications/abaTestPod";
 import { hbfServer } from "../../specifications/hbfServer";
+import { variables } from "../../infrastructure/var_storage/variables-storage";
 
 export class PSCFabric {
  
@@ -76,8 +77,10 @@ export class PSCFabric {
      * Данный лейбл заполняется номером запустившего тесты пайплайны из env
      */
     async destroyAllByInstance() {
-        await this.k8sClient.deleteAllsvcBylabel(`instance=p${process.env.PIPELINE_ID}`)
-        await this.k8sClient.deleteAllPodByLabel(`instance=p${process.env.PIPELINE_ID}`)
-        await this.k8sClient.deleteAllConfMapBylabel(`instance=p${process.env.PIPELINE_ID}`)
+        await this.k8sClient.deleteAllsvcBylabel(`instance=p${variables.get("PIPELINE_ID")}`)
+        await this.k8sClient.deleteAllPodByLabel(`instance=p${variables.get("PIPELINE_ID")}`)
+        await this.k8sClient.deleteAllConfMapBylabel(`instance=p${variables.get("PIPELINE_ID")}`)
+        await this.k8sClient.deleteServiceAccountByLabel(`instance=p${variables.get("PIPELINE_ID")}`)
+        await this.k8sClient.deleteClusterRoleBindingByLabel(`instance=p${variables.get("PIPELINE_ID")}`)
     }
 }

@@ -1,6 +1,7 @@
 import { HBFClient, ISecurityGroup } from "../../infrastructure";
 import { INetwork } from "../../infrastructure/hbf/interfaces/networks";
 import { IRule, IRulePorts } from "../../infrastructure/hbf/interfaces/rules";
+import { variables } from "../../infrastructure/var_storage/variables-storage";
 import { Networks } from "../networks";
 import { IData, IHBFTestData, IPortForServer, IPorts } from "./interfaces";
 
@@ -39,7 +40,7 @@ export class HBFDataCollector {
             const ipsFrom = this.getIPs(rule.sgFrom) 
             const ipsTo = this.getIPs(rule.sgTo)
 
-            if (ipsTo.length === 1 && (ipsTo[0] === `${process.env.REPORTER_HOST}` || ipsTo[0] === "10.150.0.231")) {
+            if (ipsTo.length === 1 && (ipsTo[0] === `${variables.get("REPORTER_HOST")}` || ipsTo[0] === "10.150.0.231")) {
                 return
             }
 

@@ -1,18 +1,19 @@
 import { V1Service, V1ConfigMap } from "@kubernetes/client-node";
+import { variables } from "../infrastructure/var_storage/variables-storage";
 
 const specPod = {
     metadata: {
-        name: `p${process.env.PIPELINE_ID}-hbf-server`,
+        name: `p${variables.get("PIPELINE_ID")}-hbf-server`,
         labels: {
             component: "hbf-server",
-            instance: `p${process.env.PIPELINE_ID}`
+            instance: `p${variables.get("PIPELINE_ID")}`
         }
     },
     spec: {
         containers: [
             {
                 name: "hbf-server",
-                image: `harbor.wildberries.ru/swarm/swarm/swarm/sgroups/sgroups:${process.env.HBF_VERSION}`,
+                image: `${variables.get("HBF_SERVER_REPOSITORY")}:${variables.get("HBF_SERVER_TAG")}`,
                 volumeMounts: [{
                         name: "hbf-server",
                         mountPath: "/app/hack/configs"
@@ -59,13 +60,13 @@ const specPod = {
         volumes: [{
             name: "hbf-server",
             configMap: {
-                name: `p${process.env.PIPELINE_ID}-hbf-server`
+                name: `p${variables.get("PIPELINE_ID")}-hbf-server`
             }
         },
         {
             name: `pg-init`,
             configMap: {
-                name: `p${process.env.PIPELINE_ID}-pg-init`
+                name: `p${variables.get("PIPELINE_ID")}-pg-init`
             }
         }]
     }
@@ -73,16 +74,16 @@ const specPod = {
 
 const specSrv: V1Service = {
     metadata: {
-        name: `p${process.env.PIPELINE_ID}-hbf-server`,
+        name: `p${variables.get("PIPELINE_ID")}-hbf-server`,
         labels: {
             name: "hbf-server",
-            instance: `p${process.env.PIPELINE_ID}`
+            instance: `p${variables.get("PIPELINE_ID")}`
         }
     },
     spec: {
         selector: {
             component: "hbf-server",
-            instance: `p${process.env.PIPELINE_ID}`
+            instance: `p${variables.get("PIPELINE_ID")}`
         },
         ports: [{
             name: "hbf",
@@ -100,10 +101,10 @@ const specSrv: V1Service = {
 
 const hbfConfMap: V1ConfigMap = {
     metadata: {
-        name: `p${process.env.PIPELINE_ID}-hbf-server`,
+        name: `p${variables.get("PIPELINE_ID")}-hbf-server`,
         labels: {
             name: "hbf-server",
-            instance: `p${process.env.PIPELINE_ID}`
+            instance: `p${variables.get("PIPELINE_ID")}`
         }
     },
     data: {
@@ -127,10 +128,10 @@ const hbfConfMap: V1ConfigMap = {
 
 const pgConfMap: V1ConfigMap = {
     metadata: {
-        name: `p${process.env.PIPELINE_ID}-pg-init`,
+        name: `p${variables.get("PIPELINE_ID")}-pg-init`,
         labels: {
             name: "pqsql",
-            instance: `p${process.env.PIPELINE_ID}`
+            instance: `p${variables.get("PIPELINE_ID")}`
         }
     },
     data: {
@@ -715,7 +716,7 @@ const pgConfMap: V1ConfigMap = {
                     ('nw-7', '10.150.0.227/32', get_sg_id('sg-4')),
                     ('nw-8', '10.150.0.228/32', get_sg_id('sg-5')),
                     ('nw-9', '10.150.0.229/32', get_sg_id('sg-5')),
-                    ('infra/report-server', '${process.env.REPORTER_HOST}/32', get_sg_id('infra/report-server')),
+                    ('infra/report-server', '${variables.get("REPORTER_HOST")}/32', get_sg_id('infra/report-server')),
                     ('infra/abathur-control', '10.150.0.231/32', get_sg_id('infra/abathur-control'));
         
                 INSERT INTO

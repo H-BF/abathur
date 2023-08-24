@@ -1,25 +1,14 @@
-import { REPORTER_HOST, REPORTER_PORT, REPORTER_PROTOCOL } from "../../../config";
-import { MissEnvVariable } from "../../errors";
 import { RestClient } from "../axios/rest-client";
+import { variables } from "../var_storage/variables-storage";
 import { IAssertionCreateReq, IAssertionsCreateRes } from "./interfaces/assertion-create.interface";
 
 export class ReporterClient extends RestClient {
 
-    constructor() {
-
-        if (!process.env.REPORTER_HOST)
-            throw new MissEnvVariable('REPORTER_HOST')
-
-        if (!process.env.REPORTER_PORT)
-            throw new MissEnvVariable('REPORTER_PORT')
-
-        if (!process.env.REPORTER_PROTOCOL)
-            throw new MissEnvVariable('REPORTER_PROTOCOL')
-        
+    constructor() {        
         super(
-            process.env.REPORTER_HOST,
-            process.env.REPORTER_PORT,
-            process.env.REPORTER_PROTOCOL,
+            variables.get("REPORTER_HOST"),
+            variables.get("REPORTER_PORT"),
+            variables.get("REPORTER_PROTOCOL"),
         )
         this.defaults.baseURL += '/v1'
     }

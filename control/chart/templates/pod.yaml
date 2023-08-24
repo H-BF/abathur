@@ -1,0 +1,53 @@
+apiVersion: v1
+kind: Pod
+metadata:
+    name: {{ .Release.Name }}-abathur-control
+    namespace: {{ .Release.Namespace }}
+    labels:
+        component: control
+        instance: p{{ .Values.gitlab.pipeline }}
+    annotations:
+        cni.projectcalico.org/ipAddrs: "[\"10.150.0.231\"]"
+spec:
+  {{- with .Values.abathurControl }}
+  containers:
+    - name: abathur-control
+      image: {{ .image.repository }}:{{ .image.tag }}
+      imagePullPolicy: {{ .image.imagePullPolicy }}
+      {{- with .securityContext | default $.Values.defaults.securityContext }}
+      securityContext:
+          {{- toYaml . | nindent 8 }}
+      {{- end }}
+      ports:
+      - containerPort: {{ .ports.addressPort }}
+        name: {{ .ports.addressPortAlias }}
+  {{- end }}
+      env:
+      - name: HBF_SERVER_REPOSITORY
+        value: {{ .Values.hbfServer.image.repository }}
+      - name: HBF_SERVER_TAG
+        value: {{ .Values.hbfServer.image.tag }}
+      - name: HBF_CLIENT_REPOSITORY
+        value: {{ .Values.hbfClient.image.repository }}
+      - name: HBF_CLIENT_TAG
+        value: {{ .Values.hbfClient.image.tag }}
+      - name: ABA_CLIENT_REPOSITORY
+        value: {{ .Values.abathurClient.image.repository }}
+      - name: ABA_CLIENT_TAG
+        value: {{ .Values.abathurClient.image.tag }}
+      - name: ABA_SERVER_REPOSITORY
+        value: {{ .Values.abathurServer.image.repository }}
+      - name: ABA_SERVER_TAG
+        value: {{ .Values.abathurServer.image.tag }}
+      - name: PIPELINE_ID
+        value: "{{ .Values.gitlab.pipeline | toString }}"
+      - name: JOB_ID
+        value: "{{ .Values.gitlab.job | default (include "control.random" .) | toString }}"
+      - name: REPORTER_PROTOCOL
+        value: {{ .Values.hbfReporter.protocol }}
+      - name: REPORTER_HOST
+        value: {{ .Values.hbfReporter.host }}
+      - name: REPORTER_PORT
+        value: "{{ .Values.hbfReporter.port | toString }}"
+  serviceAccountName: {{ .Release.Name }}-abathur
+  restartPolicy: {{ .Values.abathurControl.restartPolicy }}
