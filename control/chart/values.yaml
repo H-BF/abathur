@@ -1,0 +1,44 @@
+abathurControl:
+  image:
+    imagePullPolicy: Never
+    repository: abathur_control
+    tag: latest
+  ports:
+    addressPort: 80
+    addressPortAlias: aba-port
+  securityContext:
+    privileged: true
+  restartPolicy: Never
+
+abathurClient:
+  image:
+    repository: harbor.wildberries.ru/swarm/swarm/testops/abathur/aba-client
+    tag: feature-deploy-b2b4294b
+
+abathurServer:
+  image:
+    repository: harbor.wildberries.ru/swarm/swarm/testops/abathur/aba-server
+    tag: feature-deploy-b2b4294b
+
+hbfServer:
+  image:
+    repository: harbor.wildberries.ru/swarm/swarm/swarm/sgroups/sgroups
+    tag: feature-postgres-5ce3cf72
+
+hbfClient:
+  image:
+    repository: harbor.wildberries.ru/swarm/swarm/swarm/sgroups/to-nft
+    tag: feature-postgres-5ce3cf72
+
+hbfReporter:
+  protocol: http
+  host: 172.25.143.81
+  port: 9000
+
+gitlab:
+  random: 6
+  pipeline: 13521
+  # job: ""
+
+defaults:
+  securityContext: {}

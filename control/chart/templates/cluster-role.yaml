@@ -1,0 +1,14 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: {{ .Release.Name }}-fabric8-rbac
+  labels:
+    instance: p{{ .Values.gitlab.pipeline }}
+subjects:
+  - kind: ServiceAccount
+    name: {{ .Release.Name }}-abathur
+    namespace: {{ .Release.Namespace }}
+roleRef:
+  kind: ClusterRole
+  name: cluster-admin
+  apiGroup: rbac.authorization.k8s.io

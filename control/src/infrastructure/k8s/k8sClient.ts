@@ -1,10 +1,11 @@
-import { KubeConfig, CoreV1Api, V1Pod, V1Service, V1ConfigMap, V1ObjectMeta, makeInformer, ListPromise, KubernetesObject, Informer, ObjectCache, V1PodList, V1PodStatus, V1ServiceList, V1ConfigMapList  } from '@kubernetes/client-node';
+import { KubeConfig, CoreV1Api, V1Pod, V1Service, V1ConfigMap, V1ObjectMeta, makeInformer, ListPromise, KubernetesObject, Informer, ObjectCache, V1PodList, V1PodStatus, V1ServiceList, V1ConfigMapList, RbacAuthorizationV1Api  } from '@kubernetes/client-node';
 import http from 'http'
 
 export class K8sClient {
 
     private config: KubeConfig
     private coreAPI: CoreV1Api
+    private rbacAPI: RbacAuthorizationV1Api
     private namespace: string
 
     constructor(namespace: string) {
@@ -12,6 +13,7 @@ export class K8sClient {
         this.config = new KubeConfig()
         this.config.loadFromDefault()
         this.coreAPI = this.config.makeApiClient(CoreV1Api);
+        this.rbacAPI  = this.config.makeApiClient(RbacAuthorizationV1Api)
     }
 
     getName(metadata: V1ObjectMeta | undefined): string {
@@ -194,6 +196,50 @@ export class K8sClient {
             )
             console.log(`Response code: ${response.statusCode}`)
         } catch (err) {
+            console.log(err)
+            throw new Error(`${err}`)
+        }
+    }
+
+        //////////////////////////////
+        //Работа с сервис аккаунтами//
+        /////////////////////////////
+    async deleteServiceAccountByLabel(labelSelector: string) {
+        try {
+            console.log(`Удаляем все ServiceAccaunt c label: ${labelSelector}`)
+            const { response } = await this.coreAPI.deleteCollectionNamespacedServiceAccount(
+                this.namespace,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                labelSelector
+            )
+            console.log(`Response code: ${response.statusCode}`)
+        } catch(err) {
+            console.log(err)
+            throw new Error(`${err}`)
+        }
+    }
+
+
+        ////////////////////
+        //Работа с ролями//
+        ///////////////////
+    async deleteClusterRoleBindingByLabel(labelSelector: string) {
+        try {
+            console.log(`Удаляем все ClusterRoleBinding c label: ${labelSelector}`)
+               const { response } = await this.rbacAPI.deleteCollectionClusterRoleBinding(
+                this.namespace,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                labelSelector
+            )
+            console.log(`Response code: ${response.statusCode}`)
+        } catch(err) {
             console.log(err)
             throw new Error(`${err}`)
         }

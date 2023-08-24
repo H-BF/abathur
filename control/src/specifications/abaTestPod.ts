@@ -1,12 +1,13 @@
 import { V1ConfigMap } from "@kubernetes/client-node";
 import parse from 'json-templates';
+import { variables } from "../infrastructure/var_storage/variables-storage";
 
 const specPod = parse({
     metadata: {
-        name: `p${process.env.PIPELINE_ID}-{{podName}}`,
+        name: `p${variables.get("PIPELINE_ID")}-{{podName}}`,
         labels: {
             component: "{{component}}",
-            instance: `p${process.env.PIPELINE_ID}`
+            instance: `p${variables.get("PIPELINE_ID")}`
         },
         annotations: {
             "cni.projectcalico.org/ipAddrs": "[\"{{ip}}\"]"
@@ -28,7 +29,7 @@ const specPod = parse({
         initContainers: [
             {
                 name: "hbf-client",
-                image: `harbor.wildberries.ru/swarm/swarm/swarm/sgroups/to-nft:${process.env.HBF_VERSION}`,
+                image: `${variables.get("HBF_CLIENT_REPOSITORY")}:${variables.get("HBF_CLIENT_TAG")}`,
                 securityContext: {
                     privileged: true,
                     allowPrivilegeEscalation: true,
@@ -44,7 +45,7 @@ const specPod = parse({
         containers: [
             {
                 name: "server",
-                image: `harbor.wildberries.ru/swarm/swarm/testops/abathur/aba-server:${process.env.ABATHUR_VERSION}`,
+                image: `${variables.get("ABA_SERVER_REPOSITORY")}:${variables.get("ABA_SERVER_TAG")}`,
                 volumeMounts: [{
                     name: "test-ports",
                     mountPath: "/usr/src/server/ports"
@@ -53,7 +54,7 @@ const specPod = parse({
             },
             {
                 name: "client",
-                image: `harbor.wildberries.ru/swarm/swarm/testops/abathur/aba-client:${process.env.ABATHUR_VERSION}`,
+                image: `${variables.get("ABA_CLIENT_REPOSITORY")}:${variables.get("ABA_CLIENT_TAG")}`,
                 volumeMounts: [{
                     name: "test-data",
                     mountPath: "/usr/src/client/testData"
@@ -61,13 +62,13 @@ const specPod = parse({
                 imagePullPolicy: "Never",
                 env: [{
                     name: "REPORTER_PROTOCOL",
-                    value: process.env.REPORTER_PROTOCOL
+                    value: variables.get("REPORTER_PROTOCOL")
                 },{
                     name: "REPORTER_HOST",
-                    value: process.env.REPORTER_HOST    
+                    value: variables.get("REPORTER_HOST")
                 },{
                     name: "REPORTER_PORT",
-                    value: process.env.REPORTER_PORT                   
+                    value: variables.get("REPORTER_PORT")
                 }]
             }
         ],
@@ -76,19 +77,19 @@ const specPod = parse({
             {
                 name: "hbf-client",
                 configMap: {
-                    name: `p${process.env.PIPELINE_ID}-hbf-client`
+                    name: `p${variables.get("PIPELINE_ID")}-hbf-client`
                 }
             },
             {
                 name: "test-data",
                 configMap: {
-                    name: `p${process.env.PIPELINE_ID}-{{testData}}`
+                    name: `p${variables.get("PIPELINE_ID")}-{{testData}}`
                 }
             },
             {
                 name: "test-ports",
                 configMap: {
-                    name: `p${process.env.PIPELINE_ID}-{{ports}}`
+                    name: `p${variables.get("PIPELINE_ID")}-{{ports}}`
                 }
             }
         ]
@@ -97,10 +98,10 @@ const specPod = parse({
 
 const specConfMapHbfClient: V1ConfigMap = {
     metadata: {
-        name: `p${process.env.PIPELINE_ID}-hbf-client`,
+        name: `p${variables.get("PIPELINE_ID")}-hbf-client`,
         labels: {
             component: "hbf-client",
-            instance: `p${process.env.PIPELINE_ID}`
+            instance: `p${variables.get("PIPELINE_ID")}`
         }
     },
     data: {
@@ -116,7 +117,7 @@ const specConfMapHbfClient: V1ConfigMap = {
                     def-daial-duration: 10s
                     sgroups:
                         dial-duration: 3s
-                        address: p${process.env.PIPELINE_ID}-hbf-server:80
+                        address: p${variables.get("PIPELINE_ID")}-hbf-server:80
                         check-sync-status: 5s
             `
     }
@@ -124,10 +125,10 @@ const specConfMapHbfClient: V1ConfigMap = {
 
 const testData = parse({
     metadata: {
-        name: `p${process.env.PIPELINE_ID}-{{name}}`,
+        name: `p${variables.get("PIPELINE_ID")}-{{name}}`,
         labels: {
             component: "{{component}}",
-            instance: `p${process.env.PIPELINE_ID}`
+            instance: `p${variables.get("PIPELINE_ID")}`
         }
     },
     data: {
@@ -137,10 +138,10 @@ const testData = parse({
 
 const ports = parse({
     metadata: {
-        name: `p${process.env.PIPELINE_ID}-{{name}}`,
+        name: `p${variables.get("PIPELINE_ID")}-{{name}}`,
         labels: {
             component: "{{component}}",
-            instance: `p${process.env.PIPELINE_ID}`            
+            instance: `p${variables.get("PIPELINE_ID")}`            
         }
     },
     data: {
