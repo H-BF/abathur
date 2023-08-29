@@ -1,11 +1,12 @@
 import { V1Pod } from "@kubernetes/client-node"
 import { BaseInformer } from "./baseInformer";
 import { PodStatus } from "./enums";
+import { variables } from "../../infrastructure/var_storage/variables-storage";
 
 export class PodInformer extends BaseInformer {
 
-    constructor(namespace: string = 'default') {
-        super(namespace)
+    constructor() {
+        super(variables.get("NAMESPACE"))
     }
 
     async create(): Promise<void> {
@@ -51,3 +52,5 @@ export class PodInformer extends BaseInformer {
         })
     }
 }
+
+export const podInf = new PodInformer()

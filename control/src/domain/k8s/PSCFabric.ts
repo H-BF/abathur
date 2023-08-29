@@ -8,8 +8,8 @@ export class PSCFabric {
  
     private k8sClient: K8sClient;
 
-    constructor(namespace: string = 'default') {
-        this.k8sClient = new K8sClient(namespace)
+    constructor() {
+        this.k8sClient = new K8sClient(variables.get("NAMESPACE"))
     }
 
     /**
@@ -85,3 +85,5 @@ export class PSCFabric {
         await this.k8sClient.deleteAllDeploymentByLabel(`instance=p${variables.get("PIPELINE_ID")}`)
     }
 }
+
+export const manager = new PSCFabric()
