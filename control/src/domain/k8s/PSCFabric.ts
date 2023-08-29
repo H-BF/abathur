@@ -73,7 +73,7 @@ export class PSCFabric {
     }
 
     /**
-     * Удаляем все Поды, Сервисы и Конфиг мапы по лейблу instance
+     * Удаляем все Поды, Сервисы, Деплойменты, Сервис аккаунты, роли и Конфиг мапы по лейблу instance
      * Данный лейбл заполняется номером запустившего тесты пайплайны из env
      */
     async destroyAllByInstance() {
@@ -82,5 +82,6 @@ export class PSCFabric {
         await this.k8sClient.deleteAllConfMapBylabel(`instance=p${variables.get("PIPELINE_ID")}`)
         await this.k8sClient.deleteServiceAccountByLabel(`instance=p${variables.get("PIPELINE_ID")}`)
         await this.k8sClient.deleteClusterRoleBindingByLabel(`instance=p${variables.get("PIPELINE_ID")}`)
+        await this.k8sClient.deleteAllDeploymentByLabel(`instance=p${variables.get("PIPELINE_ID")}`)
     }
 }
