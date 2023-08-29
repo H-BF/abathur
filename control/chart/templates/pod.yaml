@@ -49,5 +49,7 @@ spec:
         value: {{ .Values.hbfReporter.host }}
       - name: REPORTER_PORT
         value: "{{ .Values.hbfReporter.port | toString }}"
+      - name: NAMESPACE
+        value: {{ .Release.Namespace }}
   serviceAccountName: {{ .Release.Name }}-abathur
   restartPolicy: {{ .Values.abathurControl.restartPolicy }}

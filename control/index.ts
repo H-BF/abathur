@@ -1,4 +1,3 @@
-import { MissEnvVariable } from "./src/domain/errors";
 import { ControlServer } from "./src/domain/grpc/control";
 import { HBFDataCollector } from "./src/domain/hbf";
 import { waitSetSize } from "./src/domain/helpers";
@@ -16,8 +15,8 @@ import { variables } from "./src/infrastructure/var_storage/variables-storage";
 
     try {
         const startTime = Date.now()
-        const manager = new PSCFabric()
-        const podInf = new PodInformer()
+        const manager = new PSCFabric(variables.get("NAMESPACE"))
+        const podInf = new PodInformer(variables.get("NAMESPACE"))
         podInf.create()
         podInf.start()
     

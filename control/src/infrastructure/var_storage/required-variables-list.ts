@@ -14,5 +14,7 @@ export const requiredVariablesList = [
 
     "REPORTER_PROTOCOL",
     "REPORTER_HOST",
-    "REPORTER_PORT"
+    "REPORTER_PORT",
+
+    "NAMESPACE"
 ]
