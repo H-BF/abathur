@@ -17,6 +17,7 @@ export class HBFDataCollector {
     }
 
     async collect(): Promise<void> {
+        console.log(`Получаем данные из БД hbf-server`)
         this.sg = (await this.HBFClient.getSecurityGroups()).groups
 
         this.networks = (await this.HBFClient.getNetworks({
@@ -32,6 +33,7 @@ export class HBFDataCollector {
     }
 
     getTestData(): IHBFTestData {
+        console.log('выделяем тестовые данные из полученных от hbf-server')
         const results: IHBFTestData = {}
 
         if (!this.rules) throw new Error("Rules is undefined")
@@ -60,6 +62,7 @@ export class HBFDataCollector {
     }
 
     gePortsForServer(): IPortForServer {
+        console.log('Получаем список портов, какие надо открыть на соответствующих подах')
         const result: IPortForServer = {} 
 
         if (!this.rules) throw new Error("Rules is undefined")

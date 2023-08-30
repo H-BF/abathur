@@ -10,6 +10,7 @@ export class PodInformer extends BaseInformer {
     }
 
     async create(): Promise<void> {
+        console.log('Создаем информер отслеживающий поды')
         const informer = this.k8sClient.createInformer('/api/v1/namespaces/{namespace}/pods', async () => {
             return await this.k8sClient.getPodList()
         })

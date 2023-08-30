@@ -15,6 +15,7 @@ export class ControlServer {
 
 
     constructor(launchUuid: string, testPodNumbers: number) {
+        console.log("Создаем gRPC control server")
         this.launchUuid = launchUuid
         this.testPodNumbers =testPodNumbers
         this.controlServer = new grpc.Server()
