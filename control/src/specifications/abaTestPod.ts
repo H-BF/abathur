@@ -4,10 +4,10 @@ import { variables } from "../infrastructure/var_storage/variables-storage";
 
 const specPod = parse({
     metadata: {
-        name: `p${variables.get("PIPELINE_ID")}-{{podName}}`,
+        name: `{{prefix}}-p${variables.get("PIPELINE_ID")}-{{podName}}`,
         labels: {
             component: "{{component}}",
-            instance: `p${variables.get("PIPELINE_ID")}`
+            instance: `{{prefix}}-p${variables.get("PIPELINE_ID")}`
         },
         annotations: {
             "cni.projectcalico.org/ipAddrs": "[\"{{ip}}\"]"
@@ -75,33 +75,33 @@ const specPod = parse({
         restartPolicy: "Never",
         volumes: [
             {
-                name: "hbf-client",
+                name: "{{prefix}}-hbf-client",
                 configMap: {
-                    name: `p${variables.get("PIPELINE_ID")}-hbf-client`
+                    name: `{{prefix}}-p${variables.get("PIPELINE_ID")}-hbf-client`
                 }
             },
             {
-                name: "test-data",
+                name: "{{prefix}}-test-data",
                 configMap: {
-                    name: `p${variables.get("PIPELINE_ID")}-{{testData}}`
+                    name: `{{prefix}}-p${variables.get("PIPELINE_ID")}-{{testData}}`
                 }
             },
             {
                 name: "test-ports",
                 configMap: {
-                    name: `p${variables.get("PIPELINE_ID")}-{{ports}}`
+                    name: `{{prefix}}-p${variables.get("PIPELINE_ID")}-{{ports}}`
                 }
             }
         ]
     }
 })
 
-const specConfMapHbfClient: V1ConfigMap = {
+const specConfMapHbfClient = parse({
     metadata: {
-        name: `p${variables.get("PIPELINE_ID")}-hbf-client`,
+        name: `{{prefix}}-p${variables.get("PIPELINE_ID")}-hbf-client`,
         labels: {
             component: "hbf-client",
-            instance: `p${variables.get("PIPELINE_ID")}`
+            instance: `{{prefix}}-p${variables.get("PIPELINE_ID")}`
         }
     },
     data: {
@@ -121,14 +121,14 @@ const specConfMapHbfClient: V1ConfigMap = {
                         check-sync-status: 5s
             `
     }
-}
+})
 
 const testData = parse({
     metadata: {
-        name: `p${variables.get("PIPELINE_ID")}-{{name}}`,
+        name: `{{prefix}}-p${variables.get("PIPELINE_ID")}-{{name}}`,
         labels: {
             component: "{{component}}",
-            instance: `p${variables.get("PIPELINE_ID")}`
+            instance: `{{prefix}}-p${variables.get("PIPELINE_ID")}`
         }
     },
     data: {
@@ -138,10 +138,10 @@ const testData = parse({
 
 const ports = parse({
     metadata: {
-        name: `p${variables.get("PIPELINE_ID")}-{{name}}`,
+        name: `{{prefix}}-p${variables.get("PIPELINE_ID")}-{{name}}`,
         labels: {
             component: "{{component}}",
-            instance: `p${variables.get("PIPELINE_ID")}`            
+            instance: `{{prefix}}-p${variables.get("PIPELINE_ID")}`            
         }
     },
     data: {

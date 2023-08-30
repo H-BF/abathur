@@ -1,18 +1,14 @@
+import { V1ConfigMap } from "@kubernetes/client-node"
 import { abaTestPod } from "../../src/specifications/abaTestPod"
 import { hbfServer } from "../../src/specifications/hbfServer"
 
 const prefix = 'func'
 
-export const scenario = {
-    functional: {
-        configMaps: [ 
-            //common
-            hbfServer.hbfConfMap,
-            hbfServer.pgConfMap,
-            abaTestPod.specConfMapHbfClient
-        ],
-        hbfServer: {
-            prefix: prefix
-        }
-    }
+export const functional = {
+    prefix: prefix,
+    sharedConfigMaps: [ 
+        hbfServer.hbfConfMap({prefix: prefix}) as V1ConfigMap,
+        hbfServer.pgConfMap({prefix: prefix}) as V1ConfigMap,
+        abaTestPod.specConfMapHbfClient({prefix: prefix}) as V1ConfigMap
+    ]
 }

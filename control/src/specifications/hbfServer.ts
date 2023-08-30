@@ -1,12 +1,12 @@
-import { V1Service, V1ConfigMap } from "@kubernetes/client-node";
 import { variables } from "../infrastructure/var_storage/variables-storage";
+import parse from "json-templates";
 
-const specPod = {
+const specPod = parse({
     metadata: {
-        name: `p${variables.get("PIPELINE_ID")}-hbf-server`,
+        name: `{{prefix}}-p${variables.get("PIPELINE_ID")}-hbf-server`,
         labels: {
             component: "hbf-server",
-            instance: `p${variables.get("PIPELINE_ID")}`
+            instance: `{{prefix}}-p${variables.get("PIPELINE_ID")}`
         }
     },
     spec: {
@@ -15,7 +15,7 @@ const specPod = {
                 name: "hbf-server",
                 image: `${variables.get("HBF_SERVER_REPOSITORY")}:${variables.get("HBF_SERVER_TAG")}`,
                 volumeMounts: [{
-                        name: "hbf-server",
+                        name: "{{prefix}}-hbf-server",
                         mountPath: "/app/hack/configs"
                 }],
                 command: ["./bin/sgroups", "-config", "/app/hack/configs/server.yaml"],
@@ -36,7 +36,7 @@ const specPod = {
                 name: "pgsql",
                 image: "postgres:14.8",
                 volumeMounts: [{
-                    name: "pg-init",
+                    name: "{{prefix}}-pg-init",
                     mountPath: "/docker-entrypoint-initdb.d"
                 }],
                 ports: [{
@@ -58,32 +58,32 @@ const specPod = {
             }
         ],
         volumes: [{
-            name: "hbf-server",
+            name: "{{prefix}}-hbf-server",
             configMap: {
-                name: `p${variables.get("PIPELINE_ID")}-hbf-server`
+                name: `{{prefix}}-p${variables.get("PIPELINE_ID")}-hbf-server`
             }
         },
         {
-            name: `pg-init`,
+            name: `{{prefix}}-pg-init`,
             configMap: {
-                name: `p${variables.get("PIPELINE_ID")}-pg-init`
+                name: `{{prefix}}-p${variables.get("PIPELINE_ID")}-pg-init`
             }
         }]
     }
-}
+})
 
-const specSrv: V1Service = {
+const specSrv = parse({
     metadata: {
-        name: `p${variables.get("PIPELINE_ID")}-hbf-server`,
+        name: `{{prefix}}-p${variables.get("PIPELINE_ID")}-hbf-server`,
         labels: {
             name: "hbf-server",
-            instance: `p${variables.get("PIPELINE_ID")}`
+            instance: `{{prefix}}-p${variables.get("PIPELINE_ID")}`
         }
     },
     spec: {
         selector: {
             component: "hbf-server",
-            instance: `p${variables.get("PIPELINE_ID")}`
+            instance: `{{prefix}}-p${variables.get("PIPELINE_ID")}`
         },
         ports: [{
             name: "hbf",
@@ -97,14 +97,14 @@ const specSrv: V1Service = {
         }],
         type: "LoadBalancer"
     }
-}
+})
 
-const hbfConfMap: V1ConfigMap = {
+const hbfConfMap = parse({
     metadata: {
-        name: `p${variables.get("PIPELINE_ID")}-hbf-server`,
+        name: `{{prefix}}-p${variables.get("PIPELINE_ID")}-hbf-server`,
         labels: {
             name: "hbf-server",
-            instance: `p${variables.get("PIPELINE_ID")}`
+            instance: `{{prefix}}-p${variables.get("PIPELINE_ID")}`
         }
     },
     data: {
@@ -124,14 +124,14 @@ const hbfConfMap: V1ConfigMap = {
                 graceful-shutdown: 30s
             `
     }
-}
+})
 
-const pgConfMap: V1ConfigMap = {
+const pgConfMap = parse({
     metadata: {
-        name: `p${variables.get("PIPELINE_ID")}-pg-init`,
+        name: `{{prefix}}-p${variables.get("PIPELINE_ID")}-pg-init`,
         labels: {
             name: "pqsql",
-            instance: `p${variables.get("PIPELINE_ID")}`
+            instance: `{{prefix}}-p${variables.get("PIPELINE_ID")}`
         }
     },
     data: {
@@ -876,6 +876,6 @@ const pgConfMap: V1ConfigMap = {
         END $$;
         `
     }
-}
+})
 
 export const hbfServer = { specPod, specSrv, hbfConfMap, pgConfMap }

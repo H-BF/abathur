@@ -1,3 +1,4 @@
+import { functional } from "./config/scenarios/functional";
 import { ControlServer } from "./src/domain/grpc/control";
 import { HBFDataCollector } from "./src/domain/hbf";
 import { waitSetSize } from "./src/domain/helpers";
@@ -19,10 +20,10 @@ import { variables } from "./src/infrastructure/var_storage/variables-storage";
         await podInf.create()
         podInf.start()
     
-        await manager.createSharedConfigMaps()
-        await manager.createHBFServer()
+        await manager.createSharedConfigMaps(functional.sharedConfigMaps)
+        await manager.createHBFServer(functional.prefix)
     
-        await podInf.waitStatus(`p${variables.get("PIPELINE_ID")}-hbf-server`, PodStatus.RUNNING)
+        await podInf.waitStatus(`${functional.prefix}-p${variables.get("PIPELINE_ID")}-hbf-server`, PodStatus.RUNNING)
         await delay(10000)
     
         const hbf = new HBFDataCollector()
@@ -36,6 +37,7 @@ import { variables } from "./src/infrastructure/var_storage/variables-storage";
     
         for (let i = 0; i < keys.length; i++) {
             await manager.createTestPod(
+                functional.prefix,
                 i,
                 keys[i],
                 JSON.stringify(hbfTestData[keys[i]]),
@@ -48,7 +50,7 @@ import { variables } from "./src/infrastructure/var_storage/variables-storage";
 
         await waitSetSize(control.getStreamList(), 0, 3_600_000, 1_000)
 
-        await manager.destroyAllByInstance()
+        await manager.destroyAllByInstance(functional.prefix)
 
         await reporter.closeLaunch(control.failCount, control.passCount, Date.now() - startTime)
     } catch (err) {
