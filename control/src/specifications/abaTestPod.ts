@@ -39,7 +39,17 @@ const specPod = parse({
                     name: "hbf-client",
                     mountPath: "/app/hack/configs"
                 }],
-                command: [ "./bin/to-nft", "-config", "/app/hack/configs/to-nft.yaml" ]
+                command: [ "./bin/to-nft", "-config", "/app/hack/configs/to-nft.yaml" ],
+                resourse: {
+                    limits: {
+                        cpu: "200m",
+                        memory: "100mi"
+                    },
+                    requests: {
+                        cpu: "200m",
+                        memory: "100mi"
+                    }
+                }
             }
         ],
         containers: [
@@ -51,6 +61,16 @@ const specPod = parse({
                     mountPath: "/usr/src/server/ports"
                 }],
                 imagePullPolicy: "Never",
+                resourse: {
+                    limits: {
+                        cpu: "200m",
+                        memory: "100mi"
+                    },
+                    requests: {
+                        cpu: "200m",
+                        memory: "100mi"
+                    }
+                }
             },
             {
                 name: "client",
@@ -69,7 +89,17 @@ const specPod = parse({
                 },{
                     name: "REPORTER_PORT",
                     value: variables.get("REPORTER_PORT")
-                }]
+                }],
+                resourse: {
+                    limits: {
+                        cpu: "200m",
+                        memory: "100mi"
+                    },
+                    requests: {
+                        cpu: "200m",
+                        memory: "100mi"
+                    }
+                }
             }
         ],
         restartPolicy: "Never",

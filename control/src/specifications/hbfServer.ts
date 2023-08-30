@@ -30,7 +30,17 @@ const specPod = {
                 {
                     name: "SG_STORAGE_TYPE",
                     value: "postgres"
-                }]
+                }],
+                resourse: {
+                    limits: {
+                        cpu: "200m",
+                        memory: "100mi"
+                    },
+                    requests: {
+                        cpu: "200m",
+                        memory: "100mi"
+                    }
+                }
             },
             {
                 name: "pgsql",
@@ -54,7 +64,17 @@ const specPod = {
                 {
                     name: "POSTGRES_DB",
                     value: "postgres"
-                }]
+                }],
+                resourse: {
+                    limits: {
+                        cpu: "200m",
+                        memory: "100mi"
+                    },
+                    requests: {
+                        cpu: "200m",
+                        memory: "100mi"
+                    }
+                }
             }
         ],
         volumes: [{
