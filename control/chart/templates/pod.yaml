@@ -5,7 +5,7 @@ metadata:
     namespace: {{ .Release.Namespace }}
     labels:
         component: control
-        instance: p{{ .Values.gitlab.pipeline }}
+        instance: p{{ .Values.gitlab.pipeline }}-abathur-control
     annotations:
         cni.projectcalico.org/ipAddrs: "[\"29.64.0.231\"]"
 spec:

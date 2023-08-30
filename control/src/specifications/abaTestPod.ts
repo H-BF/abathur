@@ -1,13 +1,12 @@
-import { V1ConfigMap } from "@kubernetes/client-node";
 import parse from 'json-templates';
 import { variables } from "../infrastructure/var_storage/variables-storage";
 
 const specPod = parse({
     metadata: {
-        name: `p${variables.get("PIPELINE_ID")}-{{podName}}`,
+        name: `{{prefix}}-p${variables.get("PIPELINE_ID")}-{{podName}}`,
         labels: {
             component: "{{component}}",
-            instance: `p${variables.get("PIPELINE_ID")}`
+            instance: `{{prefix}}-p${variables.get("PIPELINE_ID")}`
         },
         annotations: {
             "cni.projectcalico.org/ipAddrs": "[\"{{ip}}\"]"
@@ -36,9 +35,22 @@ const specPod = parse({
                     runAsUser: 0
                 },
                 volumeMounts: [{
-                    name: "hbf-client",
+                    name: "{{prefix}}-hbf-client",
                     mountPath: "/app/hack/configs"
                 }],
+<<<<<<< control/src/specifications/abaTestPod.ts
+                resources: {
+                    limits: {
+                        cpu: "200m",
+                        memory: "100Mi"
+                    },
+                    requests: {
+                        cpu: "200m",
+                        memory: "100Mi"
+                    }
+                },
+                command: [ "./bin/to-nft", "-config", "/app/hack/configs/to-nft.yaml" ]
+=======
                 command: [ "./bin/to-nft", "-config", "/app/hack/configs/to-nft.yaml" ],
                 resourse: {
                     limits: {
@@ -50,6 +62,7 @@ const specPod = parse({
                         memory: "100mi"
                     }
                 }
+>>>>>>> control/src/specifications/abaTestPod.ts
             }
         ],
         containers: [
@@ -57,10 +70,20 @@ const specPod = parse({
                 name: "server",
                 image: `${variables.get("ABA_SERVER_REPOSITORY")}:${variables.get("ABA_SERVER_TAG")}`,
                 volumeMounts: [{
-                    name: "test-ports",
+                    name: "{{prefix}}-test-ports",
                     mountPath: "/usr/src/server/ports"
                 }],
                 imagePullPolicy: "Never",
+<<<<<<< control/src/specifications/abaTestPod.ts
+                resources: {
+                    limits: {
+                        cpu: "200m",
+                        memory: "500Mi"
+                    },
+                    requests: {
+                        cpu: "200m",
+                        memory: "500Mi"
+=======
                 resourse: {
                     limits: {
                         cpu: "200m",
@@ -69,6 +92,7 @@ const specPod = parse({
                     requests: {
                         cpu: "200m",
                         memory: "100mi"
+>>>>>>> control/src/specifications/abaTestPod.ts
                     }
                 }
             },
@@ -76,7 +100,7 @@ const specPod = parse({
                 name: "client",
                 image: `${variables.get("ABA_CLIENT_REPOSITORY")}:${variables.get("ABA_CLIENT_TAG")}`,
                 volumeMounts: [{
-                    name: "test-data",
+                    name: "{{prefix}}-test-data",
                     mountPath: "/usr/src/client/testData"
                 }],
                 imagePullPolicy: "Never",
@@ -90,6 +114,16 @@ const specPod = parse({
                     name: "REPORTER_PORT",
                     value: variables.get("REPORTER_PORT")
                 }],
+<<<<<<< control/src/specifications/abaTestPod.ts
+                resources: {
+                    limits: {
+                        cpu: "200m",
+                        memory: "500Mi"
+                    },
+                    requests: {
+                        cpu: "200m",
+                        memory: "500Mi"
+=======
                 resourse: {
                     limits: {
                         cpu: "200m",
@@ -98,6 +132,7 @@ const specPod = parse({
                     requests: {
                         cpu: "200m",
                         memory: "100mi"
+>>>>>>> control/src/specifications/abaTestPod.ts
                     }
                 }
             }
@@ -105,33 +140,33 @@ const specPod = parse({
         restartPolicy: "Never",
         volumes: [
             {
-                name: "hbf-client",
+                name: "{{prefix}}-hbf-client",
                 configMap: {
-                    name: `p${variables.get("PIPELINE_ID")}-hbf-client`
+                    name: `{{prefix}}-p${variables.get("PIPELINE_ID")}-hbf-client`
                 }
             },
             {
-                name: "test-data",
+                name: "{{prefix}}-test-data",
                 configMap: {
-                    name: `p${variables.get("PIPELINE_ID")}-{{testData}}`
+                    name: `{{prefix}}-p${variables.get("PIPELINE_ID")}-{{testData}}`
                 }
             },
             {
-                name: "test-ports",
+                name: "{{prefix}}-test-ports",
                 configMap: {
-                    name: `p${variables.get("PIPELINE_ID")}-{{ports}}`
+                    name: `{{prefix}}-p${variables.get("PIPELINE_ID")}-{{ports}}`
                 }
             }
         ]
     }
 })
 
-const specConfMapHbfClient: V1ConfigMap = {
+const specConfMapHbfClient = parse({
     metadata: {
-        name: `p${variables.get("PIPELINE_ID")}-hbf-client`,
+        name: `{{prefix}}-p${variables.get("PIPELINE_ID")}-hbf-client`,
         labels: {
             component: "hbf-client",
-            instance: `p${variables.get("PIPELINE_ID")}`
+            instance: `{{prefix}}-p${variables.get("PIPELINE_ID")}`
         }
     },
     data: {
@@ -147,18 +182,18 @@ const specConfMapHbfClient: V1ConfigMap = {
                     def-daial-duration: 10s
                     sgroups:
                         dial-duration: 3s
-                        address: p${variables.get("PIPELINE_ID")}-hbf-server:80
+                        address: {{prefix}}-p${variables.get("PIPELINE_ID")}-hbf-server:80
                         check-sync-status: 5s
             `
     }
-}
+})
 
 const testData = parse({
     metadata: {
-        name: `p${variables.get("PIPELINE_ID")}-{{name}}`,
+        name: `{{prefix}}-p${variables.get("PIPELINE_ID")}-{{name}}`,
         labels: {
             component: "{{component}}",
-            instance: `p${variables.get("PIPELINE_ID")}`
+            instance: `{{prefix}}-p${variables.get("PIPELINE_ID")}`
         }
     },
     data: {
@@ -168,10 +203,10 @@ const testData = parse({
 
 const ports = parse({
     metadata: {
-        name: `p${variables.get("PIPELINE_ID")}-{{name}}`,
+        name: `{{prefix}}-p${variables.get("PIPELINE_ID")}-{{name}}`,
         labels: {
             component: "{{component}}",
-            instance: `p${variables.get("PIPELINE_ID")}`            
+            instance: `{{prefix}}-p${variables.get("PIPELINE_ID")}`            
         }
     },
     data: {

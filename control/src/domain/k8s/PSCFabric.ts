@@ -1,4 +1,4 @@
-import { V1ConfigMap, V1Pod } from "@kubernetes/client-node";
+import { V1ConfigMap, V1Pod, V1Service } from "@kubernetes/client-node";
 import { K8sClient } from "../../infrastructure/k8s/k8sClient";
 import { abaTestPod } from "../../specifications/abaTestPod";
 import { hbfServer } from "../../specifications/hbfServer";
@@ -8,8 +8,8 @@ export class PSCFabric {
  
     private k8sClient: K8sClient;
 
-    constructor(namespace: string = 'default') {
-        this.k8sClient = new K8sClient(namespace)
+    constructor() {
+        this.k8sClient = new K8sClient(variables.get("NAMESPACE"))
     }
 
     /**
@@ -18,19 +18,19 @@ export class PSCFabric {
      * - конфиг HBF клиента
      * - конфиг Nginx
      */
-    async createSharedConfigMaps() {
-        await this.k8sClient.createConfigMap(hbfServer.hbfConfMap)
-        await this.k8sClient.createConfigMap(hbfServer.pgConfMap)
-        await this.k8sClient.createConfigMap(abaTestPod.specConfMapHbfClient)
+    async createSharedConfigMaps(maps: V1ConfigMap[]) {
+        for (const map of maps) {
+            await this.k8sClient.createConfigMap(map)
+        }
     }
 
     /**
      * Создаем под HBF сервера и сервис над ним.
      * Важно! Сначало надо вызвать метод createSharedConfigMaps()
      */
-    async createHBFServer() {
-        await this.k8sClient.createPod(hbfServer.specPod)
-        await this.k8sClient.createService(hbfServer.specSrv)
+    async createHBFServer(prefix: string) {
+        await this.k8sClient.createPod(hbfServer.specPod({prefix: prefix}) as V1Pod)
+        await this.k8sClient.createService(hbfServer.specSrv({prefix: prefix}) as V1Service)
     }
 
 
@@ -44,6 +44,7 @@ export class PSCFabric {
      * @param ports - список портов на которых нужно поднять сервер на данном поде
      */
     async createTestPod(
+        prefix: string,
         podNumber: number,
         ip: string, 
         testData: string,
@@ -51,6 +52,7 @@ export class PSCFabric {
     ) {
         //Создаем configMap с тестовыми данными
         await this.k8sClient.createConfigMap(abaTestPod.testData({
+            prefix: prefix,
             name: `test-data-${podNumber}`,
             component: `test-data-${podNumber}`,
             testData: testData
@@ -58,12 +60,14 @@ export class PSCFabric {
 
         //Создаем configMap с портами на открытие
         await this.k8sClient.createConfigMap(abaTestPod.ports({
+            prefix: prefix,
             name: `test-ports-${podNumber}`,
             component: `test-ports-${podNumber}`,
             ports: ports
         }) as V1ConfigMap)
 
         await this.k8sClient.createPod(abaTestPod.specPod({
+            prefix: prefix,
             podName: `test-pod-${podNumber}`,
             component: `test-pod-${podNumber}`,
             ip: ip,
@@ -76,12 +80,18 @@ export class PSCFabric {
      * Удаляем все Поды, Сервисы, Деплойменты, Сервис аккаунты, роли и Конфиг мапы по лейблу instance
      * Данный лейбл заполняется номером запустившего тесты пайплайны из env
      */
-    async destroyAllByInstance() {
-        await this.k8sClient.deleteAllsvcBylabel(`instance=p${variables.get("PIPELINE_ID")}`)
-        await this.k8sClient.deleteAllPodByLabel(`instance=p${variables.get("PIPELINE_ID")}`)
-        await this.k8sClient.deleteAllConfMapBylabel(`instance=p${variables.get("PIPELINE_ID")}`)
-        await this.k8sClient.deleteServiceAccountByLabel(`instance=p${variables.get("PIPELINE_ID")}`)
-        await this.k8sClient.deleteClusterRoleBindingByLabel(`instance=p${variables.get("PIPELINE_ID")}`)
-        await this.k8sClient.deleteAllDeploymentByLabel(`instance=p${variables.get("PIPELINE_ID")}`)
+    async destroyAllByInstance(prefix: string) {
+        await this.k8sClient.deleteAllsvcBylabel(`instance=${prefix}-p${variables.get("PIPELINE_ID")}`)
+        await this.k8sClient.deleteAllPodByLabel(`instance=${prefix}-p${variables.get("PIPELINE_ID")}`)
+        await this.k8sClient.deleteAllConfMapBylabel(`instance=${prefix}-p${variables.get("PIPELINE_ID")}`)
+        await this.k8sClient.deleteServiceAccountByLabel(`instance=${prefix}-p${variables.get("PIPELINE_ID")}`)
+        await this.k8sClient.deleteClusterRoleBindingByLabel(`instance=${prefix}-p${variables.get("PIPELINE_ID")}`)
+        await this.k8sClient.deleteAllDeploymentByLabel(`instance=${prefix}-p${variables.get("PIPELINE_ID")}`)
+    }
+
+    async destroyAbathur() {
+        await this.k8sClient.deleteAllPodByLabel(`instance=p${variables.get("PIPELINE_ID")}-abathur-control`)
     }
 }
+
+export const manager = new PSCFabric()
