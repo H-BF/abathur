@@ -7,6 +7,9 @@ const specPod = parse({
         labels: {
             component: "hbf-server",
             instance: `{{prefix}}-p${variables.get("PIPELINE_ID")}`
+        },
+        annotations: {
+            "cni.projectcalico.org/ipAddrs": "[\"{{ip}}\"]"
         }
     },
     spec: {

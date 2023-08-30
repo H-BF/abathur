@@ -28,8 +28,8 @@ export class PSCFabric {
      * Создаем под HBF сервера и сервис над ним.
      * Важно! Сначало надо вызвать метод createSharedConfigMaps()
      */
-    async createHBFServer(prefix: string) {
-        await this.k8sClient.createPod(hbfServer.specPod({prefix: prefix}) as V1Pod)
+    async createHBFServer(prefix: string, ip: string) {
+        await this.k8sClient.createPod(hbfServer.specPod({prefix: prefix, ip: ip}) as V1Pod)
         await this.k8sClient.createService(hbfServer.specSrv({prefix: prefix}) as V1Service)
     }
 

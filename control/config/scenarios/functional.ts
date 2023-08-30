@@ -10,5 +10,8 @@ export const functional = {
         hbfServer.hbfConfMap({prefix: prefix}) as V1ConfigMap,
         hbfServer.pgConfMap({prefix: prefix}) as V1ConfigMap,
         abaTestPod.specConfMapHbfClient({prefix: prefix}) as V1ConfigMap
-    ]
+    ],
+    hbfServer: {
+        ip: "29.64.0.232"
+    }
 }

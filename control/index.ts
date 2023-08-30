@@ -21,7 +21,7 @@ import { variables } from "./src/infrastructure/var_storage/variables-storage";
         podInf.start()
     
         await manager.createSharedConfigMaps(functional.sharedConfigMaps)
-        await manager.createHBFServer(functional.prefix)
+        await manager.createHBFServer(functional.prefix, functional.hbfServer.ip)
     
         await podInf.waitStatus(`${functional.prefix}-p${variables.get("PIPELINE_ID")}-hbf-server`, PodStatus.RUNNING)
         await delay(10000)
@@ -50,12 +50,11 @@ import { variables } from "./src/infrastructure/var_storage/variables-storage";
 
         await waitSetSize(control.getStreamList(), 0, 3_600_000, 1_000)
 
-        await manager.destroyAllByInstance(functional.prefix)
-
         await reporter.closeLaunch(control.failCount, control.passCount, Date.now() - startTime)
     } catch (err) {
         await reporter.closeLaunchWithError(`${err}`)
     } finally {
+        await manager.destroyAllByInstance(functional.prefix)
         await manager.destroyAbathur()
     }
 })();
