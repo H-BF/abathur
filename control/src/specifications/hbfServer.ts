@@ -31,6 +31,7 @@ const specPod = parse({
                     name: "SG_STORAGE_TYPE",
                     value: "postgres"
                 }],
+<<<<<<< control/src/specifications/hbfServer.ts
                 resources: {
                     limits: {
                         cpu: "200m",
@@ -39,6 +40,16 @@ const specPod = parse({
                     requests: {
                         cpu: "200m",
                         memory: "100Mi"
+=======
+                resourse: {
+                    limits: {
+                        cpu: "200m",
+                        memory: "100mi"
+                    },
+                    requests: {
+                        cpu: "200m",
+                        memory: "100mi"
+>>>>>>> control/src/specifications/hbfServer.ts
                     }
                 }
             },
@@ -65,6 +76,7 @@ const specPod = parse({
                     name: "POSTGRES_DB",
                     value: "postgres"
                 }],
+<<<<<<< control/src/specifications/hbfServer.ts
                 resources: {
                     limits: {
                         cpu: "200m",
@@ -73,6 +85,16 @@ const specPod = parse({
                     requests: {
                         cpu: "200m",
                         memory: "100Mi"
+=======
+                resourse: {
+                    limits: {
+                        cpu: "200m",
+                        memory: "100mi"
+                    },
+                    requests: {
+                        cpu: "200m",
+                        memory: "100mi"
+>>>>>>> control/src/specifications/hbfServer.ts
                     }
                 }
             }
