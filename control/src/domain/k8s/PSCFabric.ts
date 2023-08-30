@@ -19,6 +19,7 @@ export class PSCFabric {
      * - конфиг Nginx
      */
     async createSharedConfigMaps(maps: V1ConfigMap[]) {
+        console.log("Создаем общие configMaps")
         for (const map of maps) {
             await this.k8sClient.createConfigMap(map)
         }
@@ -29,7 +30,9 @@ export class PSCFabric {
      * Важно! Сначало надо вызвать метод createSharedConfigMaps()
      */
     async createHBFServer(prefix: string, ip: string) {
+        console.log(`Создаем pod hbf-server: {prefix: ${prefix}, ip: ${ip}}`)
         await this.k8sClient.createPod(hbfServer.specPod({prefix: prefix, ip: ip}) as V1Pod)
+        console.log(`Создаем service hbf-server`)
         await this.k8sClient.createService(hbfServer.specSrv({prefix: prefix}) as V1Service)
     }
 
@@ -50,6 +53,7 @@ export class PSCFabric {
         testData: string,
         ports: string
     ) {
+        console.log(`Готовимся к созданию тестового пода ${podNumber}: ${ip}`)
         //Создаем configMap с тестовыми данными
         await this.k8sClient.createConfigMap(abaTestPod.testData({
             prefix: prefix,

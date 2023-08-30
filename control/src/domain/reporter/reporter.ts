@@ -18,11 +18,14 @@ export class Reporter {
     }
 
     async createLaunch(pipeline: string, job: string): Promise<void> {
+        console.log(`Создаем новый лаунч: pipe - ${pipeline}, job - ${job}`)
         const launch: ICreateLaunchReq = { pipeline: parseInt(pipeline), job: parseInt(job) }
         this._launchUUID = await this.client.createLaunch(launch)
+        console.log(`Лаунч создан! ${this._launchUUID}`)
     }
 
     async setStauts(status: LaunchStatus) {
+        console.log(`Устонавливаем в БД статус для Launch ${this._launchUUID}: ${status}`)
         if (!this._launchUUID)
             throw new Error("Launch not create yet")
 
@@ -33,6 +36,7 @@ export class Reporter {
     }
 
     async closeLaunch(fail: number, pass: number, duration: number) {
+        console.log(`Закрываем лаунч ${this._launchUUID}`)
         if (!this._launchUUID)
             throw new Error("Launch not create yet")
 
