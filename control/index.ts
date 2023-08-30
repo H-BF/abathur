@@ -55,6 +55,8 @@ import { variables } from "./src/infrastructure/var_storage/variables-storage";
         await reporter.closeLaunch(control.failCount, control.passCount, Date.now() - startTime)
     } catch (err) {
         await reporter.closeLaunchWithError(`${err}`)
+    } finally {
+        await manager.destroyAbathur()
     }
 })();
 

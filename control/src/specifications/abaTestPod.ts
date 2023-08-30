@@ -1,4 +1,3 @@
-import { V1ConfigMap } from "@kubernetes/client-node";
 import parse from 'json-templates';
 import { variables } from "../infrastructure/var_storage/variables-storage";
 
@@ -36,9 +35,19 @@ const specPod = parse({
                     runAsUser: 0
                 },
                 volumeMounts: [{
-                    name: "hbf-client",
+                    name: "{{prefix}}-hbf-client",
                     mountPath: "/app/hack/configs"
                 }],
+                resources: {
+                    limits: {
+                        cpu: "200m",
+                        memory: "100Mi"
+                    },
+                    requests: {
+                        cpu: "200m",
+                        memory: "100Mi"
+                    }
+                },
                 command: [ "./bin/to-nft", "-config", "/app/hack/configs/to-nft.yaml" ]
             }
         ],
@@ -47,16 +56,26 @@ const specPod = parse({
                 name: "server",
                 image: `${variables.get("ABA_SERVER_REPOSITORY")}:${variables.get("ABA_SERVER_TAG")}`,
                 volumeMounts: [{
-                    name: "test-ports",
+                    name: "{{prefix}}-test-ports",
                     mountPath: "/usr/src/server/ports"
                 }],
                 imagePullPolicy: "Never",
+                resources: {
+                    limits: {
+                        cpu: "200m",
+                        memory: "500Mi"
+                    },
+                    requests: {
+                        cpu: "200m",
+                        memory: "500Mi"
+                    }
+                }
             },
             {
                 name: "client",
                 image: `${variables.get("ABA_CLIENT_REPOSITORY")}:${variables.get("ABA_CLIENT_TAG")}`,
                 volumeMounts: [{
-                    name: "test-data",
+                    name: "{{prefix}}-test-data",
                     mountPath: "/usr/src/client/testData"
                 }],
                 imagePullPolicy: "Never",
@@ -69,7 +88,17 @@ const specPod = parse({
                 },{
                     name: "REPORTER_PORT",
                     value: variables.get("REPORTER_PORT")
-                }]
+                }],
+                resources: {
+                    limits: {
+                        cpu: "200m",
+                        memory: "500Mi"
+                    },
+                    requests: {
+                        cpu: "200m",
+                        memory: "500Mi"
+                    }
+                }
             }
         ],
         restartPolicy: "Never",
@@ -87,7 +116,7 @@ const specPod = parse({
                 }
             },
             {
-                name: "test-ports",
+                name: "{{prefix}}-test-ports",
                 configMap: {
                     name: `{{prefix}}-p${variables.get("PIPELINE_ID")}-{{ports}}`
                 }
@@ -117,7 +146,7 @@ const specConfMapHbfClient = parse({
                     def-daial-duration: 10s
                     sgroups:
                         dial-duration: 3s
-                        address: p${variables.get("PIPELINE_ID")}-hbf-server:80
+                        address: {{prefix}}-p${variables.get("PIPELINE_ID")}-hbf-server:80
                         check-sync-status: 5s
             `
     }

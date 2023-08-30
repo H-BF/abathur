@@ -11,6 +11,7 @@ control/.env
 apiserver.crt
 apiserver.key
 Docker-compose.yaml
+reset.control.sh
 reset.sh
 delete.sh
 pull.sh
