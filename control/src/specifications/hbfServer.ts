@@ -726,16 +726,16 @@ const pgConfMap: V1ConfigMap = {
                 INSERT INTO
                     sgroups.tbl_network(name, network, sg)
                 VALUES
-                    ('nw-0', '10.150.0.220/32', get_sg_id('sg-0')),
-                    ('nw-1', '10.150.0.221/32', get_sg_id('sg-0')),
-                    ('nw-2', '10.150.0.222/32', get_sg_id('sg-0')),
-                    ('nw-3', '10.150.0.223/32', get_sg_id('sg-1')),
-                    ('nw-4', '10.150.0.224/32', get_sg_id('sg-2')),
-                    ('nw-5', '10.150.0.225/32', get_sg_id('sg-3')),
-                    ('nw-6', '10.150.0.226/32', get_sg_id('sg-3')),
-                    ('nw-7', '10.150.0.227/32', get_sg_id('sg-4')),
-                    ('nw-8', '10.150.0.228/32', get_sg_id('sg-5')),
-                    ('nw-9', '10.150.0.229/32', get_sg_id('sg-5')),
+                    ('nw-0', '29.64.0.220/32', get_sg_id('sg-0')),
+                    ('nw-1', '29.64.0.221/32', get_sg_id('sg-0')),
+                    ('nw-2', '29.64.0.222/32', get_sg_id('sg-0')),
+                    ('nw-3', '29.64.0.223/32', get_sg_id('sg-1')),
+                    ('nw-4', '29.64.0.224/32', get_sg_id('sg-2')),
+                    ('nw-5', '29.64.0.225/32', get_sg_id('sg-3')),
+                    ('nw-6', '29.64.0.226/32', get_sg_id('sg-3')),
+                    ('nw-7', '29.64.0.227/32', get_sg_id('sg-4')),
+                    ('nw-8', '29.64.0.228/32', get_sg_id('sg-5')),
+                    ('nw-9', '29.64.0.229/32', get_sg_id('sg-5')),
                     ('infra/report-server', '${variables.get("REPORTER_HOST")}/32', get_sg_id('infra/report-server')),
                     ('infra/abathur-control', '10.150.0.231/32', get_sg_id('infra/abathur-control'));
         

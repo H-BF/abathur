@@ -7,7 +7,7 @@ metadata:
         component: control
         instance: p{{ .Values.gitlab.pipeline }}
     annotations:
-        cni.projectcalico.org/ipAddrs: "[\"10.150.0.231\"]"
+        cni.projectcalico.org/ipAddrs: "[\"29.64.0.231\"]"
 spec:
   {{- with .Values.abathurControl }}
   containers:
