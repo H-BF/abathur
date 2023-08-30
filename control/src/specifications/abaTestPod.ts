@@ -38,7 +38,6 @@ const specPod = parse({
                     name: "{{prefix}}-hbf-client",
                     mountPath: "/app/hack/configs"
                 }],
-<<<<<<< control/src/specifications/abaTestPod.ts
                 resources: {
                     limits: {
                         cpu: "200m",
@@ -50,19 +49,7 @@ const specPod = parse({
                     }
                 },
                 command: [ "./bin/to-nft", "-config", "/app/hack/configs/to-nft.yaml" ]
-=======
-                command: [ "./bin/to-nft", "-config", "/app/hack/configs/to-nft.yaml" ],
-                resourse: {
-                    limits: {
-                        cpu: "200m",
-                        memory: "100mi"
-                    },
-                    requests: {
-                        cpu: "200m",
-                        memory: "100mi"
-                    }
-                }
->>>>>>> control/src/specifications/abaTestPod.ts
+
             }
         ],
         containers: [
@@ -74,7 +61,6 @@ const specPod = parse({
                     mountPath: "/usr/src/server/ports"
                 }],
                 imagePullPolicy: "Never",
-<<<<<<< control/src/specifications/abaTestPod.ts
                 resources: {
                     limits: {
                         cpu: "200m",
@@ -83,16 +69,6 @@ const specPod = parse({
                     requests: {
                         cpu: "200m",
                         memory: "500Mi"
-=======
-                resourse: {
-                    limits: {
-                        cpu: "200m",
-                        memory: "100mi"
-                    },
-                    requests: {
-                        cpu: "200m",
-                        memory: "100mi"
->>>>>>> control/src/specifications/abaTestPod.ts
                     }
                 }
             },
@@ -114,7 +90,6 @@ const specPod = parse({
                     name: "REPORTER_PORT",
                     value: variables.get("REPORTER_PORT")
                 }],
-<<<<<<< control/src/specifications/abaTestPod.ts
                 resources: {
                     limits: {
                         cpu: "200m",
@@ -123,16 +98,6 @@ const specPod = parse({
                     requests: {
                         cpu: "200m",
                         memory: "500Mi"
-=======
-                resourse: {
-                    limits: {
-                        cpu: "200m",
-                        memory: "100mi"
-                    },
-                    requests: {
-                        cpu: "200m",
-                        memory: "100mi"
->>>>>>> control/src/specifications/abaTestPod.ts
                     }
                 }
             }
