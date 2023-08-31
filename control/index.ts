@@ -11,6 +11,8 @@ import { variables } from "./src/infrastructure/var_storage/variables-storage";
 
 (async () => {
 
+    console.log('Aba start')
+
     const reporter = new Reporter()
     await reporter.createLaunch(
         variables.get("PIPELINE_ID"),

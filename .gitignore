@@ -19,3 +19,4 @@ minikube_start.sh
 test.yaml
 pool2.yaml
 deploy.yaml
+ki.yaml

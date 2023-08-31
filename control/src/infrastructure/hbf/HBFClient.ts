@@ -7,6 +7,7 @@ import { IRules, IRulesReq } from "./interfaces/rules";
 export class HBFClient extends RestClient {
 
     constructor() {
+        console.log(`Создаем REST-client для: ${HBF_HOST}`)
         super(HBF_HOST,HBF_PORT,HBF_PROTOCOL)
         this.defaults.baseURL += "/v1"
     }
