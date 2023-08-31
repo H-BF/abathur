@@ -17,7 +17,6 @@ export class Reporter {
         return this._launchUUID
     }
 
-<<<<<<< control/src/domain/reporter/reporter.ts
     async createLaunch(
         pipeline: string,
         job: string,
@@ -34,11 +33,6 @@ export class Reporter {
             commit: commit,
             hbfTag: hbfTag
         }
-=======
-    async createLaunch(pipeline: string, job: string): Promise<void> {
-        console.log(`Создаем новый лаунч: pipe - ${pipeline}, job - ${job}`)
-        const launch: ICreateLaunchReq = { pipeline: parseInt(pipeline), job: parseInt(job) }
->>>>>>> control/src/domain/reporter/reporter.ts
         this._launchUUID = await this.client.createLaunch(launch)
         console.log(`Лаунч создан! ${this._launchUUID}`)
     }
