@@ -23,12 +23,12 @@ abathurServer:
 hbfServer:
   image:
     repository: harbor.wildberries.ru/swarm/swarm/swarm/sgroups/sgroups
-    tag: feature-postgres-5ce3cf72
+    tag: v1-0-2-947f9db4
 
 hbfClient:
   image:
     repository: harbor.wildberries.ru/swarm/swarm/swarm/sgroups/to-nft
-    tag: feature-postgres-5ce3cf72
+    tag: v1-0-2-947f9db4
 
 hbfReporter:
   protocol: http
@@ -39,6 +39,9 @@ gitlab:
   random: 6
   pipeline: 123456
   # job: ""
+  src_branch: from
+  dst_branch: to
+  commit: 34er3r323
 
 defaults:
   securityContext: {}

@@ -17,8 +17,22 @@ export class Reporter {
         return this._launchUUID
     }
 
-    async createLaunch(pipeline: string, job: string): Promise<void> {
-        const launch: ICreateLaunchReq = { pipeline: parseInt(pipeline), job: parseInt(job) }
+    async createLaunch(
+        pipeline: string,
+        job: string,
+        srcBranch: string,
+        dstBranch: string,
+        commit: string,
+        hbfTag: string
+    ): Promise<void> {
+        const launch: ICreateLaunchReq = { 
+            pipeline: parseInt(pipeline),
+            job: parseInt(job),
+            srcBranch: srcBranch,
+            dstBranch: dstBranch,
+            commit: commit,
+            hbfTag: hbfTag
+        }
         this._launchUUID = await this.client.createLaunch(launch)
     }
 

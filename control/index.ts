@@ -12,7 +12,14 @@ import { variables } from "./src/infrastructure/var_storage/variables-storage";
 (async () => {
 
     const reporter = new Reporter()
-    await reporter.createLaunch(variables.get("PIPELINE_ID"), variables.get("JOB_ID"))
+    await reporter.createLaunch(
+        variables.get("PIPELINE_ID"),
+        variables.get("JOB_ID"),
+        variables.get("CI_SOURCE_BRANCH_NAME"),
+        variables.get("CI_TARGET_BRANCH_NAME"),
+        variables.get("COMMIT"),
+        variables.get("HBF_TAG")
+    )
 
     try {
         const startTime = Date.now()

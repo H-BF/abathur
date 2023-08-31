@@ -147,7 +147,7 @@ const specConfMapHbfClient = parse({
                     def-daial-duration: 10s
                     sgroups:
                         dial-duration: 3s
-                        address: {{prefix}}-p${variables.get("PIPELINE_ID")}-hbf-server:80
+                        address: {{ip}}:{{port}}
                         check-sync-status: 5s
             `
     }
