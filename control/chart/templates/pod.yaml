@@ -43,6 +43,14 @@ spec:
         value: "{{ .Values.gitlab.pipeline | toString }}"
       - name: JOB_ID
         value: "{{ .Values.gitlab.job | default (include "control.random" .) | toString }}"
+      - name: CI_SOURCE_BRANCH_NAME
+        value: {{ $.Values.gitlab.src_branch }}
+      - name: CI_TARGET_BRANCH_NAME
+        value: {{ $.Values.gitlab.dst_branch }}
+      - name: COMMIT
+        value: {{ $.Values.gitlab.commit }}
+      - name: HBF_TAG
+        value: {{ $.Values.hbfServer.image.tag }}                  
       - name: REPORTER_PROTOCOL
         value: {{ .Values.hbfReporter.protocol }}
       - name: REPORTER_HOST

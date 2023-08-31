@@ -11,6 +11,10 @@ export const requiredVariablesList = [
     
     "PIPELINE_ID",
     "JOB_ID",
+    "CI_SOURCE_BRANCH_NAME",
+    "CI_TARGET_BRANCH_NAME",
+    "COMMIT",
+    "HBF_TAG",
 
     "REPORTER_PROTOCOL",
     "REPORTER_HOST",
