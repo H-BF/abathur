@@ -48,7 +48,7 @@ const specPod = parse({
                     name: "{{prefix}}-test-ports",
                     mountPath: "/usr/src/server/ports"
                 }],
-                imagePullPolicy: "Never",
+                imagePullPolicy: "IfNotPresent",
                 resources: {
                     limits: {
                         cpu: "200m",
@@ -67,7 +67,7 @@ const specPod = parse({
                     name: "{{prefix}}-test-data",
                     mountPath: "/usr/src/client/testData"
                 }],
-                imagePullPolicy: "Never",
+                imagePullPolicy: "IfNotPresent",
                 env: [{
                     name: "REPORTER_PROTOCOL",
                     value: variables.get("REPORTER_PROTOCOL")
@@ -93,7 +93,7 @@ const specPod = parse({
                 }
             }
         ],
-        restartPolicy: "Never",
+        restartPolicy: "IfNotPresent",
         volumes: [
             {
                 name: "{{prefix}}-hbf-client",
