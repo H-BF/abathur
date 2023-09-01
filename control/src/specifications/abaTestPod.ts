@@ -13,18 +13,6 @@ const specPod = parse({
         }
     },
     spec: {
-        securityContext: {
-            sysctls: [
-                {
-                    name: "net.ipv4.tcp_fin_timeout",
-                    value: "15"
-                },
-                {
-                    name: "net.ipv4.tcp_tw_reuse",
-                    value: "1"
-                }
-            ]
-        },
         initContainers: [
             {
                 name: "hbf-client",
