@@ -10,7 +10,7 @@ export class ReporterClient extends RestClient {
             variables.get("REPORTER_PORT"),
             variables.get("REPORTER_PROTOCOL"),
         )
-        this.defaults.baseURL += '/v1'
+        this.defaults.baseURL += '/hbf/v1'
     }
 
     async createLaunch(launch: ICreateLaunchReq): Promise<string> {
