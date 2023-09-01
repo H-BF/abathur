@@ -1,8 +1,6 @@
-export const REPORTER_HOST = '172.25.143.81'
-export const REPORTER_PORT = '9000'
-export const REPORTER_PROTOCOL = 'http'
+import { variables } from "./src/infrastructure/var_storage/variables-storage"
 
-export const CONTROL_IP = '29.64.0.231'
+export const CONTROL_IP = variables.get("ABA_CONTROL_IP")
 export const CONTROL_PORT = '9091'
 
 export const CONTROL_PROTO_PATH = '../../../../gRPC/control.proto'

@@ -77,6 +77,9 @@ const specPod = parse({
                 },{
                     name: "REPORTER_PORT",
                     value: variables.get("REPORTER_PORT")
+                },{
+                    name: "ABA_CONTROL_IP",
+                    value: variables.get("ABA_CONTROL_IP")
                 }],
                 resources: {
                     limits: {

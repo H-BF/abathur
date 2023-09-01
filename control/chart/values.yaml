@@ -3,6 +3,7 @@ abathurControl:
     imagePullPolicy: Never
     repository: abathur_control
     tag: latest
+  ip: 29.64.0.231
   ports:
     addressPort: 80
     addressPortAlias: aba-port

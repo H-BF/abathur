@@ -20,5 +20,7 @@ export const requiredVariablesList = [
     "REPORTER_HOST",
     "REPORTER_PORT",
 
-    "NAMESPACE"
+    "NAMESPACE",
+
+    "ABA_CONTROL_IP"
 ]
