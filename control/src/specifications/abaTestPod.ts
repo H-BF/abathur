@@ -93,7 +93,7 @@ const specPod = parse({
                 }
             }
         ],
-        restartPolicy: "IfNotPresent",
+        restartPolicy: "Never",
         volumes: [
             {
                 name: "{{prefix}}-hbf-client",

@@ -71,7 +71,7 @@ export class HBFDataCollector {
             const ipsTo = this.getIPs(rule.sgTo)
             const portsTo = this.transformPorts(rule.ports)
 
-            if (ipsTo.length === 1 && (ipsTo[0] === `${variables.get("REPORTER_HOST")}` || `${variables.get("ABA_CONTROL_IP")}`)) {
+            if (ipsTo.length === 1 && (ipsTo[0] === `${variables.get("REPORTER_HOST")}` || ipsTo[0] === `${variables.get("ABA_CONTROL_IP")}`)) {
                 return
             }
 
