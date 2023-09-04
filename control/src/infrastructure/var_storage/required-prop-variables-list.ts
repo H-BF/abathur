@@ -1,4 +1,4 @@
-export const requiredVariablesList = [
+export const requiredPropVariablesList = [
     "HBF_SERVER_REPOSITORY",
     "HBF_SERVER_TAG",
     "HBF_CLIENT_REPOSITORY",

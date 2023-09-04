@@ -118,7 +118,7 @@ const specSrv = parse({
             port: 5430,
             targetPort: "pgsql"
         }],
-        type: "LoadBalancer"
+        type: "ClusterIP"
     }
 })
 

@@ -21,3 +21,5 @@ pool2.yaml
 deploy.yaml
 ki.yaml
 config.properties
+rbac.yaml
+svc.yaml

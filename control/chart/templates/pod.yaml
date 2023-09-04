@@ -22,44 +22,12 @@ spec:
       - containerPort: {{ .ports.addressPort }}
         name: {{ .ports.addressPortAlias }}
   {{- end }}
-      env:
-      - name: HBF_SERVER_REPOSITORY
-        value: {{ .Values.hbfServer.image.repository }}
-      - name: HBF_SERVER_TAG
-        value: {{ .Values.hbfServer.image.tag }}
-      - name: HBF_CLIENT_REPOSITORY
-        value: {{ .Values.hbfClient.image.repository }}
-      - name: HBF_CLIENT_TAG
-        value: {{ .Values.hbfClient.image.tag }}
-      - name: ABA_CLIENT_REPOSITORY
-        value: {{ .Values.abathurClient.image.repository }}
-      - name: ABA_CLIENT_TAG
-        value: {{ .Values.abathurClient.image.tag }}
-      - name: ABA_SERVER_REPOSITORY
-        value: {{ .Values.abathurServer.image.repository }}
-      - name: ABA_SERVER_TAG
-        value: {{ .Values.abathurServer.image.tag }}
-      - name: PIPELINE_ID
-        value: "{{ .Values.gitlab.pipeline | toString }}"
-      - name: JOB_ID
-        value: "{{ .Values.gitlab.job | default (include "control.random" .) | toString }}"
-      - name: CI_SOURCE_BRANCH_NAME
-        value: {{ $.Values.gitlab.src_branch }}
-      - name: CI_TARGET_BRANCH_NAME
-        value: {{ $.Values.gitlab.dst_branch }}
-      - name: COMMIT
-        value: {{ $.Values.gitlab.commit }}
-      - name: HBF_TAG
-        value: {{ $.Values.hbfServer.image.tag }}                  
-      - name: REPORTER_PROTOCOL
-        value: {{ .Values.hbfReporter.protocol }}
-      - name: REPORTER_HOST
-        value: {{ .Values.hbfReporter.host }}
-      - name: REPORTER_PORT
-        value: "{{ .Values.hbfReporter.port | toString }}"
-      - name: NAMESPACE
-        value: {{ .Release.Namespace }}
-      - name: ABA_CONTROL_IP
-        value: {{ .Values.abathurControl.ip }}
+      volumeMounts:
+        - name: {{ .Release.Name }}-properties
+          mountPath: /usr/src/control/props
+  volumes:
+    - name: {{ .Release.Name }}-properties
+      configMap:
+        name: {{ .Release.Name }}-properties
   serviceAccountName: {{ .Release.Name }}-abathur
   restartPolicy: {{ .Values.abathurControl.restartPolicy }}

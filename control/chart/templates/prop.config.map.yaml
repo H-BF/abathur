@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-properties
+  namespace: {{ .Release.Namespace }}
+data:
+  config.properties: |
+    HBF_SERVER_REPOSITORY={{ .Values.hbfServer.image.repository }}
+    HBF_SERVER_TAG={{ .Values.hbfServer.image.tag }}
+    HBF_CLIENT_REPOSITORY={{ .Values.hbfClient.image.repository }}
+    HBF_CLIENT_TAG={{ .Values.hbfClient.image.tag }}
+    ABA_CLIENT_REPOSITORY={{ .Values.abathurClient.image.repository }}
+    ABA_CLIENT_TAG={{ .Values.abathurClient.image.tag }}
+    ABA_SERVER_REPOSITORY={{ .Values.abathurServer.image.repository }}
+    ABA_SERVER_TAG={{ .Values.abathurServer.image.tag }}
+    PIPELINE_ID={{ .Values.gitlab.pipeline | toString }}
+    JOB_ID={{ .Values.gitlab.job | default (include "control.random" .) | toString }}
+    CI_SOURCE_BRANCH_NAME={{ $.Values.gitlab.src_branch }}
+    CI_TARGET_BRANCH_NAME={{ $.Values.gitlab.dst_branch }}
+    COMMIT={{ $.Values.gitlab.commit }}
+    HBF_TAG={{ $.Values.hbfServer.image.tag }}
+    REPORTER_PROTOCOL={{ .Values.hbfReporter.protocol }}
+    REPORTER_HOST={{ .Values.hbfReporter.host }}
+    REPORTER_PORT={{ .Values.hbfReporter.port | toString }}
+    NAMESPACE={{ .Release.Namespace }}
+    ABA_CONTROL_IP={{ .Values.abathurControl.ip }}

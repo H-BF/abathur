@@ -36,6 +36,11 @@ hbfReporter:
   host: 172.25.143.81
   port: 9000
 
+# hbfReporter:
+#   protocol: http
+#   host: 10.36.38.132
+#   port: 80
+
 gitlab:
   random: 6
   pipeline: 123456
