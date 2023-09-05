@@ -7,8 +7,8 @@ abathurControl:
   ports:
     addressPort: 80
     addressPortAlias: aba-port
-  securityContext:
-    privileged: true
+  # securityContext:
+  #   privileged: true
   restartPolicy: Never
 
 abathurClient:

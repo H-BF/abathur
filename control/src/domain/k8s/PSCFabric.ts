@@ -85,16 +85,20 @@ export class PSCFabric {
      * Данный лейбл заполняется номером запустившего тесты пайплайны из env
      */
     async destroyAllByInstance(prefix: string) {
-        await this.k8sClient.deleteAllsvcBylabel(`instance=${prefix}-p${variables.get("PIPELINE_ID")}`)
-        await this.k8sClient.deleteAllPodByLabel(`instance=${prefix}-p${variables.get("PIPELINE_ID")}`)
-        await this.k8sClient.deleteAllConfMapBylabel(`instance=${prefix}-p${variables.get("PIPELINE_ID")}`)
-        await this.k8sClient.deleteServiceAccountByLabel(`instance=${prefix}-p${variables.get("PIPELINE_ID")}`)
-        await this.k8sClient.deleteClusterRoleBindingByLabel(`instance=${prefix}-p${variables.get("PIPELINE_ID")}`)
-        await this.k8sClient.deleteAllDeploymentByLabel(`instance=${prefix}-p${variables.get("PIPELINE_ID")}`)
+        const label = `instance=${prefix}-p${variables.get("PIPELINE_ID")}`
+        await this.k8sClient.deleteAllsvcBylabel(label)
+        await this.k8sClient.deleteAllPodByLabel(label)
+        await this.k8sClient.deleteAllConfMapBylabel(label)
+        await this.k8sClient.deleteServiceAccountByLabel(label)
+        await this.k8sClient.deleteClusterRoleBindingByLabel(label)
+        await this.k8sClient.deleteAllDeploymentByLabel(label)
     }
 
     async destroyAbathur() {
-        await this.k8sClient.deleteAllPodByLabel(`instance=p${variables.get("PIPELINE_ID")}-abathur-control`)
+        const label = `instance=p${variables.get("PIPELINE_ID")}-abathur-control`
+        await this.k8sClient.deleteAllJobByLabel(label)
+        await this.k8sClient.deleteAllPodByLabel(label)
+        await this.k8sClient.deleteAllConfMapBylabel(label)
     }
 }
 

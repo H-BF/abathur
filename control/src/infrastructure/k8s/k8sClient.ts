@@ -1,4 +1,8 @@
-import { KubeConfig, CoreV1Api, V1Pod, V1Service, V1ConfigMap, V1ObjectMeta, makeInformer, ListPromise, KubernetesObject, Informer, ObjectCache, V1PodList, V1PodStatus, V1ServiceList, V1ConfigMapList, RbacAuthorizationV1Api, AppsV1Api  } from '@kubernetes/client-node';
+import { KubeConfig, CoreV1Api, V1Pod, V1Service, V1ConfigMap,
+     V1ObjectMeta, makeInformer, ListPromise, KubernetesObject,
+     Informer, ObjectCache, V1PodList, V1PodStatus, V1ServiceList,
+     V1ConfigMapList, RbacAuthorizationV1Api, AppsV1Api,
+     BatchV1Api  } from '@kubernetes/client-node';
 import http from 'http'
 
 export class K8sClient {
@@ -6,6 +10,7 @@ export class K8sClient {
     private config: KubeConfig
     private coreAPI: CoreV1Api
     private appsAPI: AppsV1Api
+    private batchAPI: BatchV1Api
     private rbacAPI: RbacAuthorizationV1Api
     private namespace: string
 
@@ -15,6 +20,7 @@ export class K8sClient {
         this.config.loadFromDefault()
         this.coreAPI = this.config.makeApiClient(CoreV1Api);
         this.appsAPI = this.config.makeApiClient(AppsV1Api);
+        this.batchAPI = this.config.makeApiClient(BatchV1Api)
         this.rbacAPI  = this.config.makeApiClient(RbacAuthorizationV1Api)
     }
 
@@ -268,6 +274,29 @@ export class K8sClient {
             throw new Error(`${err}`)
         }
     }
+
+        ////////////////////////
+        ////Работа с джобами////
+        ////////////////////////
+    async deleteAllJobByLabel(labelSelector: string) {
+        try {
+            console.log(`Удаляем все Job c label: ${labelSelector}`)
+            const { response } = await this.batchAPI.deleteCollectionNamespacedJob(
+                this.namespace,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                labelSelector
+            )
+            console.log(`Response code: ${response.statusCode}`)
+        } catch(err) {
+            console.log(err)
+            throw new Error(`${err}`)
+        }
+    }
+
 
     ////////////
     //INFORMER//

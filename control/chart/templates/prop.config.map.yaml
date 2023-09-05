@@ -3,6 +3,9 @@ kind: ConfigMap
 metadata:
   name: {{ .Release.Name }}-properties
   namespace: {{ .Release.Namespace }}
+  labels:
+    component: properties
+    instance: p{{ .Values.gitlab.pipeline }}-abathur-control
 data:
   config.properties: |
     HBF_SERVER_REPOSITORY={{ .Values.hbfServer.image.repository }}
