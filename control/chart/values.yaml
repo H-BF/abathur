@@ -10,6 +10,8 @@ abathurControl:
   # securityContext:
   #   privileged: true
   restartPolicy: Never
+  destroy: true
+
 
 abathurClient:
   image:
