@@ -94,7 +94,7 @@ export class PSCFabric {
     }
 
     async destroyAbathur() {
-        await this.k8sClient.deleteAllPodByLabel(`instance=p${variables.get("PIPELINE_ID")}-abathur-control`)
+        await this.k8sClient.deleteAllJobByLabel(`instance=p${variables.get("PIPELINE_ID")}-abathur-control`)
     }
 }
 
