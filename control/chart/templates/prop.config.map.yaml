@@ -27,3 +27,4 @@ data:
     REPORTER_PORT={{ .Values.hbfReporter.port | toString }}
     NAMESPACE={{ .Release.Namespace }}
     ABA_CONTROL_IP={{ .Values.abathurControl.ip }}
+    IS_DESTROY_AFTER={{ .Values.abathurControl.destroy }}

@@ -63,8 +63,10 @@ import { variables } from "./src/infrastructure/var_storage/variables-storage";
     } catch (err) {
         await reporter.closeLaunchWithError(`${err}`)
     } finally {
-        await manager.destroyAllByInstance(functional.prefix)
-        await manager.destroyAbathur()
+        if(variables.get("IS_DESTROY_AFTER") === "true") {
+            await manager.destroyAllByInstance(functional.prefix)
+            await manager.destroyAbathur()
+        }
     }
 })();
 

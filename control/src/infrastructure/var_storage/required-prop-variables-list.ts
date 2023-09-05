@@ -22,5 +22,7 @@ export const requiredPropVariablesList = [
 
     "NAMESPACE",
 
-    "ABA_CONTROL_IP"
+    "ABA_CONTROL_IP",
+
+    "IS_DESTROY_AFTER"
 ]
