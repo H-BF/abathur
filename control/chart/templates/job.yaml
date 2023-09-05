@@ -1,0 +1,39 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+    name: {{ .Release.Name }}-abathur-control
+    namespace: {{ .Release.Namespace }}
+    labels:
+        component: control
+        instance: p{{ .Values.gitlab.pipeline }}-abathur-control
+spec:
+  template:
+    metadata:
+      labels:
+        component: control
+        instance: p{{ .Values.gitlab.pipeline }}-abathur-control
+      annotations:
+        cni.projectcalico.org/ipAddrs: "[\"{{ .Values.abathurControl.ip }}\"]"
+    spec:
+      {{- with .Values.abathurControl }}
+      containers:
+        - name: abathur-control
+          image: {{ .image.repository }}:{{ .image.tag }}
+          imagePullPolicy: {{ .image.imagePullPolicy }}
+          {{- with .securityContext | default $.Values.defaults.securityContext }}
+          securityContext:
+              {{- toYaml . | nindent 14 }}
+          {{- end }}
+          ports:
+          - containerPort: {{ .ports.addressPort }}
+            name: {{ .ports.addressPortAlias }}
+      {{- end }}
+          volumeMounts:
+            - name: {{ .Release.Name }}-properties
+              mountPath: /usr/src/control/props
+      volumes:
+        - name: {{ .Release.Name }}-properties
+          configMap:
+            name: {{ .Release.Name }}-properties
+      serviceAccountName: {{ .Release.Name }}-abathur
+      restartPolicy: {{ .Values.abathurControl.restartPolicy }}
