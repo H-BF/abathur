@@ -118,7 +118,7 @@ const specSrv = parse({
             port: 5430,
             targetPort: "pgsql"
         }],
-        type: "LoadBalancer"
+        type: "ClusterIP"
     }
 })
 
@@ -1006,7 +1006,7 @@ const pgConfMap = parse({
                     ('nw-8', '29.64.0.228/32', get_sg_id('sg-5')),
                     ('nw-9', '29.64.0.229/32', get_sg_id('sg-5')),
                     ('infra/report-server', '${variables.get("REPORTER_HOST")}/32', get_sg_id('infra/report-server')),
-                    ('infra/abathur-control', '29.64.0.231/32', get_sg_id('infra/abathur-control'));
+                    ('infra/abathur-control', '${variables.get("ABA_CONTROL_IP")}/32', get_sg_id('infra/abathur-control'));
         
                 INSERT INTO
                     sgroups.tbl_sg_rule(sg_from, sg_to, proto, ports)
@@ -1070,7 +1070,7 @@ const pgConfMap = parse({
                         get_sg_id('infra/report-server'),
                         'tcp',
                         ARRAY[
-                            ((int4multirange(int4range(NULL))), (int4multirange(int4range(9000, 9001))))
+                            ((int4multirange(int4range(NULL))), (int4multirange(int4range(${Number(variables.get("REPORTER_PORT"))}, ${Number(variables.get("REPORTER_PORT")) + 1}))))
                         ]::sgroups.sg_rule_ports[]
                     ),
                     (
@@ -1078,7 +1078,7 @@ const pgConfMap = parse({
                         get_sg_id('infra/report-server'),
                         'tcp',
                         ARRAY[
-                            ((int4multirange(int4range(NULL))), (int4multirange(int4range(9000, 9001))))
+                            ((int4multirange(int4range(NULL))), (int4multirange(int4range(${Number(variables.get("REPORTER_PORT"))}, ${Number(variables.get("REPORTER_PORT")) + 1}))))
                         ]::sgroups.sg_rule_ports[]
                     ),
                     (
@@ -1086,7 +1086,7 @@ const pgConfMap = parse({
                         get_sg_id('infra/report-server'),
                         'tcp',
                         ARRAY[
-                            ((int4multirange(int4range(NULL))), (int4multirange(int4range(9000, 9001))))
+                            ((int4multirange(int4range(NULL))), (int4multirange(int4range(${Number(variables.get("REPORTER_PORT"))}, ${Number(variables.get("REPORTER_PORT")) + 1}))))
                         ]::sgroups.sg_rule_ports[]
                     ),
                     (
@@ -1094,7 +1094,7 @@ const pgConfMap = parse({
                         get_sg_id('infra/report-server'),
                         'tcp',
                         ARRAY[
-                            ((int4multirange(int4range(NULL))), (int4multirange(int4range(9000, 9001))))
+                            ((int4multirange(int4range(NULL))), (int4multirange(int4range(${Number(variables.get("REPORTER_PORT"))}, ${Number(variables.get("REPORTER_PORT")) + 1}))))
                         ]::sgroups.sg_rule_ports[]
                     ),
                     (
@@ -1102,7 +1102,7 @@ const pgConfMap = parse({
                         get_sg_id('infra/report-server'),
                         'tcp',
                         ARRAY[
-                            ((int4multirange(int4range(NULL))), (int4multirange(int4range(9000, 9001))))
+                            ((int4multirange(int4range(NULL))), (int4multirange(int4range(${Number(variables.get("REPORTER_PORT"))}, ${Number(variables.get("REPORTER_PORT")) + 1}))))
                         ]::sgroups.sg_rule_ports[]
                     ),
                     (
@@ -1110,7 +1110,7 @@ const pgConfMap = parse({
                         get_sg_id('infra/report-server'),
                         'tcp',
                         ARRAY[
-                            ((int4multirange(int4range(NULL))), (int4multirange(int4range(9000, 9001))))
+                            ((int4multirange(int4range(NULL))), (int4multirange(int4range(${Number(variables.get("REPORTER_PORT"))}, ${Number(variables.get("REPORTER_PORT")) + 1}))))
                         ]::sgroups.sg_rule_ports[]
                     ),
                     (

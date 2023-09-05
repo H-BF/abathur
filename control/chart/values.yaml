@@ -3,6 +3,7 @@ abathurControl:
     imagePullPolicy: Never
     repository: abathur_control
     tag: latest
+  ip: 29.64.0.231
   ports:
     addressPort: 80
     addressPortAlias: aba-port
@@ -34,6 +35,11 @@ hbfReporter:
   protocol: http
   host: 172.25.143.81
   port: 9000
+
+# hbfReporter:
+#   protocol: http
+#   host: 10.36.38.132
+#   port: 80
 
 gitlab:
   random: 6

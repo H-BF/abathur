@@ -77,6 +77,9 @@ const specPod = parse({
                 },{
                     name: "REPORTER_PORT",
                     value: variables.get("REPORTER_PORT")
+                },{
+                    name: "ABA_CONTROL_IP",
+                    value: variables.get("ABA_CONTROL_IP")
                 }],
                 resources: {
                     limits: {
@@ -90,7 +93,7 @@ const specPod = parse({
                 }
             }
         ],
-        restartPolicy: "IfNotPresent",
+        restartPolicy: "Never",
         volumes: [
             {
                 name: "{{prefix}}-hbf-client",

@@ -1,4 +1,4 @@
-export const requiredVariablesList = [
+export const requiredPropVariablesList = [
     "HBF_SERVER_REPOSITORY",
     "HBF_SERVER_TAG",
     "HBF_CLIENT_REPOSITORY",
@@ -20,5 +20,7 @@ export const requiredVariablesList = [
     "REPORTER_HOST",
     "REPORTER_PORT",
 
-    "NAMESPACE"
+    "NAMESPACE",
+
+    "ABA_CONTROL_IP"
 ]
