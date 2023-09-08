@@ -1,11 +1,9 @@
 infra
 client/build
 server/build
-reporter/build
 control/build
 client/node_modules
 server/node_modules
-reporter/node_modules
 control/node_modules
 control/.env
 apiserver.crt
@@ -23,3 +21,4 @@ ki.yaml
 config.properties
 rbac.yaml
 svc.yaml
+curl.yaml

@@ -3,6 +3,8 @@ abathurControl:
     imagePullPolicy: Never
     repository: abathur_control
     tag: latest
+    # repository: harbor.wildberries.ru/swarm/swarm/testops/abathur/aba-control
+    # tag: feature-delete-job-554eaa78
   ip: 29.64.0.231
   ports:
     addressPort: 80
@@ -17,11 +19,15 @@ abathurClient:
   image:
     repository: abathur_client
     tag: latest
+    # repository: harbor.wildberries.ru/swarm/swarm/testops/abathur/aba-client
+    # tag: feature-delete-job-554eaa78
 
 abathurServer:
   image:
     repository: abathur_server
     tag: latest
+    # repository: harbor.wildberries.ru/swarm/swarm/testops/abathur/aba-server
+    # tag: feature-delete-job-554eaa78
 
 hbfServer:
   image:
