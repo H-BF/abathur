@@ -71,7 +71,7 @@
                 )
             constraint cname_validity
                 check (
-                    (value ~ '^\\S') and (value ~ '\\S$')
+                    (value ~ '^\S') and (value ~ '\S$')
                 );
         comment on domain sgroups.cname is 'Common Name type';
     

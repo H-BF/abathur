@@ -21,8 +21,8 @@
                     ('nw-7', '29.64.0.227/32', get_sg_id('sg-4')),
                     ('nw-8', '29.64.0.228/32', get_sg_id('sg-5')),
                     ('nw-9', '29.64.0.229/32', get_sg_id('sg-5')),
-                    ('infra/report-server', '${variables.get("HBF_REPORTER_HOST")}/32', get_sg_id('infra/report-server')),
-                    ('infra/abathur-control', '${variables.get("ABA_CONTROL_IP")}/32', get_sg_id('infra/abathur-control'));
+                    ('infra/report-server', 'HBF_REPORTER_HOST/32', get_sg_id('infra/report-server')),
+                    ('infra/abathur-control', 'ABA_CONTROL_IP/32', get_sg_id('infra/abathur-control'));
         
                 INSERT INTO
                     sgroups.tbl_sg_rule(sg_from, sg_to, proto, ports)
@@ -86,7 +86,7 @@
                         get_sg_id('infra/report-server'),
                         'tcp',
                         ARRAY[
-                            ((int4multirange(int4range(NULL))), (int4multirange(int4range(Number(variables.get("HBF_REPORTER_PORT")), Number(variables.get("HBF_REPORTER_PORT")) + 1))))
+                            ((int4multirange(int4range(NULL))), (int4multirange(int4range(HBF_REPORTER_PORT_FROM, HBF_REPORTER_PORT_TO))))
                         ]::sgroups.sg_rule_ports[]
                     ),
                     (
@@ -94,7 +94,7 @@
                         get_sg_id('infra/report-server'),
                         'tcp',
                         ARRAY[
-                            ((int4multirange(int4range(NULL))), (int4multirange(int4range(Number(variables.get("HBF_REPORTER_PORT")), Number(variables.get("HBF_REPORTER_PORT")) + 1))))
+                            ((int4multirange(int4range(NULL))), (int4multirange(int4range(HBF_REPORTER_PORT_FROM, HBF_REPORTER_PORT_TO))))
                         ]::sgroups.sg_rule_ports[]
                     ),
                     (
@@ -102,7 +102,7 @@
                         get_sg_id('infra/report-server'),
                         'tcp',
                         ARRAY[
-                            ((int4multirange(int4range(NULL))), (int4multirange(int4range(Number(variables.get("HBF_REPORTER_PORT")), Number(variables.get("HBF_REPORTER_PORT")) + 1))))
+                            ((int4multirange(int4range(NULL))), (int4multirange(int4range(HBF_REPORTER_PORT_FROM, HBF_REPORTER_PORT_TO))))
                         ]::sgroups.sg_rule_ports[]
                     ),
                     (
@@ -110,7 +110,7 @@
                         get_sg_id('infra/report-server'),
                         'tcp',
                         ARRAY[
-                            ((int4multirange(int4range(NULL))), (int4multirange(int4range(Number(variables.get("HBF_REPORTER_PORT")), Number(variables.get("HBF_REPORTER_PORT")) + 1))))
+                            ((int4multirange(int4range(NULL))), (int4multirange(int4range(HBF_REPORTER_PORT_FROM, HBF_REPORTER_PORT_TO))))
                         ]::sgroups.sg_rule_ports[]
                     ),
                     (
@@ -118,7 +118,7 @@
                         get_sg_id('infra/report-server'),
                         'tcp',
                         ARRAY[
-                            ((int4multirange(int4range(NULL))), (int4multirange(int4range(Number(variables.get("HBF_REPORTER_PORT")), Number(variables.get("HBF_REPORTER_PORT")) + 1))))
+                            ((int4multirange(int4range(NULL))), (int4multirange(int4range(HBF_REPORTER_PORT_FROM, HBF_REPORTER_PORT_TO))))
                         ]::sgroups.sg_rule_ports[]
                     ),
                     (
@@ -126,7 +126,7 @@
                         get_sg_id('infra/report-server'),
                         'tcp',
                         ARRAY[
-                            ((int4multirange(int4range(NULL))), (int4multirange(int4range(Number(variables.get("HBF_REPORTER_PORT")), Number(variables.get("HBF_REPORTER_PORT")) + 1))))
+                            ((int4multirange(int4range(NULL))), (int4multirange(int4range(HBF_REPORTER_PORT_FROM, HBF_REPORTER_PORT_TO))))
                         ]::sgroups.sg_rule_ports[]
                     ),
                     (
@@ -134,7 +134,7 @@
                         get_sg_id('infra/abathur-control'),
                         'tcp',
                         ARRAY[
-                            ((int4multirange(int4range(NULL))), (int4multirange(int4range(Number(variables.get("ABA_CONTROL_PORT")), Number(variables.get("ABA_CONTROL_PORT")) + 1))))
+                            ((int4multirange(int4range(NULL))), (int4multirange(int4range(ABA_CONTROL_PORT_FROM, ABA_CONTROL_PORT_TO))))
                         ]::sgroups.sg_rule_ports[]
                     ),
                                 (
@@ -142,7 +142,7 @@
                         get_sg_id('infra/abathur-control'),
                         'tcp',
                         ARRAY[
-                            ((int4multirange(int4range(NULL))), (int4multirange(int4range(Number(variables.get("ABA_CONTROL_PORT")), Number(variables.get("ABA_CONTROL_PORT")) + 1))))
+                            ((int4multirange(int4range(NULL))), (int4multirange(int4range(ABA_CONTROL_PORT_FROM, ABA_CONTROL_PORT_TO))))
                         ]::sgroups.sg_rule_ports[]
                     ),
                     (
@@ -150,7 +150,7 @@
                         get_sg_id('infra/abathur-control'),
                         'tcp',
                         ARRAY[
-                            ((int4multirange(int4range(NULL))), (int4multirange(int4range(Number(variables.get("ABA_CONTROL_PORT")), Number(variables.get("ABA_CONTROL_PORT")) + 1))))
+                            ((int4multirange(int4range(NULL))), (int4multirange(int4range(ABA_CONTROL_PORT_FROM, ABA_CONTROL_PORT_TO))))
                         ]::sgroups.sg_rule_ports[]
                     ),
                     (
@@ -158,7 +158,7 @@
                         get_sg_id('infra/abathur-control'),
                         'tcp',
                         ARRAY[
-                            ((int4multirange(int4range(NULL))), (int4multirange(int4range(Number(variables.get("ABA_CONTROL_PORT")), Number(variables.get("ABA_CONTROL_PORT")) + 1))))
+                            ((int4multirange(int4range(NULL))), (int4multirange(int4range(ABA_CONTROL_PORT_FROM, ABA_CONTROL_PORT_TO))))
                         ]::sgroups.sg_rule_ports[]
                     ),
                     (
@@ -166,7 +166,7 @@
                         get_sg_id('infra/abathur-control'),
                         'tcp',
                         ARRAY[
-                            ((int4multirange(int4range(NULL))), (int4multirange(int4range(Number(variables.get("ABA_CONTROL_PORT")), Number(variables.get("ABA_CONTROL_PORT")) + 1))))
+                            ((int4multirange(int4range(NULL))), (int4multirange(int4range(ABA_CONTROL_PORT_FROM, ABA_CONTROL_PORT_TO))))
                         ]::sgroups.sg_rule_ports[]
                     ),
                     (
@@ -174,7 +174,7 @@
                         get_sg_id('infra/abathur-control'),
                         'tcp',
                         ARRAY[
-                            ((int4multirange(int4range(NULL))), (int4multirange(int4range(Number(variables.get("ABA_CONTROL_PORT")), Number(variables.get("ABA_CONTROL_PORT")) + 1))))
+                            ((int4multirange(int4range(NULL))), (int4multirange(int4range(ABA_CONTROL_PORT_FROM, ABA_CONTROL_PORT_TO))))
                         ]::sgroups.sg_rule_ports[]
                     );
             COMMIT;

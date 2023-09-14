@@ -6,10 +6,11 @@ import { APIReporter } from "../reporter/api.reporter"
 import { PodStatus } from "../k8s/enums"
 import { manager } from "../k8s/PSCFabric"
 import { podInf } from "../k8s/podInformer"
-import { delay } from "../helpers"
+import { delay, waitSetSize } from "../helpers"
 import { hbfServer } from "../../specifications/hbfServer"
 import { apiTestPod } from "../../specifications/apiTestPod"
 import { streamApiHandler } from "../grpc/stream.api.handler"
+import { LaunchStatus } from "../../infrastructure/reporter";
 
 export class HBFApiScenario {
 
@@ -20,12 +21,12 @@ export class HBFApiScenario {
     private apiTestIp = variables.get("API_TEST_IP")
 
     private reporter: APIReporter
+    public finish: boolean = false
 
     constructor() {
         this.sharedConfigMaps.push(hbfServer.pgConfMap({
             prefix: this.prefix,
-            // data: fs.readFileSync(path.resolve(__dirname, "../../../sql/hbf.api.sql"), "utf-8") 
-            data: apiSql
+            data: fs.readFileSync(path.resolve(__dirname, "../../../sql/hbf.api.sql"), "utf-8") 
         }) as V1ConfigMap)
         this.sharedConfigMaps.push(hbfServer.hbfConfMap({
             prefix: this.prefix,
@@ -40,98 +41,52 @@ export class HBFApiScenario {
     }
 
     async start() {
-        console.log("API functional tests")
-        const startTime = Date.now()
-        await this.reporter.createLaunch(
-            variables.get("PIPELINE_ID"),
-            variables.get("JOB_ID"),
-            variables.get("CI_SOURCE_BRANCH_NAME"),
-            variables.get("CI_TARGET_BRANCH_NAME"),
-            variables.get("COMMIT"),
-            variables.get("HBF_TAG")
-        )
-        
-        console.log(`[SCENARIO] uuid: ${this.reporter.launchUUID}`)
-        streamApiHandler.setLaunchUuid(this.reporter.launchUUID)
-
-        await manager.createSharedConfigMaps(this.sharedConfigMaps)
-        await manager.createHBFServer(this.prefix, this.hbfServerIP, this.hbfServerPort)
-
-        await podInf.waitStatus(
-            `${this.prefix}-p${variables.get("PIPELINE_ID")}-hbf-server`,
-             PodStatus.RUNNING
-        )
-
-        await delay(10_000)
-
-        await manager.createAPITestPod(
-            this.prefix, 
-            this.apiTestIp,
-            this.hbfServerIP,
-            this.hbfServerPort
-        )
+        try {
+            console.log("API functional tests")
+            const startTime = Date.now()
+            await this.reporter.createLaunch(
+                variables.get("PIPELINE_ID"),
+                variables.get("JOB_ID"),
+                variables.get("CI_SOURCE_BRANCH_NAME"),
+                variables.get("CI_TARGET_BRANCH_NAME"),
+                variables.get("COMMIT"),
+                variables.get("HBF_TAG")
+            )
+            
+            console.log(`[SCENARIO] uuid: ${this.reporter.launchUUID}`)
+            streamApiHandler.setLaunchUuid(this.reporter.launchUUID)
+    
+            await manager.createSharedConfigMaps(this.sharedConfigMaps)
+            await manager.createHBFServer(this.prefix, this.hbfServerIP, this.hbfServerPort)
+    
+            await podInf.waitStatus(
+                `${this.prefix}-p${variables.get("PIPELINE_ID")}-hbf-server`,
+                 PodStatus.RUNNING
+            )
+    
+            await delay(10_000)
+    
+            await manager.createAPITestPod(
+                this.prefix, 
+                this.apiTestIp,
+                this.hbfServerIP,
+                this.hbfServerPort
+            )
+    
+            await waitSetSize(streamApiHandler.getStreamList(), 1, 180_000, 5)
+            await this.reporter.setStauts(LaunchStatus.IN_PORCESS)
+            await waitSetSize(streamApiHandler.getStreamList(), 0, 180_000, 10_000)
+    
+            const { fail, pass } = streamApiHandler.getResult()
+    
+            await this.reporter.closeLaunch(fail, pass, Date.now() - startTime)
+        } catch(err) {
+            await this.reporter.closeLaunchWithError(`${err}`)
+        } finally {
+            if(variables.get("IS_DESTROY_AFTER") === "true") {
+                await manager.destroyAllByInstance(this.prefix)
+            }
+        }
+        this.finish = true
     }
 }
-
-export const apiSql = `
-        DO $$
-        BEGIN 
-        INSERT INTO sgroups.tbl_sg(name) VALUES ('sg-0'),('sg-1'),('sg-2'),('sg-3'),('sg-4');
-        INSERT INTO
-            sgroups.tbl_network(name, network, sg)
-        VALUES
-            ('nw-0', '10.150.0.220/32', (SELECT id FROM sgroups.tbl_sg WHERE name = 'sg-0')),
-            ('nw-1', '10.150.0.221/32', (SELECT id FROM sgroups.tbl_sg WHERE name = 'sg-0')),
-            ('nw-2', '10.150.0.222/32', (SELECT id FROM sgroups.tbl_sg WHERE name = 'sg-1')),
-            ('nw-3', '10.150.0.223/32', (SELECT id FROM sgroups.tbl_sg WHERE name = 'sg-2')),
-            ('nw-4', '10.150.0.224/32', (SELECT id FROM sgroups.tbl_sg WHERE name = 'sg-3')),
-            ('nw-5', '20.150.0.224/28', (SELECT id FROM sgroups.tbl_sg WHERE name = 'sg-4'));
-        INSERT INTO
-            sgroups.tbl_sg_rule(sg_from, sg_to, proto, ports)
-        VALUES
-            (
-                (SELECT id FROM sgroups.tbl_sg WHERE name = 'sg-1'),
-                (SELECT id FROM sgroups.tbl_sg WHERE name = 'sg-0'),
-                'tcp',
-                ARRAY[
-                    ((int4multirange(int4range(NULL))), (int4multirange(int4range(5000, 5001))))
-                ]::sgroups.sg_rule_ports[]
-            ),
-            (
-                (SELECT id FROM sgroups.tbl_sg WHERE name = 'sg-1'),
-                (SELECT id FROM sgroups.tbl_sg WHERE name = 'sg-3'),
-                'udp',
-                ARRAY[
-                    ((int4multirange(int4range(NULL))), (int4multirange(int4range(5600, 5901))))
-                ]::sgroups.sg_rule_ports[]
-            ),
-            (
-                (SELECT id FROM sgroups.tbl_sg WHERE name = 'sg-0'),
-                (SELECT id FROM sgroups.tbl_sg WHERE name = 'sg-2'),
-                'tcp',
-                ARRAY[
-                    ((int4multirange(int4range(4444, 4445))), (int4multirange(int4range(7000, 7001)))),
-                    ((int4multirange(int4range(4445, 4446))), (int4multirange(int4range(7300, 7501)))),
-                    ((int4multirange(int4range(4446, 4447))), (int4multirange(int4range(7600, 7701), int4range(7800, 7801))))
-                ]::sgroups.sg_rule_ports[]
-            ),
-            (
-                (SELECT id FROM sgroups.tbl_sg WHERE name = 'sg-3'),
-                (SELECT id FROM sgroups.tbl_sg WHERE name = 'sg-2'),
-                'udp',
-                ARRAY[
-                    ((int4multirange(int4range(9999, 10051))), (int4multirange(int4range(23000, 23501))))
-                ]::sgroups.sg_rule_ports[]
-            ),
-            (
-                (SELECT id FROM sgroups.tbl_sg WHERE name = 'sg-3'),
-                (SELECT id FROM sgroups.tbl_sg WHERE name = 'sg-4'),
-                'tcp',
-                ARRAY[
-                    ((int4multirange(int4range(8888, 8889), int4range(1000, 2001))), (int4multirange(int4range(55000, 55001), int4range(56000, 57001)))),
-                    ((int4multirange(int4range(7777, 7778), int4range(45000, 46001))), (int4multirange(int4range(60000, 60001))))
-                ]::sgroups.sg_rule_ports[]
-            );
-        COMMIT;
-        END $$;
-`

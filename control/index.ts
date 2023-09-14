@@ -1,4 +1,5 @@
 import { controlServer } from "./src/domain/grpc/control";
+import { waitUntilTrue } from "./src/domain/helpers";
 import { manager } from "./src/domain/k8s/PSCFabric";
 import { podInf } from "./src/domain/k8s/podInformer";
 import { HBFApiScenario } from "./src/domain/scenarios/hbf.api.scenario";
@@ -18,18 +19,21 @@ import { variables } from "./src/infrastructure/var_storage/variables-storage";
             case 1: {
                 const funcScenario = new HBFFunctionalScenario()
                 funcScenario.start()
+                await waitUntilTrue(funcScenario.finish)
                 break
             }
             case 2: {
                 const apiScenario = new HBFApiScenario()
                 apiScenario.start()
+                await waitUntilTrue(apiScenario.finish)
                 break
             }
             case 99: {
                 const funcScenario = new HBFFunctionalScenario()
-                funcScenario.start()
                 const apiScenario = new HBFApiScenario()
+                funcScenario.start()
                 apiScenario.start()
+                await waitUntilTrue(funcScenario.finish && apiScenario.finish)
                 break
             }
             default: {

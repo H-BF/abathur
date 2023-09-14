@@ -44,3 +44,22 @@ export async function allRecordsValueIs<T extends string | number>(
         }, frequency)
     })
 }
+
+export async function waitUntilTrue(
+    state: boolean,
+    timeout: number = 60000,
+    frequency: number = 1000
+): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
+        const startTime = Date.now()
+        const interval = setInterval(() => {
+            if(state === true) {
+                clearInterval(interval)
+                resolve()
+            } else if(Date.now() - startTime >= timeout) {
+                clearInterval(interval)
+                reject(new Error("Timeout occurred!!"))
+            }
+        }, frequency)
+    })
+}

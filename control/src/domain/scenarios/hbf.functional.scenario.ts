@@ -22,11 +22,18 @@ export class HBFFunctionalScenario {
     private hbfServerPort = variables.get("F_HBF_SERVER_PORT")
 
     private reporter: HBFReporter
+    public finish: boolean = false
 
     constructor() {
         this.sharedConfigMaps.push(hbfServer.pgConfMap({
-            prefix: this.prefix,
-           data: fs.readFileSync(path.resolve(__dirname, "../../../sql/hbf.func.sql"), "utf-8") 
+           prefix: this.prefix,
+           data: fs.readFileSync(path.resolve(__dirname, "../../../sql/hbf.func.sql"), "utf-8")
+            .replaceAll("HBF_REPORTER_HOST", variables.get("HBF_REPORTER_HOST"))
+            .replaceAll("ABA_CONTROL_IP", variables.get("ABA_CONTROL_IP"))
+            .replaceAll("HBF_REPORTER_PORT_FROM", variables.get("HBF_REPORTER_PORT"))
+            .replaceAll("HBF_REPORTER_PORT_TO", (Number(variables.get("HBF_REPORTER_PORT")) + 1).toString())
+            .replaceAll("ABA_CONTROL_PORT_FROM", variables.get("ABA_CONTROL_PORT"))
+            .replaceAll("ABA_CONTROL_PORT_TO", (Number(variables.get("ABA_CONTROL_PORT")) + 1).toString())
         }) as V1ConfigMap)
         this.sharedConfigMaps.push(hbfServer.hbfConfMap({
             prefix: this.prefix,
@@ -90,6 +97,7 @@ export class HBFFunctionalScenario {
             if(variables.get("IS_DESTROY_AFTER") === "true") {
                 await manager.destroyAllByInstance(this.prefix)
             }
+            this.finish = true
         } 
     }
 

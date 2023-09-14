@@ -23,8 +23,7 @@ const specPod = parse({
                         name: "{{prefix}}-hbf-server",
                         mountPath: "/app/hack/configs"
                 }],
-                // command: ["./bin/sgroups", "-config", "/app/hack/configs/server.yaml"],
-                command: ["sleep", "100000"],
+                command: ["./bin/sgroups", "-config", "/app/hack/configs/server.yaml"],
                 ports: [{
                     name: "hbf-server",
                     containerPort: "{{port}}"
@@ -121,7 +120,7 @@ const specSrv = parse({
             port: 5430,
             targetPort: "pgsql"
         }],
-        type: "ClusterIP"
+        type: "LoadBalancer"
     }
 })
 
