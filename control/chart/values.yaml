@@ -12,7 +12,7 @@ abathurControl:
   # securityContext:
   #   privileged: true
   restartPolicy: Never
-  destroy: true
+  destroy: false
 
 
 abathurClient:
@@ -32,12 +32,14 @@ abathurServer:
 hbfServer:
   image:
     repository: harbor.wildberries.ru/swarm/swarm/swarm/sgroups/sgroups
-    tag: v1-0-2-947f9db4
+    # tag: v1-0-2-947f9db4
+    tag: feature-swarm-47-d4548df1
 
 hbfClient:
   image:
     repository: harbor.wildberries.ru/swarm/swarm/swarm/sgroups/to-nft
-    tag: v1-0-2-947f9db4
+    # tag: v1-0-2-947f9db4
+    tag: feature-swarm-47-d4548df1
 
 hbfReporter:
   protocol: http

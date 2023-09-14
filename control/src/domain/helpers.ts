@@ -14,7 +14,7 @@ export async function waitSetSize(
                 resolve()
             } else if(Date.now() - startTime >= timeout) {
                 clearInterval(interval)
-                reject(new Error("Timeout occurred!!"))
+                reject(new Error(`Не удалось дождаться готовности всех подов. Готовы ${data.size} из ${size}`))
             }
         }, frequency)
     })

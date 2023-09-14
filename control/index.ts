@@ -54,7 +54,7 @@ import { variables } from "./src/infrastructure/var_storage/variables-storage";
             )
         }
     
-        await waitSetSize(control.getStreamList(), keys.length, 3_600_000, 5)
+        await waitSetSize(control.getStreamList(), keys.length, 180_000, 5)
         await reporter.setStauts(LaunchStatus.IN_PORCESS)
 
         await waitSetSize(control.getStreamList(), 0, 3_600_000, 1_000)
