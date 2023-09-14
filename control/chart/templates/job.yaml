@@ -24,9 +24,6 @@ spec:
           securityContext:
               {{- toYaml . | nindent 14 }}
           {{- end }}
-          ports:
-          - containerPort: {{ .ports.addressPort }}
-            name: {{ .ports.addressPortAlias }}
       {{- end }}
           volumeMounts:
             - name: {{ .Release.Name }}-properties
@@ -37,3 +34,4 @@ spec:
             name: {{ .Release.Name }}-properties
       serviceAccountName: {{ .Release.Name }}-abathur
       restartPolicy: {{ .Values.abathurControl.restartPolicy }}
+  backoffLimit: 0

@@ -2,15 +2,15 @@ import { RestClient } from "../axios";
 import { variables } from "../var_storage/variables-storage";
 import { ICreateLaunchErrorReq, ICreateLaunchReq, ICreateLaunchRes, IUpdateLaunchReq, IUpdateLaunchRes } from "./interfaces";
 
-export class ReporterClient extends RestClient {
-   
+export class APIReporterClient extends RestClient {
+
     constructor() {
         super(
-            variables.get("REPORTER_HOST"),
-            variables.get("REPORTER_PORT"),
-            variables.get("REPORTER_PROTOCOL"),
+            variables.get("API_REPORTER_HOST"),
+            variables.get("API_REPORTER_PORT"),
+            variables.get("API_REPORTER_PROTOCOL"),           
         )
-        this.defaults.baseURL += '/hbf/v1'
+        this.defaults.baseURL += '/api/v1'
     }
 
     async createLaunch(launch: ICreateLaunchReq): Promise<string> {

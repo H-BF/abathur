@@ -1,8 +1,9 @@
 import { V1ConfigMap, V1Pod, V1Service } from "@kubernetes/client-node";
 import { K8sClient } from "../../infrastructure/k8s/k8sClient";
-import { abaTestPod } from "../../specifications/abaTestPod";
+import { hbfTestPod } from "../../specifications/hbfTestPod";
 import { hbfServer } from "../../specifications/hbfServer";
 import { variables } from "../../infrastructure/var_storage/variables-storage";
+import { apiTestPod } from "../../specifications/apiTestPod";
 
 export class PSCFabric {
  
@@ -29,9 +30,13 @@ export class PSCFabric {
      * Создаем под HBF сервера и сервис над ним.
      * Важно! Сначало надо вызвать метод createSharedConfigMaps()
      */
-    async createHBFServer(prefix: string, ip: string) {
-        console.log(`Создаем pod hbf-server: {prefix: ${prefix}, ip: ${ip}}`)
-        await this.k8sClient.createPod(hbfServer.specPod({prefix: prefix, ip: ip}) as V1Pod)
+    async createHBFServer(prefix: string, ip: string, port: string) {
+        console.log(`Создаем pod hbf-server: {prefix: ${prefix}, ip: ${ip}, port: ${port}}`)
+        await this.k8sClient.createPod(hbfServer.specPod({
+            prefix: prefix,
+            ip: ip,
+            port: parseInt(port)
+        }) as V1Pod)
         console.log(`Создаем service hbf-server`)
         await this.k8sClient.createService(hbfServer.specSrv({prefix: prefix}) as V1Service)
     }
@@ -46,7 +51,7 @@ export class PSCFabric {
      * @param testData - тестовые данные, которые надо поместить в ConfigMap
      * @param ports - список портов на которых нужно поднять сервер на данном поде
      */
-    async createTestPod(
+    async createHBFTestPod(
         prefix: string,
         podNumber: number,
         ip: string, 
@@ -55,7 +60,7 @@ export class PSCFabric {
     ) {
         console.log(`Готовимся к созданию тестового пода ${podNumber}: ${ip}`)
         //Создаем configMap с тестовыми данными
-        await this.k8sClient.createConfigMap(abaTestPod.testData({
+        await this.k8sClient.createConfigMap(hbfTestPod.testData({
             prefix: prefix,
             name: `test-data-${podNumber}`,
             component: `test-data-${podNumber}`,
@@ -63,20 +68,38 @@ export class PSCFabric {
         }) as V1ConfigMap)
 
         //Создаем configMap с портами на открытие
-        await this.k8sClient.createConfigMap(abaTestPod.ports({
+        await this.k8sClient.createConfigMap(hbfTestPod.ports({
             prefix: prefix,
             name: `test-ports-${podNumber}`,
             component: `test-ports-${podNumber}`,
             ports: ports
         }) as V1ConfigMap)
 
-        await this.k8sClient.createPod(abaTestPod.specPod({
+        await this.k8sClient.createPod(hbfTestPod.specPod({
             prefix: prefix,
             podName: `test-pod-${podNumber}`,
             component: `test-pod-${podNumber}`,
             ip: ip,
             testData: `test-data-${podNumber}`,
             ports: `test-ports-${podNumber}`
+        }) as V1Pod)
+    }
+
+
+    /**
+     * Создаем тествоый под для API тестов
+     */
+    async createAPITestPod(
+        prefix: string,
+        ip: string,
+        hbfServerIP: string,
+        hbfServerPort: string
+    ) {
+        await this.k8sClient.createPod(apiTestPod.specPod({
+            prefix: prefix,
+            ip: ip,
+            hbfServerIP: hbfServerIP,
+            hbfServerPort: hbfServerPort
         }) as V1Pod)
     }
 

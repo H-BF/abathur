@@ -10,6 +10,10 @@ data:
   config.properties: |
     HBF_SERVER_REPOSITORY={{ .Values.hbfServer.image.repository }}
     HBF_SERVER_TAG={{ .Values.hbfServer.image.tag }}
+    F_HBF_SERVER_IP={{ .Values.hbfServer.scenario.func.ip }}
+    F_HBF_SERVER_PORT={{ .Values.hbfServer.scenario.func.port  | toString }}
+    A_HBF_SERVER_IP={{ .Values.hbfServer.scenario.api.ip }}
+    A_HBF_SERVER_PORT={{ .Values.hbfServer.scenario.api.port | toString }}
     HBF_CLIENT_REPOSITORY={{ .Values.hbfClient.image.repository }}
     HBF_CLIENT_TAG={{ .Values.hbfClient.image.tag }}
     ABA_CLIENT_REPOSITORY={{ .Values.abathurClient.image.repository }}
@@ -22,9 +26,19 @@ data:
     CI_TARGET_BRANCH_NAME={{ $.Values.gitlab.dst_branch }}
     COMMIT={{ $.Values.gitlab.commit }}
     HBF_TAG={{ $.Values.hbfServer.image.tag }}
-    REPORTER_PROTOCOL={{ .Values.hbfReporter.protocol }}
-    REPORTER_HOST={{ .Values.hbfReporter.host }}
-    REPORTER_PORT={{ .Values.hbfReporter.port | toString }}
+    HBF_REPORTER_PROTOCOL={{ .Values.hbfReporter.protocol }}
+    HBF_REPORTER_HOST={{ .Values.hbfReporter.host }}
+    HBF_REPORTER_PORT={{ .Values.hbfReporter.port | toString }}
+    API_REPORTER_PROTOCOL={{ .Values.apiReporter.protocol }}
+    API_REPORTER_HOST={{ .Values.apiReporter.host }}
+    API_REPORTER_PORT={{ .Values.apiReporter.port | toString }}
     NAMESPACE={{ .Release.Namespace }}
     ABA_CONTROL_IP={{ .Values.abathurControl.ip }}
+    ABA_CONTROL_PORT={{ .Values.abathurControl.port | toString }}
     IS_DESTROY_AFTER={{ .Values.abathurControl.destroy }}
+    SCENARIO={{ .Values.abathurControl.scenario }}
+    TG_TOKEN={{ .Values.telegram.token }}
+    TG_GROUP_ID={{ .Values.telegram.groupId }}
+    API_TEST_REPOSITORY={{ .Values.apiTests.image.repository }}
+    API_TEST_TAG={{ .Values.apiTests.image.tag }}
+    API_TEST_IP={{ .Values.apiTests.ip }}

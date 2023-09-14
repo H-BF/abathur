@@ -6,18 +6,26 @@ import type { Req as _control_Req, Req__Output as _control_Req__Output } from '.
 import type { Res as _control_Res, Res__Output as _control_Res__Output } from '../control/Res';
 
 export interface ControlClient extends grpc.Client {
-  stream(metadata: grpc.Metadata, options?: grpc.CallOptions): grpc.ClientDuplexStream<_control_Req, _control_Res__Output>;
-  stream(options?: grpc.CallOptions): grpc.ClientDuplexStream<_control_Req, _control_Res__Output>;
-  stream(metadata: grpc.Metadata, options?: grpc.CallOptions): grpc.ClientDuplexStream<_control_Req, _control_Res__Output>;
-  stream(options?: grpc.CallOptions): grpc.ClientDuplexStream<_control_Req, _control_Res__Output>;
+  streamApi(metadata: grpc.Metadata, options?: grpc.CallOptions): grpc.ClientDuplexStream<_control_Req, _control_Res__Output>;
+  streamApi(options?: grpc.CallOptions): grpc.ClientDuplexStream<_control_Req, _control_Res__Output>;
+  streamApi(metadata: grpc.Metadata, options?: grpc.CallOptions): grpc.ClientDuplexStream<_control_Req, _control_Res__Output>;
+  streamApi(options?: grpc.CallOptions): grpc.ClientDuplexStream<_control_Req, _control_Res__Output>;
+  
+  streamFunc(metadata: grpc.Metadata, options?: grpc.CallOptions): grpc.ClientDuplexStream<_control_Req, _control_Res__Output>;
+  streamFunc(options?: grpc.CallOptions): grpc.ClientDuplexStream<_control_Req, _control_Res__Output>;
+  streamFunc(metadata: grpc.Metadata, options?: grpc.CallOptions): grpc.ClientDuplexStream<_control_Req, _control_Res__Output>;
+  streamFunc(options?: grpc.CallOptions): grpc.ClientDuplexStream<_control_Req, _control_Res__Output>;
   
 }
 
 export interface ControlHandlers extends grpc.UntypedServiceImplementation {
-  stream: grpc.handleBidiStreamingCall<_control_Req__Output, _control_Res>;
+  streamApi: grpc.handleBidiStreamingCall<_control_Req__Output, _control_Res>;
+  
+  streamFunc: grpc.handleBidiStreamingCall<_control_Req__Output, _control_Res>;
   
 }
 
 export interface ControlDefinition extends grpc.ServiceDefinition {
-  stream: MethodDefinition<_control_Req, _control_Res, _control_Req__Output, _control_Res__Output>
+  streamApi: MethodDefinition<_control_Req, _control_Res, _control_Req__Output, _control_Res__Output>
+  streamFunc: MethodDefinition<_control_Req, _control_Res, _control_Req__Output, _control_Res__Output>
 }

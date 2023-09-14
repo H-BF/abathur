@@ -1,14 +1,14 @@
-import { ReporterClient } from "../../infrastructure/reporter"
+import { HBFReporterClient } from "../../infrastructure/reporter"
 import { ICreateLaunchReq } from "../../infrastructure/reporter/interfaces/create-launch.interface"
 import { LaunchStatus } from "../../infrastructure/reporter/interfaces/update-launch.interface"
 
-export class Reporter {
+export class HBFReporter {
 
-    private client: ReporterClient
+    private client: HBFReporterClient
     private _launchUUID?: string
 
     constructor() {
-        this.client = new ReporterClient()
+        this.client = new HBFReporterClient()
     }
 
     get launchUUID(): string {

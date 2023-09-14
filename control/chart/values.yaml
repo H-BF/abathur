@@ -6,14 +6,15 @@ abathurControl:
     # repository: harbor.wildberries.ru/swarm/swarm/testops/abathur/aba-control
     # tag: feature-delete-job-554eaa78
   ip: 29.64.0.231
+  port: 9091
   ports:
     addressPort: 80
     addressPortAlias: aba-port
   # securityContext:
   #   privileged: true
   restartPolicy: Never
-  destroy: true
-
+  destroy: false
+  scenario: 1
 
 abathurClient:
   image:
@@ -33,16 +34,34 @@ hbfServer:
   image:
     repository: harbor.wildberries.ru/swarm/swarm/swarm/sgroups/sgroups
     tag: v1-0-2-947f9db4
+  scenario:
+    func:
+      ip: 29.64.0.232
+      port: 9006
+    api:
+      ip: 29.64.0.233
+      port: 9006
 
 hbfClient:
   image:
     repository: harbor.wildberries.ru/swarm/swarm/swarm/sgroups/to-nft
     tag: v1-0-2-947f9db4
 
+apiTests:
+  image:
+    repository: "hbf_api_tests"
+    tag: "latest"
+  ip: 29.64.0.255
+
 hbfReporter:
   protocol: http
   host: 172.25.143.81
   port: 9000
+
+apiReporter:
+  protocol: http
+  host: 172.25.143.81
+  port: 9001
 
 # hbfReporter:
 #   protocol: http
@@ -56,6 +75,10 @@ gitlab:
   src_branch: from
   dst_branch: to
   commit: 34er3r323
+
+telegram:
+  token: 5996680756:AAGHDMu5WnkaVioGJbesVJMv8irooQvfL7g
+  groupId: "-1001959123261"
 
 defaults:
   securityContext: {}

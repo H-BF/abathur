@@ -30,7 +30,7 @@ export class AbaControlClient {
         const meta = new grpc.Metadata()
         meta.add('id', this.ip)
 
-        this.call = client.stream(meta)
+        this.call = client.streamFunc(meta)
     }
 
     sendMsg(msg: Req) {

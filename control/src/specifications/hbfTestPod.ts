@@ -70,16 +70,19 @@ const specPod = parse({
                 imagePullPolicy: "IfNotPresent",
                 env: [{
                     name: "REPORTER_PROTOCOL",
-                    value: variables.get("REPORTER_PROTOCOL")
+                    value: variables.get("HBF_REPORTER_PROTOCOL")
                 },{
                     name: "REPORTER_HOST",
-                    value: variables.get("REPORTER_HOST")
+                    value: variables.get("HBF_REPORTER_HOST")
                 },{
                     name: "REPORTER_PORT",
-                    value: variables.get("REPORTER_PORT")
+                    value: variables.get("HBF_REPORTER_PORT")
                 },{
                     name: "ABA_CONTROL_IP",
                     value: variables.get("ABA_CONTROL_IP")
+                }, {
+                    name: "ABA_CONTROL_PORT",
+                    value: variables.get("ABA_CONTROL_PORT")
                 }],
                 resources: {
                     limits: {
@@ -170,4 +173,4 @@ const ports = parse({
     }
 })
 
-export const abaTestPod = { specPod, specConfMapHbfClient, testData, ports }
+export const hbfTestPod = { specPod, specConfMapHbfClient, testData, ports }
