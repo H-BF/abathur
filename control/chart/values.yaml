@@ -33,7 +33,7 @@ abathurServer:
 hbfServer:
   image:
     repository: harbor.wildberries.ru/swarm/swarm/swarm/sgroups/sgroups
-    tag: v1-0-2-947f9db4
+    tag: feature-swarm-47-3bbe5c15
   scenario:
     func:
       ip: 29.64.0.232
@@ -45,7 +45,7 @@ hbfServer:
 hbfClient:
   image:
     repository: harbor.wildberries.ru/swarm/swarm/swarm/sgroups/to-nft
-    tag: v1-0-2-947f9db4
+    tag: feature-swarm-47-3bbe5c15
 
 apiTests:
   image:
