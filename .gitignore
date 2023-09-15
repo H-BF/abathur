@@ -12,7 +12,8 @@ Docker-compose.yaml
 reset.control.sh
 reset.sh
 delete.sh
-pull.sh
+pull-aba.sh
+pull-hbf.sh
 minikube_start.sh
 test.yaml
 pool2.yaml
