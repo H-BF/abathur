@@ -1,3 +1,5 @@
+import { ScenarioInterface } from "./scenarios/scenario.interface"
+
 export async function delay(time: number) {
     return new Promise(resolve => setTimeout(resolve, time))
 }
@@ -8,10 +10,10 @@ export async function waitSetSize(
     timeout: number = 60000,
     frequency: number = 1000
 ): Promise<void> {
+    console.log(`Ждем пока размер массива станет ${size}`)
     return new Promise<void>((resolve, reject) => {
         const startTime = Date.now()
         const interval = setInterval(() => {
-            console.log(`Ждем пока размер массива станет ${size}. Текущий: ${data.size}`)
             if (data.size === size) {
                 clearInterval(interval)
                 resolve()
@@ -45,20 +47,24 @@ export async function allRecordsValueIs<T extends string | number>(
     })
 }
 
-export async function waitUntilTrue(
-    state: boolean,
-    timeout: number = 60000,
+export async function waitScenarioIsFinish(
+    scenarios: ScenarioInterface[],
+    timeout: number = 300000,
     frequency: number = 1000
 ): Promise<void> {
+    console.log(`Ждем сценарии завершатся`)
     return new Promise<void>((resolve, reject) => {
         const startTime = Date.now()
         const interval = setInterval(() => {
-            if(state === true) {
+            if(scenarios.length === 0) {
                 clearInterval(interval)
                 resolve()
             } else if(Date.now() - startTime >= timeout) {
                 clearInterval(interval)
-                reject(new Error("Timeout occurred!!"))
+                reject(new Error(`Сценарии ${scenarios.join(", ")} не завершились за отведенные ${timeout} мс`))
+            } else {
+                scenarios = scenarios.filter((scenario) => !scenario.isFinish());
+                console.log(scenarios)
             }
         }, frequency)
     })

@@ -33,7 +33,7 @@ abathurServer:
 hbfServer:
   image:
     repository: harbor.wildberries.ru/swarm/swarm/swarm/sgroups/sgroups
-    tag: feature-swarm-47-3bbe5c15
+    tag: v1-0-3-rc5-339b0961
   scenario:
     func:
       ip: 29.64.0.232
@@ -45,7 +45,7 @@ hbfServer:
 hbfClient:
   image:
     repository: harbor.wildberries.ru/swarm/swarm/swarm/sgroups/to-nft
-    tag: feature-swarm-47-3bbe5c15
+    tag: v1-0-3-rc5-339b0961
 
 apiTests:
   image:
@@ -53,24 +53,33 @@ apiTests:
     tag: "latest"
   ip: 29.64.0.255
 
-hbfReporter:
-  protocol: http
-  host: 172.25.143.81
-  port: 9000
-
-apiReporter:
-  protocol: http
-  host: 172.25.143.81
-  port: 9001
-
+# LOCAL
 # hbfReporter:
 #   protocol: http
-#   host: 10.36.38.132
-#   port: 80
+#   host: 172.25.143.81
+#   port: 9000
+
+# WB
+hbfReporter:
+  protocol: http
+  host: 10.36.36.186
+  port: 80
+
+# LOCAL
+# apiReporter:
+#   protocol: http
+#   host: 172.25.143.81
+#   port: 9001
+
+# WB
+apiReporter:
+  protocol: http
+  host: 10.36.37.165
+  port: 80
 
 gitlab:
   random: 6
-  pipeline: 123456
+  pipeline: 878789
   # job: ""
   src_branch: from
   dst_branch: to

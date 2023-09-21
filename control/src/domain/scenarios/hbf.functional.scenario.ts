@@ -13,8 +13,9 @@ import { LaunchStatus } from "../../infrastructure/reporter"
 import { streamFuncHandler } from "../grpc/stream.func.handler"
 import fs from 'fs'
 import path from 'path'
+import { ScenarioInterface } from "./scenario.interface"
 
-export class HBFFunctionalScenario {
+export class HBFFunctionalScenario implements ScenarioInterface {
 
     private prefix = 'func'
     private sharedConfigMaps: V1ConfigMap[] = []
@@ -22,7 +23,7 @@ export class HBFFunctionalScenario {
     private hbfServerPort = variables.get("F_HBF_SERVER_PORT")
 
     private reporter: HBFReporter
-    public finish: boolean = false
+    private finish: boolean = false
 
     constructor() {
         this.sharedConfigMaps.push(hbfServer.pgConfMap({
@@ -94,10 +95,10 @@ export class HBFFunctionalScenario {
         } catch(err) {
             await this.reporter.closeLaunchWithError(`${err}`)
         } finally {
+            this.finish = true
             if(variables.get("IS_DESTROY_AFTER") === "true") {
                 await manager.destroyAllByInstance(this.prefix)
             }
-            this.finish = true
         } 
     }
 
@@ -107,5 +108,9 @@ export class HBFFunctionalScenario {
         const hbfTestData = hbf.getTestData()
         const ports = hbf.gePortsForServer()
         return { hbfTestData, ports } 
+    }
+
+    isFinish(): boolean {
+        return this.finish
     }
 }

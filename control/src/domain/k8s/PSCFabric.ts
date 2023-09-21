@@ -91,15 +91,11 @@ export class PSCFabric {
      */
     async createAPITestPod(
         prefix: string,
-        ip: string,
-        hbfServerIP: string,
-        hbfServerPort: string
+        ip: string
     ) {
         await this.k8sClient.createPod(apiTestPod.specPod({
             prefix: prefix,
-            ip: ip,
-            hbfServerIP: hbfServerIP,
-            hbfServerPort: hbfServerPort
+            ip: ip
         }) as V1Pod)
     }
 

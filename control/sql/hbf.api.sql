@@ -56,5 +56,27 @@
                         ((int4multirange(int4range(7777, 7778), int4range(45000, 46001))), (int4multirange(int4range(60000, 60001))))
                     ]::sgroups.sg_rule_ports[]
                 );
+            INSERT INTO
+                sgroups.tbl_fqdn_rule(sg_from, fqdn_to, proto, ports, logs)
+            VALUES
+                (
+                    (SELECT id FROM sgroups.tbl_sg WHERE name = 'sg-0'),
+                    'google.com',
+                    'tcp',
+                    ARRAY[
+                        ((int4multirange(int4range(4446, 4447))), (int4multirange(int4range(7600, 7701), int4range(7800, 7801))))
+                    ]::sgroups.sg_rule_ports[],
+                    true
+                ),
+                (
+                    (SELECT id FROM sgroups.tbl_sg WHERE name = 'sg-1'),
+                    'yandex.ru',
+                    'udp',
+                    ARRAY[
+                        ((int4multirange(int4range(8888, 8889), int4range(1000, 2001))), (int4multirange(int4range(55000, 55001), int4range(56000, 57001)))),
+                        ((int4multirange(int4range(7777, 7778), int4range(45000, 46001))), (int4multirange(int4range(60000, 60001))))
+                    ]::sgroups.sg_rule_ports[],
+                    false
+                );
             COMMIT;
         END $$;

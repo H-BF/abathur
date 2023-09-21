@@ -24,9 +24,14 @@ class StreamApiHandler {
                 case 2:
                     console.log("Попали в ветку finish")
                     if(!request.data) 
-                        throw new Error('Обязательное data status отсутствует')
+                        throw new Error('Обязательное data отсутствует')
                     this.result = JSON.parse(request.data) as { fail: number, pass: number }
                     break
+                case 3:
+                    console.log("Попали в ветку error")
+                    if(!request.data) 
+                        throw new Error('Обязательное data отсутствует')
+                    throw new Error(request.data)
             }
         })
 

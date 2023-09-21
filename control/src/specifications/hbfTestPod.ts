@@ -28,11 +28,11 @@ const specPod = parse({
                 }],
                 resources: {
                     limits: {
-                        cpu: "200m",
+                        cpu: "100m",
                         memory: "100Mi"
                     },
                     requests: {
-                        cpu: "200m",
+                        cpu: "100m",
                         memory: "100Mi"
                     }
                 },
@@ -51,11 +51,11 @@ const specPod = parse({
                 imagePullPolicy: "IfNotPresent",
                 resources: {
                     limits: {
-                        cpu: "200m",
+                        cpu: "100m",
                         memory: "500Mi"
                     },
                     requests: {
-                        cpu: "200m",
+                        cpu: "100m",
                         memory: "500Mi"
                     }
                 }
@@ -86,11 +86,11 @@ const specPod = parse({
                 }],
                 resources: {
                     limits: {
-                        cpu: "200m",
+                        cpu: "100m",
                         memory: "500Mi"
                     },
                     requests: {
-                        cpu: "200m",
+                        cpu: "100m",
                         memory: "500Mi"
                     }
                 }

@@ -11,8 +11,9 @@ import { hbfServer } from "../../specifications/hbfServer"
 import { apiTestPod } from "../../specifications/apiTestPod"
 import { streamApiHandler } from "../grpc/stream.api.handler"
 import { LaunchStatus } from "../../infrastructure/reporter";
+import { ScenarioInterface } from "./scenario.interface";
 
-export class HBFApiScenario {
+export class HBFApiScenario implements ScenarioInterface {
 
     private prefix = 'api'
     private sharedConfigMaps: V1ConfigMap[] = []
@@ -21,9 +22,18 @@ export class HBFApiScenario {
     private apiTestIp = variables.get("API_TEST_IP")
 
     private reporter: APIReporter
-    public finish: boolean = false
+    private finish: boolean = false
 
     constructor() {
+        let data = JSON.parse(fs.readFileSync(path.resolve(__dirname, "../../../test_data/swarm.json"), "utf-8"))
+        data.variable.forEach((vr: any) => {
+            if (vr.key === "HOST") {
+                vr.value = this.hbfServerIP
+            } else if (vr.key === "PORT") {
+                vr.value = this.hbfServerPort
+            }
+        })
+
         this.sharedConfigMaps.push(hbfServer.pgConfMap({
             prefix: this.prefix,
             data: fs.readFileSync(path.resolve(__dirname, "../../../sql/hbf.api.sql"), "utf-8") 
@@ -36,13 +46,17 @@ export class HBFApiScenario {
             prefix: this.prefix,
             hbfServerIP: this.hbfServerIP
         }) as V1ConfigMap)
+        this.sharedConfigMaps.push(apiTestPod.specConfMapNewmanTestData({
+            prefix: this.prefix,
+            data: JSON.stringify(data)
+        }) as V1ConfigMap)
 
         this.reporter = new APIReporter()
     }
 
     async start() {
         try {
-            console.log("API functional tests")
+            console.log("API tests")
             const startTime = Date.now()
             await this.reporter.createLaunch(
                 variables.get("PIPELINE_ID"),
@@ -68,9 +82,7 @@ export class HBFApiScenario {
     
             await manager.createAPITestPod(
                 this.prefix, 
-                this.apiTestIp,
-                this.hbfServerIP,
-                this.hbfServerPort
+                this.apiTestIp
             )
     
             await waitSetSize(streamApiHandler.getStreamList(), 1, 180_000, 5)
@@ -83,10 +95,16 @@ export class HBFApiScenario {
         } catch(err) {
             await this.reporter.closeLaunchWithError(`${err}`)
         } finally {
+            this.finish = true
+            console.log("меняем finish на: " + this.finish)
             if(variables.get("IS_DESTROY_AFTER") === "true") {
                 await manager.destroyAllByInstance(this.prefix)
             }
         }
-        this.finish = true
+    }
+
+    isFinish(): boolean {
+        console.log(`finish: ${this.finish}`)
+        return this.finish
     }
 }

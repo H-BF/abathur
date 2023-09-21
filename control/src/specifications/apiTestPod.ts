@@ -17,6 +17,16 @@ const specPod = parse({
             name: "wait-db",
             image: "postgres:14.8",
             command: ["sh", "/tmp/wait-db.sh"],
+            resources: {
+                limits: {
+                    cpu: "200m",
+                    memory: "100Mi"
+                },
+                requests: {
+                    cpu: "200m",
+                    memory: "100Mi"
+                }
+            },
             volumeMounts: [{
                 name: `{{prefix}}-p${variables.get("PIPELINE_ID")}-wait-db`,
                 mountPath: "/tmp"
@@ -26,13 +36,17 @@ const specPod = parse({
             name: "api-tests",
             image: `${variables.get("API_TEST_REPOSITORY")}:${variables.get("API_TEST_TAG")}`,
             imagePullPolicy: "IfNotPresent",
+            resources: {
+                limits: {
+                    cpu: "300m",
+                    memory: "300Mi"
+                },
+                requests: {
+                    cpu: "300m",
+                    memory: "300Mi"
+                }
+            },
             env: [{
-                name: "HBF_HOST",
-                value: "{{hbfServerIP}}"
-            },{
-                name: "HBF_PORT",
-                value: "{{hbfServerPort}}"
-            }, {
                 name: "REPORTER_HOST",
                 value: `${variables.get("API_REPORTER_HOST")}`
             }, {
@@ -47,6 +61,10 @@ const specPod = parse({
             }, {
                 name: "ABA_CONTROL_PORT",
                 value: `${variables.get("ABA_CONTROL_PORT")}`
+            }],
+            volumeMounts: [{
+                name: `{{prefix}}-p${variables.get("PIPELINE_ID")}-api-data`,
+                mountPath: `/tmp/testData`
             }]
         }],
         restartPolicy: "Never",
@@ -55,7 +73,25 @@ const specPod = parse({
             configMap: {
                 name: `{{prefix}}-p${variables.get("PIPELINE_ID")}-wait-db`
             }
+        }, {
+            name: `{{prefix}}-p${variables.get("PIPELINE_ID")}-api-data`,
+            configMap: {
+                name: `{{prefix}}-p${variables.get("PIPELINE_ID")}-api-data`
+            }
         }]
+    }
+})
+
+const specConfMapNewmanTestData = parse({
+    metadata: {
+        name: `{{prefix}}-p${variables.get("PIPELINE_ID")}-api-data`,
+        labels: {
+            component: "teset-data",
+            instance: `{{prefix}}-p${variables.get("PIPELINE_ID")}`
+        }
+    },
+    data: {
+        "swarm.json": "{{data}}"
     }
 })
 
@@ -81,4 +117,4 @@ const specConfMapWaitDb = parse({
     }
 })
 
-export const apiTestPod = { specPod, specConfMapWaitDb }
+export const apiTestPod = { specPod, specConfMapWaitDb, specConfMapNewmanTestData }

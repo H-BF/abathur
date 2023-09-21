@@ -19,4 +19,5 @@ message Res {
 enum Status {
     ready = 1;
     finish = 2;
+    error = 3;
 }

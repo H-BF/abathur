@@ -38,11 +38,11 @@ const specPod = parse({
                 }],
                 resources: {
                     limits: {
-                        cpu: "200m",
+                        cpu: "100m",
                         memory: "100Mi"
                     },
                     requests: {
-                        cpu: "200m",
+                        cpu: "100m",
                         memory: "100Mi"
                     }
                 }
@@ -72,11 +72,11 @@ const specPod = parse({
                 }],
                 resources: {
                     limits: {
-                        cpu: "200m",
+                        cpu: "100m",
                         memory: "100Mi"
                     },
                     requests: {
-                        cpu: "200m",
+                        cpu: "100m",
                         memory: "100Mi"
                     }
                 }
@@ -163,7 +163,7 @@ const pgConfMap = parse({
         "01-init.sql": fs.readFileSync(path.resolve(__dirname, "../../sql/init.sql"), "utf-8"),
         "02-migr.sql": fs.readFileSync(path.resolve(__dirname, "../../sql/migr-1.sql"), "utf-8"),
         "03-migr.sql": fs.readFileSync(path.resolve(__dirname, "../../sql/migr-2.sql"), "utf-8"),
-        "03-data.sql": "{{data}}"
+        "04-data.sql": "{{data}}"
     }
 })
 
