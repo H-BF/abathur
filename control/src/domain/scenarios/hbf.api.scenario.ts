@@ -96,7 +96,6 @@ export class HBFApiScenario implements ScenarioInterface {
             await this.reporter.closeLaunchWithError(`${err}`)
         } finally {
             this.finish = true
-            console.log("меняем finish на: " + this.finish)
             if(variables.get("IS_DESTROY_AFTER") === "true") {
                 await manager.destroyAllByInstance(this.prefix)
             }
@@ -104,7 +103,6 @@ export class HBFApiScenario implements ScenarioInterface {
     }
 
     isFinish(): boolean {
-        console.log(`finish: ${this.finish}`)
         return this.finish
     }
 }

@@ -32,5 +32,15 @@ export const requiredPropVariablesList = [
     "TG_GROUP_ID",
     "API_TEST_REPOSITORY",
     "API_TEST_TAG",
-    "API_TEST_IP"
+    "API_TEST_IP",
+    "ABA_SERVER_CPU",
+    "ABA_SERVER_MEM",
+    "ABA_CLIENT_CPU",
+    "ABA_CLIENT_MEM",
+    "HBF_SERVER_CPU",
+    "HBF_SERVER_MEM",
+    "HBF_CLIENT_CPU",
+    "HBF_CLIENT_MEM",
+    "API_TEST_CPU",
+    "API_TEST_MEM",
 ]

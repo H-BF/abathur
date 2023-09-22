@@ -28,12 +28,12 @@ const specPod = parse({
                 }],
                 resources: {
                     limits: {
-                        cpu: "100m",
-                        memory: "100Mi"
+                        cpu: variables.get("HBF_CLIENT_CPU"),
+                        memory: variables.get("HBF_CLIENT_MEM")
                     },
                     requests: {
-                        cpu: "100m",
-                        memory: "100Mi"
+                        cpu: variables.get("HBF_CLIENT_CPU"),
+                        memory: variables.get("HBF_CLIENT_MEM")
                     }
                 },
                 command: [ "./bin/to-nft", "-config", "/app/hack/configs/to-nft.yaml" ]
@@ -51,12 +51,12 @@ const specPod = parse({
                 imagePullPolicy: "IfNotPresent",
                 resources: {
                     limits: {
-                        cpu: "100m",
-                        memory: "500Mi"
+                        cpu: variables.get("ABA_SERVER_CPU"),
+                        memory: variables.get("ABA_SERVER_MEM")
                     },
                     requests: {
-                        cpu: "100m",
-                        memory: "500Mi"
+                        cpu: variables.get("ABA_SERVER_CPU"),
+                        memory: variables.get("ABA_SERVER_MEM")
                     }
                 }
             },
@@ -86,12 +86,12 @@ const specPod = parse({
                 }],
                 resources: {
                     limits: {
-                        cpu: "100m",
-                        memory: "500Mi"
+                        cpu: variables.get("ABA_CLIENT_CPU"),
+                        memory: variables.get("ABA_CLIENT_MEM")
                     },
                     requests: {
-                        cpu: "100m",
-                        memory: "500Mi"
+                        cpu: variables.get("ABA_CLIENT_CPU"),
+                        memory: variables.get("ABA_CLIENT_MEM")
                     }
                 }
             }

@@ -3,13 +3,14 @@ abathurControl:
     imagePullPolicy: Never
     repository: abathur_control
     tag: latest
-    # repository: harbor.wildberries.ru/swarm/swarm/testops/abathur/aba-control
-    # tag: feature-delete-job-554eaa78
   ip: 29.64.0.231
   port: 9091
   ports:
     addressPort: 80
     addressPortAlias: aba-port
+  resources:
+    cpu: 300m
+    memory: 500Mi
   # securityContext:
   #   privileged: true
   restartPolicy: Never
@@ -20,20 +21,25 @@ abathurClient:
   image:
     repository: abathur_client
     tag: latest
-    # repository: harbor.wildberries.ru/swarm/swarm/testops/abathur/aba-client
-    # tag: feature-delete-job-554eaa78
+  resources:
+    cpu: 100m
+    memory: 500Mi
 
 abathurServer:
   image:
     repository: abathur_server
     tag: latest
-    # repository: harbor.wildberries.ru/swarm/swarm/testops/abathur/aba-server
-    # tag: feature-delete-job-554eaa78
+  resources:
+    cpu: 100m
+    memory: 500Mi
 
 hbfServer:
   image:
     repository: harbor.wildberries.ru/swarm/swarm/swarm/sgroups/sgroups
     tag: v1-0-3-rc5-339b0961
+  resources:
+    cpu: 100m
+    memory: 100Mi
   scenario:
     func:
       ip: 29.64.0.232
@@ -46,36 +52,42 @@ hbfClient:
   image:
     repository: harbor.wildberries.ru/swarm/swarm/swarm/sgroups/to-nft
     tag: v1-0-3-rc5-339b0961
+  resources:
+    cpu: 100m
+    memory:  100Mi
 
 apiTests:
   image:
     repository: "hbf_api_tests"
     tag: "latest"
   ip: 29.64.0.255
+  resources:
+    cpu: 300m
+    memory: 300Mi
 
 # LOCAL
-# hbfReporter:
-#   protocol: http
-#   host: 172.25.143.81
-#   port: 9000
-
-# WB
 hbfReporter:
   protocol: http
-  host: 10.36.36.186
-  port: 80
-
-# LOCAL
-# apiReporter:
-#   protocol: http
-#   host: 172.25.143.81
-#   port: 9001
+  host: 172.25.143.81
+  port: 9000
 
 # WB
+# hbfReporter:
+#   protocol: http
+#   host: 10.36.36.186
+#   port: 80
+
+# LOCAL
 apiReporter:
   protocol: http
-  host: 10.36.37.165
-  port: 80
+  host: 172.25.143.81
+  port: 9001
+
+# WB
+# apiReporter:
+#   protocol: http
+#   host: 10.36.37.165
+#   port: 80
 
 gitlab:
   random: 6

@@ -42,3 +42,13 @@ data:
     API_TEST_REPOSITORY={{ .Values.apiTests.image.repository }}
     API_TEST_TAG={{ .Values.apiTests.image.tag }}
     API_TEST_IP={{ .Values.apiTests.ip }}
+    ABA_SERVER_CPU={{ .Values.abathurServer.resources.cpu }}
+    ABA_SERVER_MEM={{ .Values.abathurServer.resources.memory }}
+    ABA_CLIENT_CPU={{ .Values.abathurClient.resources.cpu }}
+    ABA_CLIENT_MEM={{ .Values.abathurClient.resources.memory }}
+    HBF_SERVER_CPU={{ .Values.hbfServer.resources.cpu }}
+    HBF_SERVER_MEM={{ .Values.hbfServer.resources.memory }}
+    HBF_CLIENT_CPU={{ .Values.hbfClient.resources.cpu }}
+    HBF_CLIENT_MEM={{ .Values.hbfClient.resources.memory }}
+    API_TEST_CPU={{ .Values.apiTests.resources.cpu }}
+    API_TEST_MEM={{ .Values.apiTests.resources.memory }}

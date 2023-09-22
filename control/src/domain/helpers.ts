@@ -64,7 +64,6 @@ export async function waitScenarioIsFinish(
                 reject(new Error(`Сценарии ${scenarios.join(", ")} не завершились за отведенные ${timeout} мс`))
             } else {
                 scenarios = scenarios.filter((scenario) => !scenario.isFinish());
-                console.log(scenarios)
             }
         }, frequency)
     })

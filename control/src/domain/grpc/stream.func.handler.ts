@@ -38,6 +38,11 @@ class StreamFuncHandler {
                     this.passCount += data.pass
                     this.failCount += data.fail
                     break;
+                case 3:
+                    console.log("Попали в ветку finish")
+                    if(!request.data) 
+                        throw new Error('Обязательное data отсутствует')
+                    throw new Error(request.data)
             } 
         })
 

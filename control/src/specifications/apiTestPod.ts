@@ -38,12 +38,12 @@ const specPod = parse({
             imagePullPolicy: "IfNotPresent",
             resources: {
                 limits: {
-                    cpu: "300m",
-                    memory: "300Mi"
+                    cpu: variables.get("API_TEST_CPU"),
+                    memory: variables.get("API_TEST_MEM")
                 },
                 requests: {
-                    cpu: "300m",
-                    memory: "300Mi"
+                    cpu: variables.get("API_TEST_CPU"),
+                    memory: variables.get("API_TEST_MEM")
                 }
             },
             env: [{

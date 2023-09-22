@@ -38,12 +38,12 @@ const specPod = parse({
                 }],
                 resources: {
                     limits: {
-                        cpu: "100m",
-                        memory: "100Mi"
+                        cpu: variables.get("HBF_SERVER_CPU"),
+                        memory: variables.get("HBF_SERVER_MEM")
                     },
                     requests: {
-                        cpu: "100m",
-                        memory: "100Mi"
+                        cpu: variables.get("HBF_SERVER_CPU"),
+                        memory: variables.get("HBF_SERVER_MEM")
                     }
                 }
             },
