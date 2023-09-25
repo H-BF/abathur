@@ -42,13 +42,12 @@ export class HBFApiScenario implements ScenarioInterface {
             prefix: this.prefix,
             port: this.hbfServerPort
         }) as V1ConfigMap)
-        this.sharedConfigMaps.push(apiTestPod.specConfMapWaitDb({
-            prefix: this.prefix,
-            hbfServerIP: this.hbfServerIP
-        }) as V1ConfigMap)
         this.sharedConfigMaps.push(apiTestPod.specConfMapNewmanTestData({
             prefix: this.prefix,
             data: JSON.stringify(data)
+        }) as V1ConfigMap)
+        this.sharedConfigMaps.push(hbfServer.specConfMapWaitDb({
+            prefix: this.prefix            
         }) as V1ConfigMap)
 
         this.reporter = new APIReporter()

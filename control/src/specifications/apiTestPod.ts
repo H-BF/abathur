@@ -13,25 +13,6 @@ const specPod = parse({
         }
     },
     spec: {
-        initContainers: [{
-            name: "wait-db",
-            image: "postgres:14.8",
-            command: ["sh", "/tmp/wait-db.sh"],
-            resources: {
-                limits: {
-                    cpu: "200m",
-                    memory: "100Mi"
-                },
-                requests: {
-                    cpu: "200m",
-                    memory: "100Mi"
-                }
-            },
-            volumeMounts: [{
-                name: `{{prefix}}-p${variables.get("PIPELINE_ID")}-wait-db`,
-                mountPath: "/tmp"
-            }]
-        }],
         containers: [{
             name: "api-tests",
             image: `${variables.get("API_TEST_REPOSITORY")}:${variables.get("API_TEST_TAG")}`,
@@ -95,26 +76,4 @@ const specConfMapNewmanTestData = parse({
     }
 })
 
-const specConfMapWaitDb = parse({
-    metadata: {
-        name: `{{prefix}}-p${variables.get("PIPELINE_ID")}-wait-db`,
-        labels: {
-            component: "wait-db",
-            instance: `{{prefix}}-p${variables.get("PIPELINE_ID")}`            
-        }
-    },
-    data: {
-        "wait-db.sh": `
-        #!/bin/sh
-    
-        until [ "$(psql postgres://nkiver:nkiver@{{hbfServerIP}}:5432/postgres?sslmode=disable -c "SELECT COUNT(*) FROM sgroups.tbl_sg_rule;" -t -A)" -gt 0 ]; do
-          echo "Ожидание не пустой таблицы 'sgroups.tbl_sg_rule' в базе данных в Pod hbf-server..."
-          sleep 5
-        done
-    
-        echo "Таблица 'sgroups.tbl_sg_rule' в базе данных в Pod hbf-server отсутствует. Продолжение работы основного контейнера..."
-        `
-    }
-})
-
-export const apiTestPod = { specPod, specConfMapWaitDb, specConfMapNewmanTestData }
+export const apiTestPod = { specPod, specConfMapNewmanTestData }
