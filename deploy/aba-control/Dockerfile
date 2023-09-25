@@ -11,4 +11,5 @@ COPY --from=builder /usr/src/app/build .
 COPY --from=builder /usr/src/app/gRPC/control.proto ../gRPC/
 COPY --from=builder /usr/src/app/node_modules ./node_modules
 COPY --from=builder /usr/src/app/sql ./sql
+COPY --from=builder /usr/src/app/test_data ./test_data
 CMD ["node", "index.js"]
