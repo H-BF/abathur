@@ -53,6 +53,9 @@ const specPod = parse({
                 volumeMounts: [{
                     name: "{{prefix}}-pg-init",
                     mountPath: "/docker-entrypoint-initdb.d"
+                }, {
+                    name: `{{prefix}}-p${variables.get("PIPELINE_ID")}-wait-db`,
+                    mountPath: "/tmp"
                 }],
                 ports: [{
                     name: "pgsql",
@@ -79,6 +82,13 @@ const specPod = parse({
                         cpu: "100m",
                         memory: "100Mi"
                     }
+                },
+                redinessProbe: {
+                    exec: {
+                        command: ["sh", "/tmp/wait-db.sh"]
+                    },
+                    initialDelaySeconds: 5,
+                    successThreshold: 1
                 }
             }
         ],
@@ -92,6 +102,12 @@ const specPod = parse({
             name: `{{prefix}}-pg-init`,
             configMap: {
                 name: `{{prefix}}-p${variables.get("PIPELINE_ID")}-pg-init`
+            }
+        },
+        {
+            name: `{{prefix}}-p${variables.get("PIPELINE_ID")}-wait-db`,
+            configMap: {
+                name: `{{prefix}}-p${variables.get("PIPELINE_ID")}-wait-db`
             }
         }]
     }
@@ -167,4 +183,33 @@ const pgConfMap = parse({
     }
 })
 
-export const hbfServer = { specPod, specSrv, hbfConfMap, pgConfMap }
+
+const specConfMapWaitDb = parse({
+    metadata: {
+        name: `{{prefix}}-p${variables.get("PIPELINE_ID")}-wait-db`,
+        labels: {
+            component: "wait-db",
+            instance: `{{prefix}}-p${variables.get("PIPELINE_ID")}`            
+        }
+    },
+    data: {
+        "wait-db.sh": `
+        #!/bin/sh
+
+        max_attempts=12
+        attempts=0
+    
+        until [ "$(psql postgres://nkiver:nkiver@localhost:5432/postgres?sslmode=disable -c "SELECT COUNT(*) FROM sgroups.tbl_sg_rule;" -t -A)" -gt 0 ]; do
+        attempts=$((attempts+1))
+        if [ $attempts -gt $max_attempts ]; then
+          echo "Превышено максимальное количество попыток ожидания"
+          exit 1
+        fi
+          echo "Ожидание не пустой таблицы 'sgroups.tbl_sg_rule' в базе данных в Pod hbf-server..."
+          sleep 5
+        done
+        `
+    }
+})
+
+export const hbfServer = { specPod, specSrv, hbfConfMap, pgConfMap, specConfMapWaitDb }

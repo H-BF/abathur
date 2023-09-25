@@ -45,6 +45,10 @@ export class HBFFunctionalScenario implements ScenarioInterface {
             ip: this.hbfServerIP,
             port: this.hbfServerPort            
         }) as V1ConfigMap)
+        this.sharedConfigMaps.push(hbfServer.specConfMapWaitDb({
+            prefix: this.prefix            
+        }) as V1ConfigMap)
+        
         this.reporter = new HBFReporter()
     }
 
