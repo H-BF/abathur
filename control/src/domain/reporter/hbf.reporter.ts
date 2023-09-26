@@ -63,6 +63,7 @@ export class HBFReporter {
     }
 
     async closeLaunchWithError(errMsg: string) {
+        console.log(errMsg)
         if (!this._launchUUID)
             throw new Error("Launch not create yet")
 

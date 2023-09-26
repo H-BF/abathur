@@ -2,8 +2,11 @@ import { KubeConfig, CoreV1Api, V1Pod, V1Service, V1ConfigMap,
      V1ObjectMeta, makeInformer, ListPromise, KubernetesObject,
      Informer, ObjectCache, V1PodList, V1PodStatus, V1ServiceList,
      V1ConfigMapList, RbacAuthorizationV1Api, AppsV1Api,
-     BatchV1Api  } from '@kubernetes/client-node';
+     BatchV1Api,  
+     V1PodCondition} from '@kubernetes/client-node';
 import http from 'http'
+import { PodConditionTypes } from '../../domain/k8s/enums';
+import { PodConditionStatus } from '../../domain/k8s/types/pod.condition.status.type';
 
 export class K8sClient {
 
@@ -40,6 +43,16 @@ export class K8sClient {
         return status.phase
     }
 
+    getConditionStatus(
+        type: PodConditionTypes,
+        conditions: Array<V1PodCondition>
+      ) : { status: PodConditionStatus, date: Date} | undefined {
+        const condition = conditions.find(c => c.type === type)
+        if (!condition) return;
+        const status = condition.status as PodConditionStatus
+        const date = condition.lastTransitionTime ? condition.lastTransitionTime : new Date('2000-01-01T00:00:00Z')
+        return { status, date };
+      }
         ///////////////////
         //Работа с подами//
         ///////////////////

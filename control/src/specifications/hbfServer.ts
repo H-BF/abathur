@@ -83,13 +83,15 @@ const specPod = parse({
                         memory: "100Mi"
                     }
                 },
-                redinessProbe: {
+                startupProbe: {
                     exec: {
                         command: ["sh", "/tmp/wait-db.sh"]
                     },
-                    initialDelaySeconds: 5,
-                    successThreshold: 1
-                }
+                    initialDelaySeconds: 10,
+                    timeoutSeconds: 5,
+                    successThreshold: 1,
+                    failureThreshold: 5
+                },
             }
         ],
         volumes: [{
@@ -194,20 +196,18 @@ const specConfMapWaitDb = parse({
     },
     data: {
         "wait-db.sh": `
-        #!/bin/sh
-
-        max_attempts=12
-        attempts=0
-    
-        until [ "$(psql postgres://nkiver:nkiver@localhost:5432/postgres?sslmode=disable -c "SELECT COUNT(*) FROM sgroups.tbl_sg_rule;" -t -A)" -gt 0 ]; do
-        attempts=$((attempts+1))
-        if [ $attempts -gt $max_attempts ]; then
-          echo "Превышено максимальное количество попыток ожидания"
-          exit 1
+        #!/bin/sh        
+        echo "Проверяем что в таблице 'sgroups.tbl_sg_rule' есть хоть одна строка"
+        count=$(psql postgres://nkiver:nkiver@localhost:5432/postgres?sslmode=disable -c "SELECT COUNT(*) FROM sgroups.tbl_sg_rule;" -t -A)
+        echo "Количество строк в таблице 'sgroups.tbl_sg_rule': $count"
+        
+        if [ "$count" -gt 0 ]; then
+            echo "more"
+            exit 0
+        else
+            echo "less"
+            exit 1
         fi
-          echo "Ожидание не пустой таблицы 'sgroups.tbl_sg_rule' в базе данных в Pod hbf-server..."
-          sleep 5
-        done
         `
     }
 })

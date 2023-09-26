@@ -76,9 +76,10 @@ export class HBFApiScenario implements ScenarioInterface {
                 `${this.prefix}-p${variables.get("PIPELINE_ID")}-hbf-server`,
                  PodStatus.RUNNING
             )
-    
-            await delay(10_000)
-    
+            await podInf.waitContainerIsReady(
+                `${this.prefix}-p${variables.get("PIPELINE_ID")}-hbf-server`
+            )
+
             await manager.createAPITestPod(
                 this.prefix, 
                 this.apiTestIp
@@ -92,6 +93,7 @@ export class HBFApiScenario implements ScenarioInterface {
     
             await this.reporter.closeLaunch(fail, pass, Date.now() - startTime)
         } catch(err) {
+            console.log(`${err}`)
             await this.reporter.closeLaunchWithError(`${err}`)
         } finally {
             this.finish = true

@@ -1,0 +1,957 @@
+Создаем gRPC control server
+Создаем информер отслеживающий поды
+Запускаем под информер
+Получаем список подов для namespase: default
+Сценарий: 2
+API tests
+Ждем сценарии завершатся
+Control Server start successfully!
+Лаунч создан! a5223c37-8297-4b0b-a4ff-3778ea42161f
+[SCENARIO] uuid: a5223c37-8297-4b0b-a4ff-3778ea42161f
+Создаем общие configMaps
+Создаем ConfigMap: api-p878789-pg-init
+ADD
+V1Pod {
+  apiVersion: undefined,
+  kind: undefined,
+  metadata: V1ObjectMeta {
+    annotations: {
+      'cni.projectcalico.org/containerID': '350d062a2074dc83e9b6592f78a81be3bc892d0d4624d896416cfb6d62a19a4e',
+      'cni.projectcalico.org/podIP': '10.244.120.85/32',
+      'cni.projectcalico.org/podIPs': '10.244.120.85/32',
+      'meta.helm.sh/release-name': 'boo',
+      'meta.helm.sh/release-namespace': 'default'
+    },
+    creationTimestamp: 2023-09-22T11:21:26.000Z,
+    deletionGracePeriodSeconds: undefined,
+    deletionTimestamp: undefined,
+    finalizers: undefined,
+    generateName: undefined,
+    generation: undefined,
+    labels: {
+      'app.kubernetes.io/managed-by': 'Helm',
+      component: 'boo-hbf-reporter-crud'
+    },
+    managedFields: [
+      [V1ManagedFieldsEntry],
+      [V1ManagedFieldsEntry],
+      [V1ManagedFieldsEntry]
+    ],
+    name: 'boo-hbf-reporter-crud',
+    namespace: 'default',
+    ownerReferences: undefined,
+    resourceVersion: '1670484',
+    selfLink: undefined,
+    uid: '7b6dc1da-0977-4236-a10c-4c48360e9f47'
+  },
+  spec: V1PodSpec {
+    activeDeadlineSeconds: undefined,
+    affinity: undefined,
+    automountServiceAccountToken: undefined,
+    containers: [ [V1Container] ],
+    dnsConfig: undefined,
+    dnsPolicy: 'ClusterFirst',
+    enableServiceLinks: true,
+    ephemeralContainers: undefined,
+    hostAliases: undefined,
+    hostIPC: undefined,
+    hostNetwork: undefined,
+    hostPID: undefined,
+    hostUsers: undefined,
+    hostname: undefined,
+    imagePullSecrets: [ [V1LocalObjectReference] ],
+    initContainers: undefined,
+    nodeName: 'minikube',
+    nodeSelector: undefined,
+    os: undefined,
+    overhead: undefined,
+    preemptionPolicy: 'PreemptLowerPriority',
+    priority: 0,
+    priorityClassName: undefined,
+    readinessGates: undefined,
+    restartPolicy: 'OnFailure',
+    runtimeClassName: undefined,
+    schedulerName: 'default-scheduler',
+    securityContext: V1PodSecurityContext {
+      fsGroup: undefined,
+      fsGroupChangePolicy: undefined,
+      runAsGroup: undefined,
+      runAsNonRoot: undefined,
+      runAsUser: undefined,
+      seLinuxOptions: undefined,
+      seccompProfile: undefined,
+      supplementalGroups: undefined,
+      sysctls: undefined,
+      windowsOptions: undefined
+    },
+    serviceAccount: 'default',
+    serviceAccountName: 'default',
+    setHostnameAsFQDN: undefined,
+    shareProcessNamespace: undefined,
+    subdomain: undefined,
+    terminationGracePeriodSeconds: 30,
+    tolerations: [ [V1Toleration], [V1Toleration] ],
+    topologySpreadConstraints: undefined,
+    volumes: [ [V1Volume] ]
+  },
+  status: V1PodStatus {
+    conditions: [
+      [V1PodCondition],
+      [V1PodCondition],
+      [V1PodCondition],
+      [V1PodCondition]
+    ],
+    containerStatuses: [ [V1ContainerStatus] ],
+    ephemeralContainerStatuses: undefined,
+    hostIP: '192.168.49.2',
+    initContainerStatuses: undefined,
+    message: undefined,
+    nominatedNodeName: undefined,
+    phase: 'Running',
+    podIP: '10.244.120.85',
+    podIPs: [ [V1PodIP] ],
+    qosClass: 'BestEffort',
+    reason: undefined,
+    startTime: 2023-09-22T11:21:26.000Z
+  }
+}
+ADD
+V1Pod {
+  apiVersion: undefined,
+  kind: undefined,
+  metadata: V1ObjectMeta {
+    annotations: {
+      'cni.projectcalico.org/containerID': '24b4c473234aba4742dc4cd3c8b8702ac13e52469112dc647f0597daa9251e88',
+      'cni.projectcalico.org/podIP': '10.244.120.109/32',
+      'cni.projectcalico.org/podIPs': '10.244.120.109/32',
+      'meta.helm.sh/release-name': 'coo',
+      'meta.helm.sh/release-namespace': 'default'
+    },
+    creationTimestamp: 2023-09-11T15:54:18.000Z,
+    deletionGracePeriodSeconds: undefined,
+    deletionTimestamp: undefined,
+    finalizers: undefined,
+    generateName: undefined,
+    generation: undefined,
+    labels: {
+      'app.kubernetes.io/managed-by': 'Helm',
+      component: 'coo-api-reporter-crud'
+    },
+    managedFields: [
+      [V1ManagedFieldsEntry],
+      [V1ManagedFieldsEntry],
+      [V1ManagedFieldsEntry]
+    ],
+    name: 'coo-api-reporter-crud',
+    namespace: 'default',
+    ownerReferences: undefined,
+    resourceVersion: '1670453',
+    selfLink: undefined,
+    uid: '702f1f27-b749-4b32-97fa-ca1619cc3dd7'
+  },
+  spec: V1PodSpec {
+    activeDeadlineSeconds: undefined,
+    affinity: undefined,
+    automountServiceAccountToken: undefined,
+    containers: [ [V1Container] ],
+    dnsConfig: undefined,
+    dnsPolicy: 'ClusterFirst',
+    enableServiceLinks: true,
+    ephemeralContainers: undefined,
+    hostAliases: undefined,
+    hostIPC: undefined,
+    hostNetwork: undefined,
+    hostPID: undefined,
+    hostUsers: undefined,
+    hostname: undefined,
+    imagePullSecrets: [ [V1LocalObjectReference] ],
+    initContainers: undefined,
+    nodeName: 'minikube',
+    nodeSelector: undefined,
+    os: undefined,
+    overhead: undefined,
+    preemptionPolicy: 'PreemptLowerPriority',
+    priority: 0,
+    priorityClassName: undefined,
+    readinessGates: undefined,
+    restartPolicy: 'OnFailure',
+    runtimeClassName: undefined,
+    schedulerName: 'default-scheduler',
+    securityContext: V1PodSecurityContext {
+      fsGroup: undefined,
+      fsGroupChangePolicy: undefined,
+      runAsGroup: undefined,
+      runAsNonRoot: undefined,
+      runAsUser: undefined,
+      seLinuxOptions: undefined,
+      seccompProfile: undefined,
+      supplementalGroups: undefined,
+      sysctls: undefined,
+      windowsOptions: undefined
+    },
+    serviceAccount: 'default',
+    serviceAccountName: 'default',
+    setHostnameAsFQDN: undefined,
+    shareProcessNamespace: undefined,
+    subdomain: undefined,
+    terminationGracePeriodSeconds: 30,
+    tolerations: [ [V1Toleration], [V1Toleration] ],
+    topologySpreadConstraints: undefined,
+    volumes: [ [V1Volume] ]
+  },
+  status: V1PodStatus {
+    conditions: [
+      [V1PodCondition],
+      [V1PodCondition],
+      [V1PodCondition],
+      [V1PodCondition]
+    ],
+    containerStatuses: [ [V1ContainerStatus] ],
+    ephemeralContainerStatuses: undefined,
+    hostIP: '192.168.49.2',
+    initContainerStatuses: undefined,
+    message: undefined,
+    nominatedNodeName: undefined,
+    phase: 'Running',
+    podIP: '10.244.120.109',
+    podIPs: [ [V1PodIP] ],
+    qosClass: 'BestEffort',
+    reason: undefined,
+    startTime: 2023-09-11T15:54:18.000Z
+  }
+}
+ADD
+V1Pod {
+  apiVersion: undefined,
+  kind: undefined,
+  metadata: V1ObjectMeta {
+    annotations: {
+      'cni.projectcalico.org/containerID': 'fe40eaf40218be66616e3d93b620f20fc7566ad19c13450945755cd0449169fa',
+      'cni.projectcalico.org/podIP': '10.244.120.72/32',
+      'cni.projectcalico.org/podIPs': '10.244.120.72/32',
+      'kubectl.kubernetes.io/last-applied-configuration': '{"apiVersion":"v1","kind":"Pod","metadata":{"annotations":{},"labels":{"label":"frontops"},"name":"frontops","namespace":"default"},"spec":{"containers":[{"env":[{"name":"API_REPORT_CRUD_URI","value":"http://172.25.143.81:9000"}],"image":"harbor.wildberries.ru/swarm/swarm/frontops/frontend-test-ui/front-testops:dev-df7a239a","imagePullPolicy":"Never","name":"frontops","ports":[{"containerPort":80}],"resources":{"limits":{"cpu":"200m","memory":"500Mi"},"requests":{"cpu":"200m","memory":"500Mi"}}}]}}\n'
+    },
+    creationTimestamp: 2023-09-22T11:12:17.000Z,
+    deletionGracePeriodSeconds: undefined,
+    deletionTimestamp: undefined,
+    finalizers: undefined,
+    generateName: undefined,
+    generation: undefined,
+    labels: { label: 'frontops' },
+    managedFields: [
+      [V1ManagedFieldsEntry],
+      [V1ManagedFieldsEntry],
+      [V1ManagedFieldsEntry]
+    ],
+    name: 'frontops',
+    namespace: 'default',
+    ownerReferences: undefined,
+    resourceVersion: '1670499',
+    selfLink: undefined,
+    uid: '635d4f44-6630-4f2c-a956-aef8089901f0'
+  },
+  spec: V1PodSpec {
+    activeDeadlineSeconds: undefined,
+    affinity: undefined,
+    automountServiceAccountToken: undefined,
+    containers: [ [V1Container] ],
+    dnsConfig: undefined,
+    dnsPolicy: 'ClusterFirst',
+    enableServiceLinks: true,
+    ephemeralContainers: undefined,
+    hostAliases: undefined,
+    hostIPC: undefined,
+    hostNetwork: undefined,
+    hostPID: undefined,
+    hostUsers: undefined,
+    hostname: undefined,
+    imagePullSecrets: [ [V1LocalObjectReference] ],
+    initContainers: undefined,
+    nodeName: 'minikube',
+    nodeSelector: undefined,
+    os: undefined,
+    overhead: undefined,
+    preemptionPolicy: 'PreemptLowerPriority',
+    priority: 0,
+    priorityClassName: undefined,
+    readinessGates: undefined,
+    restartPolicy: 'Always',
+    runtimeClassName: undefined,
+    schedulerName: 'default-scheduler',
+    securityContext: V1PodSecurityContext {
+      fsGroup: undefined,
+      fsGroupChangePolicy: undefined,
+      runAsGroup: undefined,
+      runAsNonRoot: undefined,
+      runAsUser: undefined,
+      seLinuxOptions: undefined,
+      seccompProfile: undefined,
+      supplementalGroups: undefined,
+      sysctls: undefined,
+      windowsOptions: undefined
+    },
+    serviceAccount: 'default',
+    serviceAccountName: 'default',
+    setHostnameAsFQDN: undefined,
+    shareProcessNamespace: undefined,
+    subdomain: undefined,
+    terminationGracePeriodSeconds: 30,
+    tolerations: [ [V1Toleration], [V1Toleration] ],
+    topologySpreadConstraints: undefined,
+    volumes: [ [V1Volume] ]
+  },
+  status: V1PodStatus {
+    conditions: [
+      [V1PodCondition],
+      [V1PodCondition],
+      [V1PodCondition],
+      [V1PodCondition]
+    ],
+    containerStatuses: [ [V1ContainerStatus] ],
+    ephemeralContainerStatuses: undefined,
+    hostIP: '192.168.49.2',
+    initContainerStatuses: undefined,
+    message: undefined,
+    nominatedNodeName: undefined,
+    phase: 'Running',
+    podIP: '10.244.120.72',
+    podIPs: [ [V1PodIP] ],
+    qosClass: 'Guaranteed',
+    reason: undefined,
+    startTime: 2023-09-22T11:12:17.000Z
+  }
+}
+ADD
+V1Pod {
+  apiVersion: undefined,
+  kind: undefined,
+  metadata: V1ObjectMeta {
+    annotations: {
+      'cni.projectcalico.org/containerID': '61ccdc727fdde816b0f6931acf6748201bfccf5df924626f94518d45b74f8a89',
+      'cni.projectcalico.org/ipAddrs': '["29.64.0.231"]',
+      'cni.projectcalico.org/podIP': '29.64.0.231/32',
+      'cni.projectcalico.org/podIPs': '29.64.0.231/32'
+    },
+    creationTimestamp: 2023-09-26T10:48:47.000Z,
+    deletionGracePeriodSeconds: undefined,
+    deletionTimestamp: undefined,
+    finalizers: [ 'batch.kubernetes.io/job-tracking' ],
+    generateName: 'soo-abathur-control-',
+    generation: undefined,
+    labels: {
+      component: 'control',
+      'controller-uid': '312bfb3d-0584-410b-96ed-ce2b3ec3bd38',
+      instance: 'p878789-abathur-control',
+      'job-name': 'soo-abathur-control'
+    },
+    managedFields: [
+      [V1ManagedFieldsEntry],
+      [V1ManagedFieldsEntry],
+      [V1ManagedFieldsEntry]
+    ],
+    name: 'soo-abathur-control-z6dq7',
+    namespace: 'default',
+    ownerReferences: [ [V1OwnerReference] ],
+    resourceVersion: '1672205',
+    selfLink: undefined,
+    uid: '19240c30-16de-4749-a474-060f87f13faa'
+  },
+  spec: V1PodSpec {
+    activeDeadlineSeconds: undefined,
+    affinity: undefined,
+    automountServiceAccountToken: undefined,
+    containers: [ [V1Container] ],
+    dnsConfig: undefined,
+    dnsPolicy: 'ClusterFirst',
+    enableServiceLinks: true,
+    ephemeralContainers: undefined,
+    hostAliases: undefined,
+    hostIPC: undefined,
+    hostNetwork: undefined,
+    hostPID: undefined,
+    hostUsers: undefined,
+    hostname: undefined,
+    imagePullSecrets: undefined,
+    initContainers: undefined,
+    nodeName: 'minikube',
+    nodeSelector: undefined,
+    os: undefined,
+    overhead: undefined,
+    preemptionPolicy: 'PreemptLowerPriority',
+    priority: 0,
+    priorityClassName: undefined,
+    readinessGates: undefined,
+    restartPolicy: 'Never',
+    runtimeClassName: undefined,
+    schedulerName: 'default-scheduler',
+    securityContext: V1PodSecurityContext {
+      fsGroup: undefined,
+      fsGroupChangePolicy: undefined,
+      runAsGroup: undefined,
+      runAsNonRoot: undefined,
+      runAsUser: undefined,
+      seLinuxOptions: undefined,
+      seccompProfile: undefined,
+      supplementalGroups: undefined,
+      sysctls: undefined,
+      windowsOptions: undefined
+    },
+    serviceAccount: 'soo-abathur',
+    serviceAccountName: 'soo-abathur',
+    setHostnameAsFQDN: undefined,
+    shareProcessNamespace: undefined,
+    subdomain: undefined,
+    terminationGracePeriodSeconds: 30,
+    tolerations: [ [V1Toleration], [V1Toleration] ],
+    topologySpreadConstraints: undefined,
+    volumes: [ [V1Volume], [V1Volume] ]
+  },
+  status: V1PodStatus {
+    conditions: [
+      [V1PodCondition],
+      [V1PodCondition],
+      [V1PodCondition],
+      [V1PodCondition]
+    ],
+    containerStatuses: [ [V1ContainerStatus] ],
+    ephemeralContainerStatuses: undefined,
+    hostIP: '192.168.49.2',
+    initContainerStatuses: undefined,
+    message: undefined,
+    nominatedNodeName: undefined,
+    phase: 'Running',
+    podIP: '29.64.0.231',
+    podIPs: [ [V1PodIP] ],
+    qosClass: 'Guaranteed',
+    reason: undefined,
+    startTime: 2023-09-26T10:48:47.000Z
+  }
+}
+ADD
+V1Pod {
+  apiVersion: undefined,
+  kind: undefined,
+  metadata: V1ObjectMeta {
+    annotations: {
+      'cni.projectcalico.org/containerID': '63a83fa6b8b47050d604d9661ea48852e448ae73fadb159c79c558f94eeab927',
+      'cni.projectcalico.org/podIP': '10.244.120.96/32',
+      'cni.projectcalico.org/podIPs': '10.244.120.96/32',
+      'kubectl.kubernetes.io/last-applied-configuration': '{"apiVersion":"v1","kind":"Pod","metadata":{"annotations":{},"labels":{"name":"test-db"},"name":"test-db","namespace":"default"},"spec":{"containers":[{"env":[{"name":"PGDATA","value":"/var/lib/postgresql/data/pgdata"},{"name":"POSTGRES_USER","value":"nkiver"},{"name":"POSTGRES_PASSWORD","value":"nkiver"},{"name":"POSTGRES_DB","value":"postgres"}],"image":"postgres:14.8","name":"pgsql","ports":[{"containerPort":5432,"name":"pgsql"}],"resources":{"limits":{"cpu":"500m","memory":"1Gi"}},"volumeMounts":[{"mountPath":"/var/lib/postgresql/data","name":"db-data"}]}],"volumes":[{"name":"db-data","persistentVolumeClaim":{"claimName":"pg-storage"}}]}}\n'
+    },
+    creationTimestamp: 2023-08-29T17:49:19.000Z,
+    deletionGracePeriodSeconds: undefined,
+    deletionTimestamp: undefined,
+    finalizers: undefined,
+    generateName: undefined,
+    generation: undefined,
+    labels: { name: 'test-db' },
+    managedFields: [
+      [V1ManagedFieldsEntry],
+      [V1ManagedFieldsEntry],
+      [V1ManagedFieldsEntry]
+    ],
+    name: 'test-db',
+    namespace: 'default',
+    ownerReferences: undefined,
+    resourceVersion: '1670287',
+    selfLink: undefined,
+    uid: '7b1024ae-823a-4ff6-913e-cb6b58bf4704'
+  },
+  spec: V1PodSpec {
+    activeDeadlineSeconds: undefined,
+    affinity: undefined,
+    automountServiceAccountToken: undefined,
+    containers: [ [V1Container] ],
+    dnsConfig: undefined,
+    dnsPolicy: 'ClusterFirst',
+    enableServiceLinks: true,
+    ephemeralContainers: undefined,
+    hostAliases: undefined,
+    hostIPC: undefined,
+    hostNetwork: undefined,
+    hostPID: undefined,
+    hostUsers: undefined,
+    hostname: undefined,
+    imagePullSecrets: [ [V1LocalObjectReference] ],
+    initContainers: undefined,
+    nodeName: 'minikube',
+    nodeSelector: undefined,
+    os: undefined,
+    overhead: undefined,
+    preemptionPolicy: 'PreemptLowerPriority',
+    priority: 0,
+    priorityClassName: undefined,
+    readinessGates: undefined,
+    restartPolicy: 'Always',
+    runtimeClassName: undefined,
+    schedulerName: 'default-scheduler',
+    securityContext: V1PodSecurityContext {
+      fsGroup: undefined,
+      fsGroupChangePolicy: undefined,
+      runAsGroup: undefined,
+      runAsNonRoot: undefined,
+      runAsUser: undefined,
+      seLinuxOptions: undefined,
+      seccompProfile: undefined,
+      supplementalGroups: undefined,
+      sysctls: undefined,
+      windowsOptions: undefined
+    },
+    serviceAccount: 'default',
+    serviceAccountName: 'default',
+    setHostnameAsFQDN: undefined,
+    shareProcessNamespace: undefined,
+    subdomain: undefined,
+    terminationGracePeriodSeconds: 30,
+    tolerations: [ [V1Toleration], [V1Toleration] ],
+    topologySpreadConstraints: undefined,
+    volumes: [ [V1Volume], [V1Volume] ]
+  },
+  status: V1PodStatus {
+    conditions: [
+      [V1PodCondition],
+      [V1PodCondition],
+      [V1PodCondition],
+      [V1PodCondition]
+    ],
+    containerStatuses: [ [V1ContainerStatus] ],
+    ephemeralContainerStatuses: undefined,
+    hostIP: '192.168.49.2',
+    initContainerStatuses: undefined,
+    message: undefined,
+    nominatedNodeName: undefined,
+    phase: 'Running',
+    podIP: '10.244.120.96',
+    podIPs: [ [V1PodIP] ],
+    qosClass: 'Guaranteed',
+    reason: undefined,
+    startTime: 2023-08-29T17:49:19.000Z
+  }
+}
+Response code: 201
+Создаем ConfigMap: api-p878789-hbf-server
+Response code: 201
+Создаем ConfigMap: api-p878789-api-data
+Response code: 201
+Создаем ConfigMap: api-p878789-wait-db
+Response code: 201
+Создаем pod hbf-server: {prefix: api, ip: 29.64.0.233, port: 9006}
+Создаем Pod: api-p878789-hbf-server
+Response code: 201
+Создаем service hbf-server
+Создаем сервис: api-p878789-hbf-server
+ADD
+{
+  kind: 'Pod',
+  apiVersion: 'v1',
+  metadata: {
+    name: 'api-p878789-hbf-server',
+    namespace: 'default',
+    uid: '718be468-2702-4332-bd6a-ffc5c91971f7',
+    resourceVersion: '1672211',
+    creationTimestamp: '2023-09-26T10:48:50Z',
+    labels: { component: 'hbf-server', instance: 'api-p878789' },
+    annotations: { 'cni.projectcalico.org/ipAddrs': '["29.64.0.233"]' },
+    managedFields: [ [Object] ]
+  },
+  spec: {
+    volumes: [ [Object], [Object], [Object], [Object] ],
+    containers: [ [Object], [Object] ],
+    restartPolicy: 'Always',
+    terminationGracePeriodSeconds: 30,
+    dnsPolicy: 'ClusterFirst',
+    serviceAccountName: 'default',
+    serviceAccount: 'default',
+    securityContext: {},
+    imagePullSecrets: [ [Object] ],
+    schedulerName: 'default-scheduler',
+    tolerations: [ [Object], [Object] ],
+    priority: 0,
+    enableServiceLinks: true,
+    preemptionPolicy: 'PreemptLowerPriority'
+  },
+  status: { phase: 'Pending', qosClass: 'Guaranteed' }
+}
+UPDATE
+{
+  kind: 'Pod',
+  apiVersion: 'v1',
+  metadata: {
+    name: 'api-p878789-hbf-server',
+    namespace: 'default',
+    uid: '718be468-2702-4332-bd6a-ffc5c91971f7',
+    resourceVersion: '1672212',
+    creationTimestamp: '2023-09-26T10:48:50Z',
+    labels: { component: 'hbf-server', instance: 'api-p878789' },
+    annotations: { 'cni.projectcalico.org/ipAddrs': '["29.64.0.233"]' },
+    managedFields: [ [Object] ]
+  },
+  spec: {
+    volumes: [ [Object], [Object], [Object], [Object] ],
+    containers: [ [Object], [Object] ],
+    restartPolicy: 'Always',
+    terminationGracePeriodSeconds: 30,
+    dnsPolicy: 'ClusterFirst',
+    serviceAccountName: 'default',
+    serviceAccount: 'default',
+    nodeName: 'minikube',
+    securityContext: {},
+    imagePullSecrets: [ [Object] ],
+    schedulerName: 'default-scheduler',
+    tolerations: [ [Object], [Object] ],
+    priority: 0,
+    enableServiceLinks: true,
+    preemptionPolicy: 'PreemptLowerPriority'
+  },
+  status: {
+    phase: 'Pending',
+    conditions: [ [Object] ],
+    qosClass: 'Guaranteed'
+  }
+}
+UPDATE
+{
+  kind: 'Pod',
+  apiVersion: 'v1',
+  metadata: {
+    name: 'api-p878789-hbf-server',
+    namespace: 'default',
+    uid: '718be468-2702-4332-bd6a-ffc5c91971f7',
+    resourceVersion: '1672215',
+    creationTimestamp: '2023-09-26T10:48:50Z',
+    labels: { component: 'hbf-server', instance: 'api-p878789' },
+    annotations: { 'cni.projectcalico.org/ipAddrs': '["29.64.0.233"]' },
+    managedFields: [ [Object], [Object] ]
+  },
+  spec: {
+    volumes: [ [Object], [Object], [Object], [Object] ],
+    containers: [ [Object], [Object] ],
+    restartPolicy: 'Always',
+    terminationGracePeriodSeconds: 30,
+    dnsPolicy: 'ClusterFirst',
+    serviceAccountName: 'default',
+    serviceAccount: 'default',
+    nodeName: 'minikube',
+    securityContext: {},
+    imagePullSecrets: [ [Object] ],
+    schedulerName: 'default-scheduler',
+    tolerations: [ [Object], [Object] ],
+    priority: 0,
+    enableServiceLinks: true,
+    preemptionPolicy: 'PreemptLowerPriority'
+  },
+  status: {
+    phase: 'Pending',
+    conditions: [ [Object], [Object], [Object], [Object] ],
+    hostIP: '192.168.49.2',
+    startTime: '2023-09-26T10:48:50Z',
+    containerStatuses: [ [Object], [Object] ],
+    qosClass: 'Guaranteed'
+  }
+}
+Response code: 201
+Ждем у Pod'а api-p878789-hbf-server статус Running
+UPDATE
+{
+  kind: 'Pod',
+  apiVersion: 'v1',
+  metadata: {
+    name: 'api-p878789-hbf-server',
+    namespace: 'default',
+    uid: '718be468-2702-4332-bd6a-ffc5c91971f7',
+    resourceVersion: '1672225',
+    creationTimestamp: '2023-09-26T10:48:50Z',
+    labels: { component: 'hbf-server', instance: 'api-p878789' },
+    annotations: {
+      'cni.projectcalico.org/containerID': '588f6ff03e21d06eaf31e477b6da23036ca6ff12f8b09ce3018d06ba82ad1019',
+      'cni.projectcalico.org/ipAddrs': '["29.64.0.233"]',
+      'cni.projectcalico.org/podIP': '29.64.0.233/32',
+      'cni.projectcalico.org/podIPs': '29.64.0.233/32'
+    },
+    managedFields: [ [Object], [Object], [Object] ]
+  },
+  spec: {
+    volumes: [ [Object], [Object], [Object], [Object] ],
+    containers: [ [Object], [Object] ],
+    restartPolicy: 'Always',
+    terminationGracePeriodSeconds: 30,
+    dnsPolicy: 'ClusterFirst',
+    serviceAccountName: 'default',
+    serviceAccount: 'default',
+    nodeName: 'minikube',
+    securityContext: {},
+    imagePullSecrets: [ [Object] ],
+    schedulerName: 'default-scheduler',
+    tolerations: [ [Object], [Object] ],
+    priority: 0,
+    enableServiceLinks: true,
+    preemptionPolicy: 'PreemptLowerPriority'
+  },
+  status: {
+    phase: 'Pending',
+    conditions: [ [Object], [Object], [Object], [Object] ],
+    hostIP: '192.168.49.2',
+    startTime: '2023-09-26T10:48:50Z',
+    containerStatuses: [ [Object], [Object] ],
+    qosClass: 'Guaranteed'
+  }
+}
+UPDATE
+{
+  kind: 'Pod',
+  apiVersion: 'v1',
+  metadata: {
+    name: 'api-p878789-hbf-server',
+    namespace: 'default',
+    uid: '718be468-2702-4332-bd6a-ffc5c91971f7',
+    resourceVersion: '1672233',
+    creationTimestamp: '2023-09-26T10:48:50Z',
+    labels: { component: 'hbf-server', instance: 'api-p878789' },
+    annotations: {
+      'cni.projectcalico.org/containerID': '588f6ff03e21d06eaf31e477b6da23036ca6ff12f8b09ce3018d06ba82ad1019',
+      'cni.projectcalico.org/ipAddrs': '["29.64.0.233"]',
+      'cni.projectcalico.org/podIP': '29.64.0.233/32',
+      'cni.projectcalico.org/podIPs': '29.64.0.233/32'
+    },
+    managedFields: [ [Object], [Object], [Object] ]
+  },
+  spec: {
+    volumes: [ [Object], [Object], [Object], [Object] ],
+    containers: [ [Object], [Object] ],
+    restartPolicy: 'Always',
+    terminationGracePeriodSeconds: 30,
+    dnsPolicy: 'ClusterFirst',
+    serviceAccountName: 'default',
+    serviceAccount: 'default',
+    nodeName: 'minikube',
+    securityContext: {},
+    imagePullSecrets: [ [Object] ],
+    schedulerName: 'default-scheduler',
+    tolerations: [ [Object], [Object] ],
+    priority: 0,
+    enableServiceLinks: true,
+    preemptionPolicy: 'PreemptLowerPriority'
+  },
+  status: {
+    phase: 'Running',
+    conditions: [ [Object], [Object], [Object], [Object] ],
+    hostIP: '192.168.49.2',
+    podIP: '29.64.0.233',
+    podIPs: [ [Object] ],
+    startTime: '2023-09-26T10:48:50Z',
+    containerStatuses: [ [Object], [Object] ],
+    qosClass: 'Guaranteed'
+  }
+}
+Дождались!
+Создаем Pod: api-p878789-api-tests
+ADD
+{
+  kind: 'Pod',
+  apiVersion: 'v1',
+  metadata: {
+    name: 'api-p878789-api-tests',
+    namespace: 'default',
+    uid: 'cf485fc7-272b-4820-91f1-88d7b4f57735',
+    resourceVersion: '1672245',
+    creationTimestamp: '2023-09-26T10:49:02Z',
+    labels: { component: 'api-tests', instance: 'api-p878789' },
+    annotations: { 'cni.projectcalico.org/ipAddrs': '["29.64.0.255"]' },
+    managedFields: [ [Object] ]
+  },
+  spec: {
+    volumes: [ [Object], [Object], [Object] ],
+    containers: [ [Object] ],
+    restartPolicy: 'Never',
+    terminationGracePeriodSeconds: 30,
+    dnsPolicy: 'ClusterFirst',
+    serviceAccountName: 'default',
+    serviceAccount: 'default',
+    securityContext: {},
+    imagePullSecrets: [ [Object] ],
+    schedulerName: 'default-scheduler',
+    tolerations: [ [Object], [Object] ],
+    priority: 0,
+    enableServiceLinks: true,
+    preemptionPolicy: 'PreemptLowerPriority'
+  },
+  status: { phase: 'Pending', qosClass: 'Guaranteed' }
+}
+Response code: 201
+Ждем пока размер массива станет 1
+UPDATE
+{
+  kind: 'Pod',
+  apiVersion: 'v1',
+  metadata: {
+    name: 'api-p878789-api-tests',
+    namespace: 'default',
+    uid: 'cf485fc7-272b-4820-91f1-88d7b4f57735',
+    resourceVersion: '1672246',
+    creationTimestamp: '2023-09-26T10:49:02Z',
+    labels: { component: 'api-tests', instance: 'api-p878789' },
+    annotations: { 'cni.projectcalico.org/ipAddrs': '["29.64.0.255"]' },
+    managedFields: [ [Object] ]
+  },
+  spec: {
+    volumes: [ [Object], [Object], [Object] ],
+    containers: [ [Object] ],
+    restartPolicy: 'Never',
+    terminationGracePeriodSeconds: 30,
+    dnsPolicy: 'ClusterFirst',
+    serviceAccountName: 'default',
+    serviceAccount: 'default',
+    nodeName: 'minikube',
+    securityContext: {},
+    imagePullSecrets: [ [Object] ],
+    schedulerName: 'default-scheduler',
+    tolerations: [ [Object], [Object] ],
+    priority: 0,
+    enableServiceLinks: true,
+    preemptionPolicy: 'PreemptLowerPriority'
+  },
+  status: {
+    phase: 'Pending',
+    conditions: [ [Object] ],
+    qosClass: 'Guaranteed'
+  }
+}
+UPDATE
+{
+  kind: 'Pod',
+  apiVersion: 'v1',
+  metadata: {
+    name: 'api-p878789-api-tests',
+    namespace: 'default',
+    uid: 'cf485fc7-272b-4820-91f1-88d7b4f57735',
+    resourceVersion: '1672248',
+    creationTimestamp: '2023-09-26T10:49:02Z',
+    labels: { component: 'api-tests', instance: 'api-p878789' },
+    annotations: { 'cni.projectcalico.org/ipAddrs': '["29.64.0.255"]' },
+    managedFields: [ [Object], [Object] ]
+  },
+  spec: {
+    volumes: [ [Object], [Object], [Object] ],
+    containers: [ [Object] ],
+    restartPolicy: 'Never',
+    terminationGracePeriodSeconds: 30,
+    dnsPolicy: 'ClusterFirst',
+    serviceAccountName: 'default',
+    serviceAccount: 'default',
+    nodeName: 'minikube',
+    securityContext: {},
+    imagePullSecrets: [ [Object] ],
+    schedulerName: 'default-scheduler',
+    tolerations: [ [Object], [Object] ],
+    priority: 0,
+    enableServiceLinks: true,
+    preemptionPolicy: 'PreemptLowerPriority'
+  },
+  status: {
+    phase: 'Pending',
+    conditions: [ [Object], [Object], [Object], [Object] ],
+    hostIP: '192.168.49.2',
+    startTime: '2023-09-26T10:49:02Z',
+    containerStatuses: [ [Object] ],
+    qosClass: 'Guaranteed'
+  }
+}
+UPDATE
+{
+  kind: 'Pod',
+  apiVersion: 'v1',
+  metadata: {
+    name: 'api-p878789-api-tests',
+    namespace: 'default',
+    uid: 'cf485fc7-272b-4820-91f1-88d7b4f57735',
+    resourceVersion: '1672252',
+    creationTimestamp: '2023-09-26T10:49:02Z',
+    labels: { component: 'api-tests', instance: 'api-p878789' },
+    annotations: {
+      'cni.projectcalico.org/containerID': '9040e7c69496e7cd64fa2bb8da3a404953d165e3c10c830e36f5cd3cdce2be8d',
+      'cni.projectcalico.org/ipAddrs': '["29.64.0.255"]',
+      'cni.projectcalico.org/podIP': '29.64.0.255/32',
+      'cni.projectcalico.org/podIPs': '29.64.0.255/32'
+    },
+    managedFields: [ [Object], [Object], [Object] ]
+  },
+  spec: {
+    volumes: [ [Object], [Object], [Object] ],
+    containers: [ [Object] ],
+    restartPolicy: 'Never',
+    terminationGracePeriodSeconds: 30,
+    dnsPolicy: 'ClusterFirst',
+    serviceAccountName: 'default',
+    serviceAccount: 'default',
+    nodeName: 'minikube',
+    securityContext: {},
+    imagePullSecrets: [ [Object] ],
+    schedulerName: 'default-scheduler',
+    tolerations: [ [Object], [Object] ],
+    priority: 0,
+    enableServiceLinks: true,
+    preemptionPolicy: 'PreemptLowerPriority'
+  },
+  status: {
+    phase: 'Pending',
+    conditions: [ [Object], [Object], [Object], [Object] ],
+    hostIP: '192.168.49.2',
+    startTime: '2023-09-26T10:49:02Z',
+    containerStatuses: [ [Object] ],
+    qosClass: 'Guaranteed'
+  }
+}
+UPDATE
+{
+  kind: 'Pod',
+  apiVersion: 'v1',
+  metadata: {
+    name: 'api-p878789-api-tests',
+    namespace: 'default',
+    uid: 'cf485fc7-272b-4820-91f1-88d7b4f57735',
+    resourceVersion: '1672256',
+    creationTimestamp: '2023-09-26T10:49:02Z',
+    labels: { component: 'api-tests', instance: 'api-p878789' },
+    annotations: {
+      'cni.projectcalico.org/containerID': '9040e7c69496e7cd64fa2bb8da3a404953d165e3c10c830e36f5cd3cdce2be8d',
+      'cni.projectcalico.org/ipAddrs': '["29.64.0.255"]',
+      'cni.projectcalico.org/podIP': '29.64.0.255/32',
+      'cni.projectcalico.org/podIPs': '29.64.0.255/32'
+    },
+    managedFields: [ [Object], [Object], [Object] ]
+  },
+  spec: {
+    volumes: [ [Object], [Object], [Object] ],
+    containers: [ [Object] ],
+    restartPolicy: 'Never',
+    terminationGracePeriodSeconds: 30,
+    dnsPolicy: 'ClusterFirst',
+    serviceAccountName: 'default',
+    serviceAccount: 'default',
+    nodeName: 'minikube',
+    securityContext: {},
+    imagePullSecrets: [ [Object] ],
+    schedulerName: 'default-scheduler',
+    tolerations: [ [Object], [Object] ],
+    priority: 0,
+    enableServiceLinks: true,
+    preemptionPolicy: 'PreemptLowerPriority'
+  },
+  status: {
+    phase: 'Running',
+    conditions: [ [Object], [Object], [Object], [Object] ],
+    hostIP: '192.168.49.2',
+    podIP: '29.64.0.255',
+    podIPs: [ [Object] ],
+    startTime: '2023-09-26T10:49:02Z',
+    containerStatuses: [ [Object] ],
+    qosClass: 'Guaranteed'
+  }
+}
+Попали в ветку ready
+uuid: a5223c37-8297-4b0b-a4ff-3778ea42161f
+Устонавливаем в БД статус для Launch a5223c37-8297-4b0b-a4ff-3778ea42161f: in_process
+Ждем пока размер массива станет 0
+Попали в ветку finish
+Стрим c завершен!
+Закрываем лаунч a5223c37-8297-4b0b-a4ff-3778ea42161f
