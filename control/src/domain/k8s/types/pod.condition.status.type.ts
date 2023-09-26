@@ -1,0 +1,1 @@
+export type PodConditionStatus = 'True' | 'False' | 'Unknown'

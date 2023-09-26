@@ -72,8 +72,9 @@ export class HBFFunctionalScenario implements ScenarioInterface {
                 `${this.prefix}-p${variables.get("PIPELINE_ID")}-hbf-server`,
                  PodStatus.RUNNING
             )
-
-            await delay(10_000)
+            await podInf.waitContainerIsReady(
+                `${this.prefix}-p${variables.get("PIPELINE_ID")}-hbf-server`
+            )
 
            const { hbfTestData, ports } = await this.collectTestData()
 

@@ -9,7 +9,6 @@ export abstract class BaseInformer {
         | Informer<V1Service> & ObjectCache<V1Service> 
         | Informer<V1ConfigMap> & ObjectCache<V1ConfigMap> 
         | undefined
-    protected statusRecord: Record<string, string> = {}
 
     constructor(namespace: string) {
         this.k8sClient = new K8sClient(namespace)

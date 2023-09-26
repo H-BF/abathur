@@ -62,7 +62,7 @@ export class APIReporter {
 
     async closeLaunchWithError(errMsg: string) {
         if (!this._launchUUID)
-        throw new Error("Launch not create yet")
+            throw new Error("Launch not create yet")
 
         await this.client.createLaunchError({
             launch_uuid: this._launchUUID,
