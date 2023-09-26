@@ -93,7 +93,6 @@ export class HBFApiScenario implements ScenarioInterface {
     
             await this.reporter.closeLaunch(fail, pass, Date.now() - startTime)
         } catch(err) {
-            console.log(`${err}`)
             await this.reporter.closeLaunchWithError(`${err}`)
         } finally {
             this.finish = true
