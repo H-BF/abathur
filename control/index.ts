@@ -12,6 +12,7 @@ import { variables } from "./src/infrastructure/var_storage/variables-storage";
 
         podInf.start()
         controlServer.start()
+        await variables.resolveReporterHosts()
 
         const scenario = Number(variables.get("SCENARIO"))
         console.log(`Сценарий: ${scenario}`)

@@ -1,4 +1,5 @@
 import { ScenarioInterface } from "./scenarios/scenario.interface"
+import * as dns from 'dns';
 
 export async function delay(time: number) {
     return new Promise(resolve => setTimeout(resolve, time))
@@ -66,5 +67,14 @@ export async function waitScenarioIsFinish(
                 scenarios = scenarios.filter((scenario) => !scenario.isFinish());
             }
         }, frequency)
+    })
+}
+
+export async function resolveHostName(hostName: string): Promise<string[]> {
+    return new Promise((resolve, reject) => {
+        dns.resolve(hostName, (err, addresses) => {
+            if (err) reject(err)
+            resolve(addresses)
+        })
     })
 }

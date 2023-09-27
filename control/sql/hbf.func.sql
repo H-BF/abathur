@@ -21,7 +21,7 @@
                     ('nw-7', '29.64.0.227/32', get_sg_id('sg-4')),
                     ('nw-8', '29.64.0.228/32', get_sg_id('sg-5')),
                     ('nw-9', '29.64.0.229/32', get_sg_id('sg-5')),
-                    ('infra/report-server', 'HBF_REPORTER_HOST/32', get_sg_id('infra/report-server')),
+                    ('infra/report-server', 'HBF_REPORTER_IP/32', get_sg_id('infra/report-server')),
                     ('infra/abathur-control', 'ABA_CONTROL_IP/32', get_sg_id('infra/abathur-control'));
         
                 INSERT INTO

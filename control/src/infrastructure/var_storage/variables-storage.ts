@@ -2,6 +2,7 @@ import propertiesReader from 'properties-reader'
 import { MissEnvVariable, MissPropVariable } from "../../domain/errors"
 import { requiredEnvVariablesList } from "./required-env-variables-list"
 import { requiredPropVariablesList } from "./required-prop-variables-list"
+import { resolveHostName } from '../../domain/helpers'
 
 class VariableStorage {
     
@@ -46,6 +47,24 @@ class VariableStorage {
             throw new Error(`Переменная ${name} отсутствует в хранилище`)
 
         return this.variables[name]
+    }
+
+    
+    async resolveReporterHosts() {
+        const msg = "Не удалось одназначно разрезолвить"
+        const apiName = variables.get("API_REPORTER_HOST")
+        const hbfName = variables.get("HBF_REPORTER_HOST")
+
+        const apiIps = await resolveHostName(apiName)
+        const hbfIps = await resolveHostName(hbfName)
+
+        if (apiIps.length > 1 || apiIps.length === 0)
+            throw new Error(`${msg} ${apiName}`)
+        if (hbfIps.length > 1 || hbfIps.length === 0)
+            throw new Error(`${msg} ${hbfName}`)
+
+        this.variables["API_REPORTER_IP"] = apiIps[0]
+        this.variables["HBF_REPORTER_IP"] = hbfIps[0]
     }
 }
 
