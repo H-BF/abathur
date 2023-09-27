@@ -43,4 +43,7 @@ export const requiredPropVariablesList = [
     "HBF_CLIENT_MEM",
     "API_TEST_CPU",
     "API_TEST_MEM",
+    "DNS_IP",
+    "DNS_PROTOCOL",
+    "DNS_PORT"
 ]

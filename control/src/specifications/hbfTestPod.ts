@@ -143,6 +143,19 @@ const specConfMapHbfClient = parse({
                         dial-duration: 3s
                         address: {{ip}}:{{port}}
                         check-sync-status: 5s
+            
+            base-rules:
+                networks: ["{{ip}}/32", "${variables.get("DNS_IP")}/32"]
+
+            dns:
+                nameservers: ["${variables.get("DNS_IP")}"]
+                proto: ${variables.get("DNS_PROTOCOL")}
+                port: ${variables.get("DNS_PORT")}
+                dial-duration: 3s
+                read-duration: 5s #default 
+                write-duration: 5s #default 5s
+                retries: 5 #default 1
+                retry-timeout: 3s #default 1s            
             `
     }
 })
