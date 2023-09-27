@@ -52,3 +52,6 @@ data:
     HBF_CLIENT_MEM={{ .Values.hbfClient.resources.memory }}
     API_TEST_CPU={{ .Values.apiTests.resources.cpu }}
     API_TEST_MEM={{ .Values.apiTests.resources.memory }}
+    DNS_IP={{ .Values.hbfClient.dns.ip }}
+    DNS_PROTOCOL={{ .Values.hbfClient.dns.protocol }}
+    DNS_PORT={{ .Values.hbfClient.dns.port }}

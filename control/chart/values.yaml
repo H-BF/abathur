@@ -55,6 +55,10 @@ hbfClient:
   resources:
     cpu: 100m
     memory:  100Mi
+  dns:
+    ip: 10.96.0.10
+    port: 53
+    protocol: udp
 
 apiTests:
   image:
