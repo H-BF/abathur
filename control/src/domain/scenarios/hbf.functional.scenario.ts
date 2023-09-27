@@ -29,7 +29,7 @@ export class HBFFunctionalScenario implements ScenarioInterface {
         this.sharedConfigMaps.push(hbfServer.pgConfMap({
            prefix: this.prefix,
            data: fs.readFileSync(path.resolve(__dirname, "../../../sql/hbf.func.sql"), "utf-8")
-            .replaceAll("HBF_REPORTER_HOST", variables.get("HBF_REPORTER_HOST"))
+            .replaceAll("HBF_REPORTER_IP", variables.get("HBF_REPORTER_IP"))
             .replaceAll("ABA_CONTROL_IP", variables.get("ABA_CONTROL_IP"))
             .replaceAll("HBF_REPORTER_PORT_FROM", variables.get("HBF_REPORTER_PORT"))
             .replaceAll("HBF_REPORTER_PORT_TO", (Number(variables.get("HBF_REPORTER_PORT")) + 1).toString())
