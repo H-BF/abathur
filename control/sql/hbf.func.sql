@@ -177,5 +177,9 @@
                             ((int4multirange(int4range(NULL))), (int4multirange(int4range(ABA_CONTROL_PORT_FROM, ABA_CONTROL_PORT_TO))))
                         ]::sgroups.sg_rule_ports[]
                     );
+                    INSERT INTO 
+                        sgroups.tbl_sync_status(total_affected_rows)
+                    VALUES
+                        (1);
             COMMIT;
         END $$;

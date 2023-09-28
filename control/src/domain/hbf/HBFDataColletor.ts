@@ -42,7 +42,7 @@ export class HBFDataCollector {
             const ipsFrom = this.getIPs(rule.sgFrom) 
             const ipsTo = this.getIPs(rule.sgTo)
 
-            if (ipsTo.length === 1 && (ipsTo[0] === `${variables.get("HBF_REPORTER_HOST")}` || ipsTo[0] === `${variables.get("ABA_CONTROL_IP")}`)) {
+            if (ipsTo.length === 1 && (ipsTo[0] === `${variables.get("HBF_REPORTER_IP")}` || ipsTo[0] === `${variables.get("ABA_CONTROL_IP")}`)) {
                 return
             }
 
@@ -71,7 +71,7 @@ export class HBFDataCollector {
             const ipsTo = this.getIPs(rule.sgTo)
             const portsTo = this.transformPorts(rule.ports)
 
-            if (ipsTo.length === 1 && (ipsTo[0] === `${variables.get("HBF_REPORTER_HOST")}` || ipsTo[0] === `${variables.get("ABA_CONTROL_IP")}`)) {
+            if (ipsTo.length === 1 && (ipsTo[0] === `${variables.get("HBF_REPORTER_IP")}` || ipsTo[0] === `${variables.get("ABA_CONTROL_IP")}`)) {
                 return
             }
 
