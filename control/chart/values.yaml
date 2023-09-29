@@ -5,6 +5,8 @@ abathurControl:
     tag: latest
   ip: 29.64.0.231
   port: 9091
+  proxyPort: 9092
+  proxyProtocol: http
   ports:
     addressPort: 80
     addressPortAlias: aba-port
@@ -14,7 +16,7 @@ abathurControl:
   # securityContext:
   #   privileged: true
   restartPolicy: Never
-  destroy: true
+  destroy: false
   scenario: 99
 
 abathurClient:
