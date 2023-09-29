@@ -35,6 +35,8 @@ data:
     NAMESPACE={{ .Release.Namespace }}
     ABA_CONTROL_IP={{ .Values.abathurControl.ip }}
     ABA_CONTROL_PORT={{ .Values.abathurControl.port | toString }}
+    ABA_PROXY_PORT={{ .Values.abathurControl.proxyPort | toString }}
+    ABA_PROXY_PROTOCOL={{ .Values.abathurControl.proxyProtocol }}
     IS_DESTROY_AFTER={{ .Values.abathurControl.destroy }}
     SCENARIO={{ .Values.abathurControl.scenario }}
     TG_TOKEN={{ .Values.telegram.token }}

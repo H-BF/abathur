@@ -26,6 +26,8 @@ export const requiredPropVariablesList = [
     "NAMESPACE",
     "ABA_CONTROL_IP",
     "ABA_CONTROL_PORT",
+    "ABA_PROXY_PORT",
+    'ABA_PROXY_PROTOCOL',
     "IS_DESTROY_AFTER",
     "SCENARIO",
     "TG_TOKEN",

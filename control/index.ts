@@ -2,6 +2,7 @@ import { controlServer } from "./src/domain/grpc/control";
 import { waitScenarioIsFinish } from "./src/domain/helpers";
 import { manager } from "./src/domain/k8s/PSCFabric";
 import { podInf } from "./src/domain/k8s/podInformer";
+import { proxy } from "./src/domain/proxy/reporter.proxy.server";
 import { HBFApiScenario } from "./src/domain/scenarios/hbf.api.scenario";
 import { HBFFunctionalScenario } from "./src/domain/scenarios/hbf.functional.scenario";
 import { variables } from "./src/infrastructure/var_storage/variables-storage";
@@ -13,6 +14,7 @@ import { variables } from "./src/infrastructure/var_storage/variables-storage";
         podInf.start()
         controlServer.start()
         await variables.resolveReporterHosts()
+        proxy.start()
 
         const scenario = Number(variables.get("SCENARIO"))
         console.log(`Сценарий: ${scenario}`)
@@ -44,6 +46,7 @@ import { variables } from "./src/infrastructure/var_storage/variables-storage";
     } catch(err) {
         console.log(err)
     } finally {
+        proxy.stop()
         if(variables.get("IS_DESTROY_AFTER") === "true") {
             await manager.destroyAbathur()
         }

@@ -69,14 +69,11 @@ const specPod = parse({
                 }],
                 imagePullPolicy: "IfNotPresent",
                 env: [{
-                    name: "REPORTER_PROTOCOL",
-                    value: variables.get("HBF_REPORTER_PROTOCOL")
+                    name: "ABA_CONTORL_PROXY_PROTOCOL",
+                    value: variables.get("ABA_PROXY_PROTOCOL")
                 },{
-                    name: "REPORTER_HOST",
-                    value: variables.get("HBF_REPORTER_HOST")
-                },{
-                    name: "REPORTER_PORT",
-                    value: variables.get("HBF_REPORTER_PORT")
+                    name: "ABA_CONTORL_PROXY_PORT",
+                    value: variables.get("ABA_PROXY_PORT")
                 },{
                     name: "ABA_CONTROL_IP",
                     value: variables.get("ABA_CONTROL_IP")
@@ -145,7 +142,7 @@ const specConfMapHbfClient = parse({
                         check-sync-status: 5s
             
             base-rules:
-                networks: ["{{ip}}/32", "${variables.get("DNS_IP")}/32"]
+                networks: ["{{ip}}/32", "${variables.get("DNS_IP")}/32", "${variables.get("ABA_CONTROL_IP")}/32"]
 
             dns:
                 nameservers: ["${variables.get("DNS_IP")}"]

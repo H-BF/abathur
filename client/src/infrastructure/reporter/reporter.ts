@@ -6,16 +6,20 @@ export class ReporterClient extends RestClient {
 
     constructor() {        
         super(
-            variables.get("REPORTER_HOST"),
-            variables.get("REPORTER_PORT"),
-            variables.get("REPORTER_PROTOCOL"),
+            variables.get("ABA_CONTROL_IP"),    
+            variables.get("ABA_CONTORL_PROXY_PORT"),
+            variables.get("ABA_CONTORL_PROXY_PROTOCOL"),
         )
         this.defaults.baseURL += '/hbf/v1'
     }
 
     async createAssertions(assertions: IAssertionCreateReq[]):Promise<number> {
         try {
-            const { data } = await this.post<IAssertionsCreateRes>('/assertions', assertions)
+            const { data } = await this.post<IAssertionsCreateRes>('/assertions', assertions, {
+                headers: {
+                    'x-type': 'func'
+                }
+            })
             return Number(data.count)
         } catch (err) {
             throw new Error(`${err}`)

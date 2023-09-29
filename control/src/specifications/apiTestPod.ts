@@ -28,14 +28,11 @@ const specPod = parse({
                 }
             },
             env: [{
-                name: "REPORTER_HOST",
-                value: `${variables.get("API_REPORTER_HOST")}`
+                name: "ABA_CONTORL_PROXY_PORT",
+                value: `${variables.get("ABA_PROXY_PORT")}`
             }, {
-                name: "REPORTER_PORT",
-                value: `${variables.get("API_REPORTER_PORT")}`
-            }, {
-                name: "REPORTER_PROTOCOL",
-                value: `${variables.get("API_REPORTER_PROTOCOL")}`
+                name: "ABA_CONTORL_PROXY_PROTOCOL",
+                value: `${variables.get("ABA_PROXY_PROTOCOL")}`
             }, {
                 name: "ABA_CONTROL_IP",
                 value: `${variables.get("ABA_CONTROL_IP")}`
