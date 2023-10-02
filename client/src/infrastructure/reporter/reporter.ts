@@ -22,6 +22,7 @@ export class ReporterClient extends RestClient {
             })
             return Number(data.count)
         } catch (err) {
+            console.log(err)
             throw new Error(`${err}`)
         }
     }
