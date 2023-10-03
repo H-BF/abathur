@@ -1,4 +1,4 @@
-import http, { Server } from 'http';
+import http, { Server, IncomingMessage } from 'http';
 import httpProxy from 'http-proxy'
 import { variables } from '../../infrastructure/var_storage/variables-storage';
 
@@ -16,7 +16,14 @@ class ReporterProxyServer {
             if (typeof req.headers['x-type'] !== 'string')
                 throw new Error("Не корректное значение X-Type. Должно быть string")
 
-            let target = this.selectTarget(req.headers['x-type'])
+            const type = req.headers['x-type']
+
+            let target = this.selectTarget(type)
+            console.log("BEFORE")
+            console.log(req.headers)
+            req.headers.host = this.setHeaderHost(type)
+            console.log("AFTER")
+            console.log(req.headers)
             proxy.web(req, res, { target: target })
         })
     }
@@ -32,6 +39,24 @@ class ReporterProxyServer {
         this.server.close(() => {
             console.log("Proxy server stopped")
         })
+    }
+
+    private setHeaderHost(type: string): string {
+        let host = ''
+        let port = ''
+        switch(type.toLowerCase()) {
+            case 'api':
+                host = variables.get("API_REPORTER_HOST")
+                port = variables.get("API_REPORTER_PORT")
+                break;
+            case 'func':
+                host = variables.get("HBF_REPORTER_HOST")
+                port = variables.get("HBF_REPORTER_PORT")
+                break;
+            default:
+                throw new Error(`не известный тип тестов: ${type}`)
+        }
+        return `${host}:${port}`
     }
 
     private selectTarget(type: string): string {

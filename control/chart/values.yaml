@@ -16,7 +16,7 @@ abathurControl:
   # securityContext:
   #   privileged: true
   restartPolicy: Never
-  destroy: false
+  destroy: true
   scenario: 99
 
 abathurClient:
