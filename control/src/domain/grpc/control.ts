@@ -5,13 +5,14 @@ import { ProtoGrpcType } from '../../../gRPC/control'
 import { streamFuncHandler } from './stream.func.handler'
 import { streamApiHandler } from './stream.api.handler'
 import { variables } from '../../infrastructure/var_storage/variables-storage'
+import { logger } from '../logger/logger.service'
 
 class ControlServer {
 
     private controlServer: grpc.Server;
 
     constructor() {
-        console.log("Создаем gRPC control server")
+        logger.info("[MAIN] Создаем gRPC control server")
         this.controlServer = new grpc.Server()
 
         const packageDef = protoLoader.loadSync(path.resolve(__dirname, "../../../../gRPC/control.proto"), {
@@ -31,11 +32,11 @@ class ControlServer {
             grpc.ServerCredentials.createInsecure(),
             err => {
                 if (err) {
-                    console.log(err)
+                    logger.error(err)
                     return
                 }
                 this.controlServer.start()
-                console.log(`Control Server start successfully!`)
+                logger.info(`[MAIN] Control Server start successfully!`)
             }
         )
     }

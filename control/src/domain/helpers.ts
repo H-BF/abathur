@@ -1,3 +1,4 @@
+import { logger } from "./logger/logger.service";
 import { ScenarioInterface } from "./scenarios/scenario.interface"
 import * as dns from 'dns';
 
@@ -11,7 +12,7 @@ export async function waitSetSize(
     timeout: number = 60000,
     frequency: number = 1000
 ): Promise<void> {
-    console.log(`Ждем пока размер массива станет ${size}`)
+    logger.info(`Ждем пока размер массива станет ${size}`)
     return new Promise<void>((resolve, reject) => {
         const startTime = Date.now()
         const interval = setInterval(() => {
@@ -35,7 +36,7 @@ export async function allRecordsValueIs<T extends string | number>(
     return new Promise<void>((resolve, reject) => {
         const startTime = Date.now()
         const interval = setInterval(() => {
-            console.log("Ждем одинаковые статусы")
+            logger.info("Ждем одинаковые статусы")
             const values = new Set<T>(Object.values(data))
             if(values.size === 1 && values.has(value)) {
                 clearInterval(interval)
@@ -53,7 +54,7 @@ export async function waitScenarioIsFinish(
     timeout: number = 300000,
     frequency: number = 1000
 ): Promise<void> {
-    console.log(`Ждем сценарии завершатся`)
+    logger.info(`Ждем сценарии завершатся`)
     return new Promise<void>((resolve, reject) => {
         const startTime = Date.now()
         const interval = setInterval(() => {

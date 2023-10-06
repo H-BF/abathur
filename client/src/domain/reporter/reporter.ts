@@ -1,6 +1,7 @@
 import { AssertionStatus, IAssertionCreateReq, Protocol } from "../../infrastructure/reporter/interfaces/assertion-create.interface";
 import { ReporterClient } from "../../infrastructure/reporter/reporter";
 import { IResult } from "../interfaces";
+import { logger } from "../logger/logger.service";
 
 export class Reporter {
 
@@ -15,8 +16,8 @@ export class Reporter {
     async send(results: IResult[]) {
         const assertions = this.transform(results)
 
-        console.log('assertions: ')
-        console.log(assertions)
+        logger.info('assertions: ')
+        logger.info(assertions)
 
         await this.client.createAssertions(assertions)
     }

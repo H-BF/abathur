@@ -22,7 +22,8 @@
     "json-templates": "^5.0.0",
     "properties-reader": "^2.3.0",
     "rimraf": "^5.0.1",
-    "tslib": "^2.6.0"
+    "tslib": "^2.6.0",
+    "tslog": "^4.9.2"
   },
   "devDependencies": {
     "@types/http-proxy": "^1.17.12",

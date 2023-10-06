@@ -3,6 +3,7 @@ import { MissEnvVariable, MissPropVariable } from "../../domain/errors"
 import { requiredEnvVariablesList } from "./required-env-variables-list"
 import { requiredPropVariablesList } from "./required-prop-variables-list"
 import { resolveHostName } from '../../domain/helpers'
+import { logger } from '../../domain/logger/logger.service'
 
 class VariableStorage {
     
@@ -68,4 +69,13 @@ class VariableStorage {
     }
 }
 
-export const variables = new VariableStorage()
+function initVariableStorage() {
+    try {
+        return new VariableStorage()
+    } catch(err) {
+        logger.error(err)
+        process.exit(1)
+    }
+}
+
+export const variables = initVariableStorage()

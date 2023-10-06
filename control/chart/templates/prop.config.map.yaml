@@ -57,3 +57,5 @@ data:
     DNS_IP={{ .Values.hbfClient.dns.ip }}
     DNS_PROTOCOL={{ .Values.hbfClient.dns.protocol }}
     DNS_PORT={{ .Values.hbfClient.dns.port }}
+    LOG_TYPE={{ .Values.logger.logType }}
+    LOG_LVL={{ .Values.logger.logLevel }}

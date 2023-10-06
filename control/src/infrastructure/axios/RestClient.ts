@@ -1,4 +1,5 @@
 import { Axios } from "axios";
+import { logger } from "../../domain/logger/logger.service";
 
 export class RestClient extends Axios {
 
@@ -18,7 +19,7 @@ export class RestClient extends Axios {
                     if (data)
                         return JSON.parse(data)
                 } catch (e) {
-                    console.warn("Payload type is unexpected", e)
+                    logger.warn("Payload type is unexpected", e)
                 }
 
                 return data

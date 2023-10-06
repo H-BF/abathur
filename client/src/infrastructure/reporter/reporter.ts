@@ -1,3 +1,4 @@
+import { logger } from "../../domain/logger/logger.service";
 import { RestClient } from "../axios/rest-client";
 import { variables } from "../var_storage/variables-storage";
 import { IAssertionCreateReq, IAssertionsCreateRes } from "./interfaces/assertion-create.interface";
@@ -22,7 +23,7 @@ export class ReporterClient extends RestClient {
             })
             return Number(data.count)
         } catch (err) {
-            console.log(err)
+            logger.error(err)
             throw new Error(`${err}`)
         }
     }

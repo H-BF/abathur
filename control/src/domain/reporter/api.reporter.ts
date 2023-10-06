@@ -1,4 +1,5 @@
 import { APIReporterClient, ICreateLaunchReq, LaunchStatus } from "../../infrastructure/reporter";
+import { logger } from "../logger/logger.service";
 
 export class APIReporter {
 
@@ -32,11 +33,11 @@ export class APIReporter {
             hbfTag: hbfTag
         }
         this._launchUUID = await this.client.createLaunch(launch)
-        console.log(`Лаунч создан! ${this._launchUUID}`)
+        logger.info(`Лаунч создан! ${this._launchUUID}`)
     }
 
     async setStauts(status: LaunchStatus) {
-        console.log(`Устонавливаем в БД статус для Launch ${this._launchUUID}: ${status}`)
+        logger.info(`Устонавливаем в БД статус для Launch ${this._launchUUID}: ${status}`)
         if (!this._launchUUID)
             throw new Error("Launch not create yet")
 
@@ -47,7 +48,7 @@ export class APIReporter {
     }
 
     async closeLaunch(fail: number, pass: number, duration: number) {
-        console.log(`Закрываем лаунч ${this._launchUUID}`)
+        logger.info(`Закрываем лаунч ${this._launchUUID}`)
         if (!this._launchUUID)
             throw new Error("Launch not create yet")
 
@@ -61,7 +62,7 @@ export class APIReporter {
     }
 
     async closeLaunchWithError(errMsg: string) {
-        console.log(errMsg)
+        logger.error(errMsg)
         if (!this._launchUUID)
             throw new Error("Launch not create yet")
 

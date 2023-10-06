@@ -1,4 +1,5 @@
 import { Req } from '../../../gRPC/control/Req'
+import { logger } from '../logger/logger.service';
 
 class StreamFuncHandler {
 
@@ -13,7 +14,7 @@ class StreamFuncHandler {
         const streamID = call.metadata.get("id")[0]
         this.streamsList.add(streamID)
 
-        console.log(`Начат стрим ${streamID}`)
+        logger.info(`Начат стрим ${streamID}`)
 
 
         call.on("data", (request: Req) => {
@@ -22,7 +23,7 @@ class StreamFuncHandler {
 
             switch(request.status) {
                 case 1:
-                    console.log("Попали в ветку ready") 
+                    logger.info("Попали в ветку ready") 
                     const interval = setInterval(() => {
                         if (this.streamsList.size == this.testPodNumbers) {
                             clearInterval(interval)
@@ -31,7 +32,7 @@ class StreamFuncHandler {
                     })
                     break;
                 case 2:
-                    console.log("Попали в ветку finish")
+                    logger.info("Попали в ветку finish")
                     if(!request.data) 
                         throw new Error('Обязательное data status отсутствует')
                     const data = JSON.parse(request.data) as { fail: number, pass: number }
@@ -39,7 +40,7 @@ class StreamFuncHandler {
                     this.failCount += data.fail
                     break;
                 case 3:
-                    console.log("Попали в ветку finish")
+                    logger.info("Попали в ветку finish")
                     if(!request.data) 
                         throw new Error('Обязательное data отсутствует')
                     throw new Error(request.data)
@@ -48,11 +49,11 @@ class StreamFuncHandler {
 
         call.on("end", () => {
             this.streamsList.delete(streamID)
-            console.log(`Стрим c ${streamID} завершен!`)
+            logger.info(`Стрим c ${streamID} завершен!`)
         })
         
         call.on("error", (err: any) => {
-            console.log(err)
+            logger.error(err)
         })
     }
 

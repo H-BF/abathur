@@ -1,5 +1,6 @@
 import { Informer, ObjectCache, V1ConfigMap, V1Pod, V1Service } from "@kubernetes/client-node";
 import { K8sClient } from "../../infrastructure/k8s/k8sClient";
+import { logger } from "../logger/logger.service";
 
 export abstract class BaseInformer {
 
@@ -19,7 +20,7 @@ export abstract class BaseInformer {
     start() {
         if(!this.informer)
             throw new Error("Informer not created")
-        console.log("Запускаем под информер")
+        logger.info("[MAIN] Запускаем под информер")
         this.informer.start()
     }
 

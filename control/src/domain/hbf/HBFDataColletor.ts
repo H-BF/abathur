@@ -2,6 +2,7 @@ import { HBFClient, ISecurityGroup } from "../../infrastructure";
 import { INetwork } from "../../infrastructure/hbf/interfaces/networks";
 import { IRule, IRulePorts } from "../../infrastructure/hbf/interfaces/rules";
 import { variables } from "../../infrastructure/var_storage/variables-storage";
+import { logger } from "../logger/logger.service";
 import { Networks } from "../networks";
 import { IData, IHBFTestData, IPortForServer, IPorts } from "./interfaces";
 
@@ -17,7 +18,7 @@ export class HBFDataCollector {
     }
 
     async collect(): Promise<void> {
-        console.log(`Получаем данные из БД hbf-server`)
+        logger.info(`Получаем данные из БД hbf-server`)
         this.sg = (await this.HBFClient.getSecurityGroups()).groups
 
         this.networks = (await this.HBFClient.getNetworks({
@@ -33,7 +34,7 @@ export class HBFDataCollector {
     }
 
     getTestData(): IHBFTestData {
-        console.log('выделяем тестовые данные из полученных от hbf-server')
+        logger.info('выделяем тестовые данные из полученных от hbf-server')
         const results: IHBFTestData = {}
 
         if (!this.rules) throw new Error("Rules is undefined")
@@ -62,7 +63,7 @@ export class HBFDataCollector {
     }
 
     gePortsForServer(): IPortForServer {
-        console.log('Получаем список портов, какие надо открыть на соответствующих подах')
+        logger.info('Получаем список портов, какие надо открыть на соответствующих подах')
         const result: IPortForServer = {} 
 
         if (!this.rules) throw new Error("Rules is undefined")

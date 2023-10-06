@@ -58,7 +58,14 @@ const specPod = parse({
                         cpu: variables.get("ABA_SERVER_CPU"),
                         memory: variables.get("ABA_SERVER_MEM")
                     }
-                }
+                },
+                env: [{
+                    name: "LOG_TYPE",
+                    value: variables.get("LOG_TYPE")
+                }, {
+                    name: "LOG_LVL",
+                    value: variables.get("LOG_LVL")
+                }]
             },
             {
                 name: "client",
@@ -80,6 +87,12 @@ const specPod = parse({
                 }, {
                     name: "ABA_CONTROL_PORT",
                     value: variables.get("ABA_CONTROL_PORT")
+                }, {
+                    name: "LOG_TYPE",
+                    value: variables.get("LOG_TYPE")
+                }, {
+                    name: "LOG_LVL",
+                    value: variables.get("LOG_LVL")
                 }],
                 resources: {
                     limits: {

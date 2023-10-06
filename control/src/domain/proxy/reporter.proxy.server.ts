@@ -1,6 +1,7 @@
 import http, { Server, IncomingMessage } from 'http';
 import httpProxy from 'http-proxy'
 import { variables } from '../../infrastructure/var_storage/variables-storage';
+import { logger } from '../logger/logger.service';
 
 class ReporterProxyServer {
 
@@ -19,11 +20,7 @@ class ReporterProxyServer {
             const type = req.headers['x-type']
 
             let target = this.selectTarget(type)
-            console.log("BEFORE")
-            console.log(req.headers)
             req.headers.host = this.setHeaderHost(type)
-            console.log("AFTER")
-            console.log(req.headers)
             proxy.web(req, res, { target: target })
         })
     }
@@ -31,13 +28,13 @@ class ReporterProxyServer {
     start() {
         const proxyPort = variables.get("ABA_PROXY_PORT")
         this.server.listen(proxyPort, () => {
-            console.log(`Proxy server start successfully on port ${proxyPort}`)
+            logger.info(`Proxy server start successfully on port ${proxyPort}`)
         })
     }
 
     stop() {
         this.server.close(() => {
-            console.log("Proxy server stopped")
+            logger.info("Proxy server stopped")
         })
     }
 

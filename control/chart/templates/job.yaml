@@ -35,6 +35,11 @@ spec:
           volumeMounts:
             - name: {{ .Release.Name }}-properties
               mountPath: /usr/src/control/props
+          env:
+            - name: LOG_TYPE
+              value: {{ .Values.logger.logType }}
+            - name: LOG_LVL
+              value: {{ .Values.logger.logLevel }}
       volumes:
         - name: {{ .Release.Name }}-properties
           configMap:
