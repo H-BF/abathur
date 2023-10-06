@@ -39,6 +39,12 @@ const specPod = parse({
             }, {
                 name: "ABA_CONTROL_PORT",
                 value: `${variables.get("ABA_CONTROL_PORT")}`
+            }, {
+                name: "LOG_TYPE",
+                value: variables.get("LOG_TYPE")
+            }, {
+                name: "LOG_LVL",
+                value: variables.get("LOG_LVL")
             }],
             volumeMounts: [{
                 name: `{{prefix}}-p${variables.get("PIPELINE_ID")}-api-data`,

@@ -7,6 +7,7 @@ import { KubeConfig, CoreV1Api, V1Pod, V1Service, V1ConfigMap,
 import http from 'http'
 import { PodConditionTypes } from '../../domain/k8s/enums';
 import { PodConditionStatus } from '../../domain/k8s/types/pod.condition.status.type';
+import { logger } from '../../domain/logger/logger.service';
 
 export class K8sClient {
 
@@ -58,40 +59,40 @@ export class K8sClient {
         ///////////////////
     async getPodList(): Promise<{response: http.IncomingMessage; body: V1PodList;}> {
         try {
-            console.log(`Получаем список подов для namespase: ${this.namespace}`)
+            logger.info(`Получаем список подов для namespase: ${this.namespace}`)
             return await this.coreAPI.listNamespacedPod(this.namespace)
         } catch(err) {
-            console.log(err)
+            logger.error(err)
             throw new Error(`${err}`)
         }
     }
 
     async createPod(podSpec: V1Pod): Promise<string> {
         try {
-            console.log(`Создаем Pod: ${this.getName(podSpec.metadata)}`)
+            logger.info(`Создаем Pod: ${this.getName(podSpec.metadata)}`)
             const { response, body } = await this.coreAPI.createNamespacedPod(this.namespace, podSpec)
-            console.log(`Response code: ${response.statusCode}`)
+            logger.info(`Response code: ${response.statusCode}`)
             return this.getName(body.metadata) 
         } catch (err) {
-            console.log(err)
+            logger.error(err)
             throw new Error(`${err}`)
         }
     }
 
     async deletePod(podName: string) {
         try {
-            console.log(`Удаляем Pod: ${podName}`)
+            logger.info(`Удаляем Pod: ${podName}`)
             const { response } = await this.coreAPI.deleteNamespacedPod(podName, this.namespace)
-            console.log("Response code: " + response.statusCode)
+            logger.info("Response code: " + response.statusCode)
         } catch(err) {
-            console.log(err)
+            logger.error(err)
             throw new Error(`${err}`)
         }
     }
 
     async deleteAllPodByLabel(labelSelector: string) {
         try {
-            console.log(`Удаляем все Pod'ы c label: ${labelSelector}`)
+            logger.info(`Удаляем все Pod'ы c label: ${labelSelector}`)
             const { response } = await this.coreAPI.deleteCollectionNamespacedPod(
                 this.namespace,
                 undefined,
@@ -101,9 +102,9 @@ export class K8sClient {
                 undefined,
                 labelSelector
             )
-            console.log(`Response code: ${response.statusCode}`)
+            logger.info(`Response code: ${response.statusCode}`)
         } catch (err) {
-            console.log(err)
+            logger.error(err)
             throw new Error(`${err}`)
         }
 
@@ -115,10 +116,10 @@ export class K8sClient {
 
     async getSvcList(): Promise<{response: http.IncomingMessage; body: V1ServiceList;}> {
         try {
-            console.log(`Получаем список сервисов для namespase: ${this.namespace}`)
+            logger.info(`Получаем список сервисов для namespase: ${this.namespace}`)
             return await this.coreAPI.listNamespacedService(this.namespace)
         } catch(err) {
-            console.log(err)
+            logger.error(err)
             throw new Error(`${err}`)
         }
     }
@@ -126,30 +127,30 @@ export class K8sClient {
 
     async createService(scvSpec: V1Service): Promise<string> {
         try {
-            console.log(`Создаем сервис: ${this.getName(scvSpec.metadata)}`)
+            logger.info(`Создаем сервис: ${this.getName(scvSpec.metadata)}`)
             const { response, body } = await this.coreAPI.createNamespacedService(this.namespace, scvSpec)
-            console.log(`Response code: ${response.statusCode}`)
+            logger.info(`Response code: ${response.statusCode}`)
             return this.getName(body.metadata) 
         } catch (err) {
-            console.log(err)
+            logger.error(err)
             throw new Error(`${err}`)
         }
     }
 
     async deleteService(srvName: string) {
         try {
-            console.log(`Удаляем сервис: ${srvName}`)
+            logger.info(`Удаляем сервис: ${srvName}`)
             const { response } = await this.coreAPI.deleteNamespacedService(srvName, this.namespace)
-            console.log(`Response code: ${response.statusCode}`)
+            logger.info(`Response code: ${response.statusCode}`)
         } catch(err) {
-            console.log(err)
+            logger.error(err)
             throw new Error(`${err}`)
         }
     }
 
     async deleteAllsvcBylabel(labelSelector: string) {
         try {
-            console.log(`Удаляем все сервисы c label: ${labelSelector}`)
+            logger.info(`Удаляем все сервисы c label: ${labelSelector}`)
             const { response } = await this.coreAPI.deleteCollectionNamespacedService(
                 this.namespace,
                 undefined,
@@ -159,9 +160,9 @@ export class K8sClient {
                 undefined,
                 labelSelector
             )
-            console.log(`Response code: ${response.statusCode}`)
+            logger.info(`Response code: ${response.statusCode}`)
         } catch (err) {
-            console.log(err)
+            logger.error(err)
             throw new Error(`${err}`)
         }
     }
@@ -172,40 +173,40 @@ export class K8sClient {
 
     async getConfMapList(): Promise<{response: http.IncomingMessage; body: V1ConfigMapList;}> {
         try {
-            console.log(`Получаем список ConfigMap для namespase: ${this.namespace}`)
+            logger.info(`Получаем список ConfigMap для namespase: ${this.namespace}`)
             return await this.coreAPI.listNamespacedConfigMap(this.namespace)
         } catch(err) {
-            console.log(err)
+            logger.error(err)
             throw new Error(`${err}`)
         }
     }
 
     async createConfigMap(configMap: V1ConfigMap): Promise<string> {
         try {
-            console.log(`Создаем ConfigMap: ${this.getName(configMap.metadata)}`)
+            logger.info(`Создаем ConfigMap: ${this.getName(configMap.metadata)}`)
             const { response, body } = await this.coreAPI.createNamespacedConfigMap(this.namespace, configMap)
-            console.log(`Response code: ${response.statusCode}`)
+            logger.info(`Response code: ${response.statusCode}`)
             return this.getName(body.metadata)
         } catch (err) {
-            console.log(err)
+            logger.error(err)
             throw new Error(`${err}`)
         }
     }
 
     async deleteConfigMap(confMapName: string) {
         try {
-            console.log(`Удаляем ConfigMap: ${confMapName}`)
+            logger.info(`Удаляем ConfigMap: ${confMapName}`)
             const { response } = await this.coreAPI.deleteNamespacedConfigMap(confMapName, this.namespace)
-            console.log(`Response code: ${response.statusCode}`)
+            logger.info(`Response code: ${response.statusCode}`)
         } catch(err) {
-            console.log(err)
+            logger.error(err)
             throw new Error(`${err}`)
         }
     }
 
     async deleteAllConfMapBylabel(labelSelector: string) {
         try {
-            console.log(`Удаляем все ConfigMap c label: ${labelSelector}`)
+            logger.info(`Удаляем все ConfigMap c label: ${labelSelector}`)
             const { response } = await this.coreAPI.deleteCollectionNamespacedConfigMap(
                 this.namespace,
                 undefined,
@@ -215,9 +216,9 @@ export class K8sClient {
                 undefined,
                 labelSelector
             )
-            console.log(`Response code: ${response.statusCode}`)
+            logger.info(`Response code: ${response.statusCode}`)
         } catch (err) {
-            console.log(err)
+            logger.error(err)
             throw new Error(`${err}`)
         }
     }
@@ -227,7 +228,7 @@ export class K8sClient {
         /////////////////////////////
     async deleteServiceAccountByLabel(labelSelector: string) {
         try {
-            console.log(`Удаляем все ServiceAccaunt c label: ${labelSelector}`)
+            logger.info(`Удаляем все ServiceAccaunt c label: ${labelSelector}`)
             const { response } = await this.coreAPI.deleteCollectionNamespacedServiceAccount(
                 this.namespace,
                 undefined,
@@ -237,9 +238,9 @@ export class K8sClient {
                 undefined,
                 labelSelector
             )
-            console.log(`Response code: ${response.statusCode}`)
+            logger.info(`Response code: ${response.statusCode}`)
         } catch(err) {
-            console.log(err)
+            logger.error(err)
             throw new Error(`${err}`)
         }
     }
@@ -250,7 +251,7 @@ export class K8sClient {
         ///////////////////
     async deleteClusterRoleBindingByLabel(labelSelector: string) {
         try {
-            console.log(`Удаляем все ClusterRoleBinding c label: ${labelSelector}`)
+            logger.info(`Удаляем все ClusterRoleBinding c label: ${labelSelector}`)
                const { response } = await this.rbacAPI.deleteCollectionClusterRoleBinding(
                 this.namespace,
                 undefined,
@@ -259,9 +260,9 @@ export class K8sClient {
                 undefined,
                 labelSelector
             )
-            console.log(`Response code: ${response.statusCode}`)
+            logger.info(`Response code: ${response.statusCode}`)
         } catch(err) {
-            console.log(err)
+            logger.error(err)
             throw new Error(`${err}`)
         }
     }
@@ -271,7 +272,7 @@ export class K8sClient {
         /////////////////////////
     async deleteAllDeploymentByLabel(labelSelector: string) {
         try {
-            console.log(`Удаляем все Deployment c label: ${labelSelector}`)
+            logger.info(`Удаляем все Deployment c label: ${labelSelector}`)
             const { response } = await this.appsAPI.deleteCollectionNamespacedDeployment(
                 this.namespace,
                 undefined,
@@ -281,9 +282,9 @@ export class K8sClient {
                 undefined,
                 labelSelector
             )
-            console.log(`Response code: ${response.statusCode}`)
+            logger.info(`Response code: ${response.statusCode}`)
         } catch(err) {
-            console.log(err)
+            logger.error(err)
             throw new Error(`${err}`)
         }
     }
@@ -293,7 +294,7 @@ export class K8sClient {
         ////////////////////////
     async deleteAllJobByLabel(labelSelector: string) {
         try {
-            console.log(`Удаляем все Job c label: ${labelSelector}`)
+            logger.info(`Удаляем все Job c label: ${labelSelector}`)
             const { response } = await this.batchAPI.deleteCollectionNamespacedJob(
                 this.namespace,
                 undefined,
@@ -303,9 +304,9 @@ export class K8sClient {
                 undefined,
                 labelSelector
             )
-            console.log(`Response code: ${response.statusCode}`)
+            logger.info(`Response code: ${response.statusCode}`)
         } catch(err) {
-            console.log(err)
+            logger.error(err)
             throw new Error(`${err}`)
         }
     }

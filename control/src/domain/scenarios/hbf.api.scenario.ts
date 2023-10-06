@@ -12,6 +12,7 @@ import { apiTestPod } from "../../specifications/apiTestPod"
 import { streamApiHandler } from "../grpc/stream.api.handler"
 import { LaunchStatus } from "../../infrastructure/reporter";
 import { ScenarioInterface } from "./scenario.interface";
+import { logger } from "../logger/logger.service";
 
 export class HBFApiScenario implements ScenarioInterface {
 
@@ -55,7 +56,7 @@ export class HBFApiScenario implements ScenarioInterface {
 
     async start() {
         try {
-            console.log("API tests")
+            logger.info("API tests")
             const startTime = Date.now()
             await this.reporter.createLaunch(
                 variables.get("PIPELINE_ID"),
@@ -66,18 +67,20 @@ export class HBFApiScenario implements ScenarioInterface {
                 variables.get("HBF_TAG")
             )
             
-            console.log(`[SCENARIO] uuid: ${this.reporter.launchUUID}`)
+            logger.info(`[SCENARIO] uuid: ${this.reporter.launchUUID}`)
             streamApiHandler.setLaunchUuid(this.reporter.launchUUID)
     
-            await manager.createSharedConfigMaps(this.sharedConfigMaps)
+            await manager.createSharedConfigMaps(this.sharedConfigMaps, this.prefix)
             await manager.createHBFServer(this.prefix, this.hbfServerIP, this.hbfServerPort)
     
             await podInf.waitStatus(
                 `${this.prefix}-p${variables.get("PIPELINE_ID")}-hbf-server`,
-                 PodStatus.RUNNING
+                 PodStatus.RUNNING,
+                 "API"
             )
             await podInf.waitContainerIsReady(
-                `${this.prefix}-p${variables.get("PIPELINE_ID")}-hbf-server`
+                `${this.prefix}-p${variables.get("PIPELINE_ID")}-hbf-server`,
+                this.prefix
             )
 
             await manager.createAPITestPod(

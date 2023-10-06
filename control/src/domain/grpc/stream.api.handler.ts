@@ -1,4 +1,5 @@
 import { Req } from "../../../gRPC/control/Req"
+import { logger } from "../logger/logger.service";
 
 class StreamApiHandler {
 
@@ -17,18 +18,17 @@ class StreamApiHandler {
             
             switch(request.status) {
                 case 1:
-                    console.log("Попали в ветку ready")
-                    console.log("uuid: " + this.launchUuid)
+                    logger.info("Попали в ветку ready")
                     call.write({ msg: this.launchUuid })
                     break
                 case 2:
-                    console.log("Попали в ветку finish")
+                    logger.info("Попали в ветку finish")
                     if(!request.data) 
                         throw new Error('Обязательное data отсутствует')
                     this.result = JSON.parse(request.data) as { fail: number, pass: number }
                     break
                 case 3:
-                    console.log("Попали в ветку error")
+                    logger.info("Попали в ветку error")
                     if(!request.data) 
                         throw new Error('Обязательное data отсутствует')
                     throw new Error(request.data)
@@ -37,11 +37,11 @@ class StreamApiHandler {
 
         call.on("end", () => {
             this.streamsList.delete(streamID)
-            console.log(`Стрим c завершен!`)
+            logger.info(`Стрим c завершен!`)
         })
 
         call.on("error", (err: any) => {
-            console.log(err)
+            logger.error(err)
         })
     }
 

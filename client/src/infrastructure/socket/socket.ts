@@ -1,4 +1,5 @@
 import net from 'net';
+import { logger } from '../../domain/logger/logger.service';
 
 export class SocketClient {
     private socket: net.Socket
@@ -37,7 +38,7 @@ export class SocketClient {
             })
 
             this.socket.on('timeout', () => {
-                console.log('Connection timed out!')
+                logger.info('Connection timed out!')
                 this.socket.destroy();
                 reject(new Error('Connection timed out'));
             })

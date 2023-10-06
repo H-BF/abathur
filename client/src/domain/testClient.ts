@@ -1,6 +1,7 @@
 import { evalutePorts } from "../helper"
-import { IData, IResult, IResults } from "./interfaces"
+import { IData, IResult } from "./interfaces"
 import { SocketClient } from "../infrastructure/socket/socket";
+import { logger } from "./logger/logger.service";
 
 export class TestClient {
 
@@ -36,7 +37,7 @@ export class TestClient {
                                 status = "pass"
                             } catch (err) {
                                 msgErr = `${err}`
-                                console.log(`${err}`)
+                                logger.error(err)
                             }
 
                             switch(status) {

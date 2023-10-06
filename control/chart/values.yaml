@@ -16,7 +16,7 @@ abathurControl:
   # securityContext:
   #   privileged: true
   restartPolicy: Never
-  destroy: true
+  destroy: false
   scenario: 99
 
 abathurClient:
@@ -102,6 +102,10 @@ gitlab:
   src_branch: from
   dst_branch: to
   commit: 34er3r323
+
+logger:
+  logLevel: DEBUG
+  logType: pretty
 
 telegram:
   token: 5996680756:AAGHDMu5WnkaVioGJbesVJMv8irooQvfL7g

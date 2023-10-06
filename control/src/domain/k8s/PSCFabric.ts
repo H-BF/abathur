@@ -4,6 +4,7 @@ import { hbfTestPod } from "../../specifications/hbfTestPod";
 import { hbfServer } from "../../specifications/hbfServer";
 import { variables } from "../../infrastructure/var_storage/variables-storage";
 import { apiTestPod } from "../../specifications/apiTestPod";
+import { logger } from "../logger/logger.service";
 
 export class PSCFabric {
  
@@ -19,8 +20,8 @@ export class PSCFabric {
      * - конфиг HBF клиента
      * - конфиг Nginx
      */
-    async createSharedConfigMaps(maps: V1ConfigMap[]) {
-        console.log("Создаем общие configMaps")
+    async createSharedConfigMaps(maps: V1ConfigMap[], context: string) {
+        logger.info(`[${context}] Создаем общие configMaps`)
         for (const map of maps) {
             await this.k8sClient.createConfigMap(map)
         }
@@ -31,13 +32,13 @@ export class PSCFabric {
      * Важно! Сначало надо вызвать метод createSharedConfigMaps()
      */
     async createHBFServer(prefix: string, ip: string, port: string) {
-        console.log(`Создаем pod hbf-server: {prefix: ${prefix}, ip: ${ip}, port: ${port}}`)
+        logger.info(`[${prefix}] Создаем pod hbf-server: {ip: ${ip}, port: ${port}}`)
         await this.k8sClient.createPod(hbfServer.specPod({
             prefix: prefix,
             ip: ip,
             port: parseInt(port)
         }) as V1Pod)
-        console.log(`Создаем service hbf-server`)
+        logger.info(`[${prefix}] Создаем service hbf-server`)
         await this.k8sClient.createService(hbfServer.specSrv({prefix: prefix}) as V1Service)
     }
 
@@ -58,7 +59,7 @@ export class PSCFabric {
         testData: string,
         ports: string
     ) {
-        console.log(`Готовимся к созданию тестового пода ${podNumber}: ${ip}`)
+        logger.info(`[${prefix}] Готовимся к созданию тестового пода ${podNumber}: ${ip}`)
         //Создаем configMap с тестовыми данными
         await this.k8sClient.createConfigMap(hbfTestPod.testData({
             prefix: prefix,

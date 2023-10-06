@@ -11,4 +11,4 @@ RUN apt install -y nftables iptables net-tools
 WORKDIR /usr/src/server
 COPY --from=builder /usr/src/app/build .
 COPY --from=builder /usr/src/app/node_modules ./node_modules
-CMD ["node", "server.js"]
+CMD ["node", "index.js"]

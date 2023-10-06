@@ -1,6 +1,7 @@
 import { HBFReporterClient } from "../../infrastructure/reporter"
 import { ICreateLaunchReq } from "../../infrastructure/reporter/interfaces/create-launch.interface"
 import { LaunchStatus } from "../../infrastructure/reporter/interfaces/update-launch.interface"
+import { logger } from "../logger/logger.service"
 
 export class HBFReporter {
 
@@ -23,7 +24,8 @@ export class HBFReporter {
         srcBranch: string,
         dstBranch: string,
         commit: string,
-        hbfTag: string
+        hbfTag: string,
+        context: string
     ): Promise<void> {
         const launch: ICreateLaunchReq = { 
             pipeline: parseInt(pipeline),
@@ -34,11 +36,11 @@ export class HBFReporter {
             hbfTag: hbfTag
         }
         this._launchUUID = await this.client.createLaunch(launch)
-        console.log(`Лаунч создан! ${this._launchUUID}`)
+        logger.info(`[${context.toUpperCase()}] Лаунч создан! ${this._launchUUID}`)
     }
 
     async setStauts(status: LaunchStatus) {
-        console.log(`Устонавливаем в БД статус для Launch ${this._launchUUID}: ${status}`)
+        logger.info(`Устонавливаем в БД статус для Launch ${this._launchUUID}: ${status}`)
         if (!this._launchUUID)
             throw new Error("Launch not create yet")
 
@@ -49,7 +51,7 @@ export class HBFReporter {
     }
 
     async closeLaunch(fail: number, pass: number, duration: number) {
-        console.log(`Закрываем лаунч ${this._launchUUID}`)
+        logger.info(`Закрываем лаунч ${this._launchUUID}`)
         if (!this._launchUUID)
             throw new Error("Launch not create yet")
 
@@ -63,7 +65,7 @@ export class HBFReporter {
     }
 
     async closeLaunchWithError(errMsg: string) {
-        console.log(errMsg)
+        logger.error(errMsg)
         if (!this._launchUUID)
             throw new Error("Launch not create yet")
 

@@ -23,8 +23,6 @@ import fs from 'fs';
             data: JSON.stringify({ fail: test.failCount, pass: test.passCount })
         })
           
-        console.log(test.getResults())
-    
         const reporter = new Reporter(luanchUUID)
         await reporter.send(test.getResults())
     

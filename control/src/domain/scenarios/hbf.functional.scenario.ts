@@ -8,12 +8,13 @@ import { podInf } from "../k8s/podInformer"
 import { PodStatus } from "../k8s/enums"
 import { HBFDataCollector } from "../hbf"
 import { IHBFTestData, IPortForServer } from "../hbf/interfaces"
-import { delay, waitSetSize } from "../helpers"
+import { waitSetSize } from "../helpers"
 import { LaunchStatus } from "../../infrastructure/reporter"
 import { streamFuncHandler } from "../grpc/stream.func.handler"
 import fs from 'fs'
 import path from 'path'
 import { ScenarioInterface } from "./scenario.interface"
+import { logger } from "../logger/logger.service"
 
 export class HBFFunctionalScenario implements ScenarioInterface {
 
@@ -54,7 +55,7 @@ export class HBFFunctionalScenario implements ScenarioInterface {
 
     async start() {
         try {
-            console.log("HBF functional tests")
+            logger.info("[FUNC] HBF functional tests")
             const startTime = Date.now()
             await this.reporter.createLaunch(
                 variables.get("PIPELINE_ID"),
@@ -62,18 +63,21 @@ export class HBFFunctionalScenario implements ScenarioInterface {
                 variables.get("CI_SOURCE_BRANCH_NAME"),
                 variables.get("CI_TARGET_BRANCH_NAME"),
                 variables.get("COMMIT"),
-                variables.get("HBF_TAG")
+                variables.get("HBF_TAG"),
+                this.prefix
             )
 
-            await manager.createSharedConfigMaps(this.sharedConfigMaps)
+            await manager.createSharedConfigMaps(this.sharedConfigMaps, this.prefix)
             await manager.createHBFServer(this.prefix, this.hbfServerIP, this.hbfServerPort)
 
             await podInf.waitStatus(
                 `${this.prefix}-p${variables.get("PIPELINE_ID")}-hbf-server`,
-                 PodStatus.RUNNING
+                 PodStatus.RUNNING,
+                 this.prefix
             )
             await podInf.waitContainerIsReady(
-                `${this.prefix}-p${variables.get("PIPELINE_ID")}-hbf-server`
+                `${this.prefix}-p${variables.get("PIPELINE_ID")}-hbf-server`,
+                this.prefix
             )
 
            const { hbfTestData, ports } = await this.collectTestData()

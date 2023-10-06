@@ -2,6 +2,7 @@ import { controlServer } from "./src/domain/grpc/control";
 import { waitScenarioIsFinish } from "./src/domain/helpers";
 import { manager } from "./src/domain/k8s/PSCFabric";
 import { podInf } from "./src/domain/k8s/podInformer";
+import { logger } from "./src/domain/logger/logger.service";
 import { proxy } from "./src/domain/proxy/reporter.proxy.server";
 import { HBFApiScenario } from "./src/domain/scenarios/hbf.api.scenario";
 import { HBFFunctionalScenario } from "./src/domain/scenarios/hbf.functional.scenario";
@@ -17,7 +18,7 @@ import { variables } from "./src/infrastructure/var_storage/variables-storage";
         proxy.start()
 
         const scenario = Number(variables.get("SCENARIO"))
-        console.log(`Сценарий: ${scenario}`)
+        logger.info(`[MAIN] Сценарий: ${scenario}`)
         switch(scenario) {
             case 1: {
                 const funcScenario = new HBFFunctionalScenario()
@@ -40,11 +41,11 @@ import { variables } from "./src/infrastructure/var_storage/variables-storage";
                 break
             }
             default: {
-                console.log(`Сценарий ${scenario} не известен`)
+                logger.info(`[MAIN] Сценарий ${scenario} не известен`)
             }
         }
     } catch(err) {
-        console.log(err)
+        logger.error(err)
     } finally {
         proxy.stop()
         if(variables.get("IS_DESTROY_AFTER") === "true") {

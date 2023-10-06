@@ -3,6 +3,7 @@ import { BaseInformer } from "./baseInformer";
 import { PodConditionTypes, PodStatus } from "./enums";
 import { variables } from "../../infrastructure/var_storage/variables-storage";
 import { IPodData } from "./interfaces/pod.data.interface";
+import { logger } from "../logger/logger.service";
 
 export class PodInformer extends BaseInformer {
 
@@ -13,7 +14,7 @@ export class PodInformer extends BaseInformer {
     }
 
     async create(): Promise<void> {
-        console.log('Создаем информер отслеживающий поды')
+       logger.info('[MAIN] Создаем информер отслеживающий поды')
         const informer = this.k8sClient.createInformer(
             '/api/v1/namespaces/{namespace}/pods',
              async () => {
@@ -39,20 +40,21 @@ export class PodInformer extends BaseInformer {
     async waitStatus (
         podName: string,
         status: PodStatus,
+        context: string,
         timeout: number = 60000,
         frequency: number = 1000
     ): Promise<void> {
         return new Promise( (resolve, reject) => {
-            console.log(`Ждем у Pod'а ${podName} статус ${status}`)
+            logger.info(`[${context}] Ждем у Pod'а ${podName} статус ${status}`)
             const startTime = Date.now()
             const interval = setInterval(() => {
                 if(this.podDataRecord[podName].podStatus === status) {
-                    console.log(`Дождались статус ${status} у пода ${podName}!`)
+                    logger.info(`[${context}] Дождались статус ${status} у пода ${podName}!`)
                     clearInterval(interval)
                     resolve()
                 } else if (Date.now() - startTime >= timeout) {
                     clearInterval(interval)
-                    reject(new Error("Timeout occurred!!"))
+                    reject(new Error(`[${context}] Timeout occurred!!`))
                 }
 
             }, frequency)            
@@ -61,15 +63,16 @@ export class PodInformer extends BaseInformer {
 
     async waitContainerIsReady(
         podName: string,
+        context: string,        
         timeout: number = 30000,
         frequency: number = 1000
     ): Promise<void> {
         return new Promise((resolve, reject) => {
-            console.log(`Ждем у пода ${podName} состояние ContainersReady True`)
+            logger.info(`[${context}] Ждем у пода ${podName} состояние ContainersReady True`)
             const startTime = Date.now()
             const interval = setInterval(() => {
                 if(this.podDataRecord[podName].containersReady?.status == 'True') {
-                    console.log(`Дождались состояние ContainersReady True у пода ${podName}!`)
+                    logger.info(`[${context}] Дождались состояние ContainersReady True у пода ${podName}!`)
                     clearInterval(interval)
                     resolve()
                 } else if (Date.now() - startTime >= timeout) {

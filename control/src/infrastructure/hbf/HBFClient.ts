@@ -3,11 +3,12 @@ import { HBF_HOST, HBF_PORT, HBF_PROTOCOL } from "../../../config/hbf_conf";
 import { ISecurityGroups, ISecurityGroupsReq } from "./interfaces/securityGroups";
 import { INetworks, INetworksReq } from "./interfaces/networks";
 import { IRules, IRulesReq } from "./interfaces/rules";
+import { logger } from "../../domain/logger/logger.service";
 
 export class HBFClient extends RestClient {
 
     constructor() {
-        console.log(`Создаем REST-client для: ${HBF_HOST}`)
+        logger.info(`Создаем REST-client для: ${HBF_HOST}`)
         super(HBF_HOST,HBF_PORT,HBF_PROTOCOL)
         this.defaults.baseURL += "/v1"
     }
