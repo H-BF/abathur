@@ -2,9 +2,9 @@ export type TestData = Record<string, IData[]>
 
 export interface IData {
     sgFrom: string
-    sgTo: string
+    to: string
     transport: string
-    dstIps: string[]
+    dst: string[]
     ports: IPorts[]
 }
 
@@ -22,10 +22,10 @@ export interface IResults {
 
 export interface IResult {
     sgFrom: string
-    sgTo: string
+    to: string
     srcIp: string
     srcPort: string
-    dstIp: string
+    dst: string
     dstPort: string
     protocol: string
     status: string

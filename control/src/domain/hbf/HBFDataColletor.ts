@@ -1,6 +1,8 @@
 import { HBFClient, ISecurityGroup } from "../../infrastructure";
 import { INetwork } from "../../infrastructure/hbf/interfaces/networks";
-import { IRule, IRulePorts } from "../../infrastructure/hbf/interfaces/rules";
+import { IRulePorts } from "../../infrastructure/hbf/interfaces/rules";
+import { IToFqdnRule } from "../../infrastructure/hbf/interfaces/rules-to-fqdn";
+import { IToSgRule } from "../../infrastructure/hbf/interfaces/rules-to-sg";
 import { variables } from "../../infrastructure/var_storage/variables-storage";
 import { logger } from "../logger/logger.service";
 import { Networks } from "../networks";
@@ -9,7 +11,8 @@ import { IData, IHBFTestData, IPortForServer, IPorts } from "./interfaces";
 export class HBFDataCollector {
 
     private HBFClient: HBFClient
-    private rules: IRule[] | undefined
+    private toSgRules: IToSgRule[] | undefined
+    private toFqdnRules: IToFqdnRule[] | undefined
     private sg: ISecurityGroup[] | undefined
     private networks: INetwork[] | undefined
     
@@ -19,46 +22,45 @@ export class HBFDataCollector {
 
     async collect(): Promise<void> {
         logger.info(`Получаем данные из БД hbf-server`)
+        logger.info(`Список SG`)
         this.sg = (await this.HBFClient.getSecurityGroups()).groups
 
+        logger.info(`Список networks`)
         this.networks = (await this.HBFClient.getNetworks({
                 neteworkNames: this.sg.flatMap(group => group.networks) 
             })
         ).networks
 
-        this.rules = (await this.HBFClient.getRulesBetween({
+        logger.info(`Правила sg-to-sg`)
+        this.toSgRules = (await this.HBFClient.getToSgRules({
                 sgFrom: this.sg.map(group => group.name),
                 sgTo: []
             })
         ).rules
+
+        logger.info(`Правила sg-to-fqdn`)
+        this.toFqdnRules = (await this.HBFClient.getToFqdnRules({
+            sgFrom: this.sg.map(group  => group.name)
+        })).rules
     }
 
     getTestData(): IHBFTestData {
         logger.info('выделяем тестовые данные из полученных от hbf-server')
         const results: IHBFTestData = {}
 
-        if (!this.rules) throw new Error("Rules is undefined")
+        if (!this.toSgRules) 
+            throw new Error("SG Rules is undefined")
 
-        this.rules.forEach(rule => {
-            const ipsFrom = this.getIPs(rule.sgFrom) 
-            const ipsTo = this.getIPs(rule.sgTo)
+        if (!this.toFqdnRules) 
+            throw new Error("FQDN Rules is undefined")  
 
-            if (ipsTo.length === 1 && (ipsTo[0] === `${variables.get("HBF_REPORTER_IP")}` || ipsTo[0] === `${variables.get("ABA_CONTROL_IP")}`)) {
-                return
-            }
+        const toSgTestData: IHBFTestData = this.getTestDataFrom(this.toSgRules)
+        const toFqdnTestData: IHBFTestData = this.getTestDataFrom(this.toFqdnRules);
 
-            const data: IData = {
-                sgFrom: rule.sgFrom,
-                sgTo: rule.sgTo,
-                transport: rule.transport,
-                dstIps: ipsTo,
-                ports: this.transformPorts(rule.ports)
-            }
-
-            ipsFrom.forEach(ipFrom => {
-                results[ipFrom] = results[ipFrom] ? [...results[ipFrom], data] : [data]
-            })
+        [...new Set(Object.keys(toSgTestData).concat(Object.keys(toFqdnTestData)))].forEach(key => {
+            results[key] = (toSgTestData[key] || []).concat(toFqdnTestData[key] || [])
         })
+        
         return results
     }
 
@@ -66,26 +68,27 @@ export class HBFDataCollector {
         logger.info('Получаем список портов, какие надо открыть на соответствующих подах')
         const result: IPortForServer = {} 
 
-        if (!this.rules) throw new Error("Rules is undefined")
+        if (!this.toSgRules) 
+            throw new Error("SG Rules is undefined")
+
+        if (!this.toFqdnRules) 
+            throw new Error("FQDN Rules is undefined")
         
-        this.rules.forEach(rule => {
-            const ipsTo = this.getIPs(rule.sgTo)
-            const portsTo = this.transformPorts(rule.ports)
+        const toSgPorts: IPortForServer = this.getPorts(this.toSgRules)
+        const toFqdnPorts: IPortForServer = this.getPorts(this.toFqdnRules);
 
-            if (ipsTo.length === 1 && (ipsTo[0] === `${variables.get("HBF_REPORTER_IP")}` || ipsTo[0] === `${variables.get("ABA_CONTROL_IP")}`)) {
-                return
-            }
-
-            ipsTo.forEach(ip => {
-                if (ip in result) {
-                    result[ip] = result[ip].concat(portsTo.map(item => item.dstPorts).flat())
-                } else {
-                    result[ip] = portsTo.map(item => item.dstPorts).flat()
-                }
-            })
+        [...new Set(Object.keys(toSgPorts).concat(Object.keys(toFqdnPorts)))].forEach(key => {
+            result[key] = [...new Set((toSgPorts[key] || []).concat(toFqdnPorts[key] || []))]
         })
 
         return result
+    }
+
+    getFqdnList(): string[] {
+        if (!this.toFqdnRules)
+            throw new Error("FQDN Rules is undefined")
+
+        return Array.from(new Set(this.toFqdnRules.map(e => e.FQDN)))
     }
 
     private getCIDRs(sgName: string): string[] {
@@ -99,6 +102,56 @@ export class HBFDataCollector {
                     return this.networks.find(networkItem => networkItem.name === netName)?.network.CIDR || ""
                 })
             })
+    }
+
+    private getTestDataFrom(rules: IToSgRule[] | IToFqdnRule[]): IHBFTestData {
+        const results: IHBFTestData = {}
+        rules.forEach(rule => {
+            const ipsFrom = this.getIPs(rule.sgFrom)
+            const to = (rule as IToSgRule).sgTo ? this.getIPs((rule as IToSgRule).sgTo) : [(rule as IToFqdnRule).FQDN]
+
+            if (this.isNeedTo(to)) {
+                return
+            }
+
+            const data: IData = {
+                sgFrom: rule.sgFrom,
+                to: (rule as IToSgRule).sgTo ?? (rule as IToFqdnRule).FQDN,
+                transport: rule.transport,
+                dst: to,
+                ports: this.transformPorts(rule.ports)
+            }
+
+            ipsFrom.forEach(ipFrom => {
+                results[ipFrom] = results[ipFrom] ? [...results[ipFrom], data] : [data]
+            })
+        })
+        return results
+    }
+
+    private getPorts(rules: IToSgRule[] | IToFqdnRule[]): IPortForServer {
+        const result: IPortForServer = {} 
+        rules.forEach(rule => {
+            const to = (rule as IToSgRule).sgTo ? this.getIPs((rule as IToSgRule).sgTo) : [(rule as IToFqdnRule).FQDN]
+            const portsTo = this.transformPorts(rule.ports)
+
+            if (this.isNeedTo(to)) {
+                return
+            }
+
+            to.forEach(ip => {
+                if (ip in result) {
+                    result[ip] = result[ip].concat(portsTo.map(item => item.dstPorts).flat())
+                } else {
+                    result[ip] = portsTo.map(item => item.dstPorts).flat()
+                }
+            })
+        })
+        return result
+    }
+    
+    private isNeedTo(to: string[]): boolean {
+        return to.length === 1 && (to[0] === `${variables.get("HBF_REPORTER_IP")}` || to[0] === `${variables.get("ABA_CONTROL_IP")}`)
     }
 
     private getIPs(sg: string) {

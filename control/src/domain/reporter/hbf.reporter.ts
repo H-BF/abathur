@@ -35,6 +35,7 @@ export class HBFReporter {
             commit: commit,
             hbfTag: hbfTag
         }
+        logger.info(`[${context.toUpperCase()}] Создаем лаунч!`)
         this._launchUUID = await this.client.createLaunch(launch)
         logger.info(`[${context.toUpperCase()}] Лаунч создан! ${this._launchUUID}`)
     }

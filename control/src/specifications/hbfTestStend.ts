@@ -105,6 +105,28 @@ const specPod = parse({
                     }
                 }
             }
+            // {
+            //     name: "debugger",
+            //     image: "debugger:latest",
+            //     imagePullPolicy: "IfNotPresent",
+            //     securityContext: {
+            //         privileged: true  
+            //     },
+            //     resources: {
+            //         limits: {
+            //             cpu: "1",
+            //             memory: "500Mi"
+            //         },
+            //         requests: {
+            //             cpu: "1",
+            //             memory: "500Mi"
+            //         }
+            //     },
+            //     env: [{
+            //         name: "HOST",
+            //         value: "127.0.0.1"
+            //     }]
+            // }
         ],
         restartPolicy: "Never",
         volumes: [
@@ -196,4 +218,4 @@ const ports = parse({
     }
 })
 
-export const hbfTestPod = { specPod, specConfMapHbfClient, testData, ports }
+export const hbfTestStend = { specPod, specConfMapHbfClient, testData, ports }

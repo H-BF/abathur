@@ -29,11 +29,11 @@ export class Reporter {
                 launchUUID: this.launchUUID,
                 srcIp: elem.srcIp,
                 srcPort: elem.srcPort || 'any',
-                dstIp:  elem.dstIp,
+                dstIp:  elem.dst,
                 dstPort: elem.dstPort || 'any',
                 protocol: elem.protocol.toLocaleLowerCase() as Protocol,
                 sgFrom: elem.sgFrom,
-                sgTo: elem.sgTo,
+                sgTo: elem.to,
                 status: elem.status as AssertionStatus,
                 msgErr: elem.msgErr || null
             })

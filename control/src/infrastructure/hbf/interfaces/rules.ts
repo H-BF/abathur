@@ -1,8 +1,3 @@
-export interface IRulesReq {
-    sgFrom: string[]
-    sgTo: string[]
-}
-
 export interface IRules {
     rules: IRule[]
 }
@@ -10,8 +5,9 @@ export interface IRules {
 export interface IRule {
     ports: IRulePorts[]
     sgFrom: string
-    sgTo: string
+    to: string
     transport: string
+    logs: boolean
 }
 
 export interface IRulePorts {

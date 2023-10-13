@@ -1,6 +1,7 @@
 import { logger } from "./logger/logger.service";
 import { ScenarioInterface } from "./scenarios/scenario.interface"
 import * as dns from 'dns';
+import fs from 'fs';
 
 export async function delay(time: number) {
     return new Promise(resolve => setTimeout(resolve, time))
@@ -78,4 +79,15 @@ export async function resolveHostName(hostName: string): Promise<string[]> {
             resolve(addresses)
         })
     })
+}
+
+export function getSvcNameTail(): string {
+    const searchLine = fs.readFileSync("/etc/resolv.conf", "utf-8")
+        .split("\n")
+        .find(line => line.startsWith("search"))
+
+    if(!searchLine)
+        throw new Error("строка не найдена")
+
+    return searchLine.split(" ")[1]
 }

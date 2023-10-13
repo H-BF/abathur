@@ -16,8 +16,8 @@ abathurControl:
   # securityContext:
   #   privileged: true
   restartPolicy: Never
-  destroy: false
-  scenario: 99
+  destroy: true
+  scenario: 1
 
 abathurClient:
   image:
@@ -80,7 +80,7 @@ hbfReporter:
 # WB
 # hbfReporter:
 #   protocol: http
-#   host: 10.36.36.186
+#   host: testops-ingress-controller.testops.svc.k8s.dldevel
 #   port: 80
 
 # LOCAL
@@ -92,7 +92,7 @@ apiReporter:
 # WB
 # apiReporter:
 #   protocol: http
-#   host: 10.36.37.165
+#   host: testops-ingress-controller.testops.svc.k8s.dldevel
 #   port: 80
 
 gitlab:

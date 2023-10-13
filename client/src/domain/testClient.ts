@@ -16,7 +16,7 @@ export class TestClient {
 
    async runTests(data: IData[]) {
         for (const node of data) {
-            for (const dstIp of node.dstIps) {
+            for (const dstIp of node.dst) {
                 for (const ports of node.ports) {
                     const srcPorts = evalutePorts(ports.srcPorts)
                     const dstPorts = evalutePorts(ports.dstPorts)
@@ -51,10 +51,10 @@ export class TestClient {
 
                             this.testResults.push({
                                 sgFrom: node.sgFrom,
-                                sgTo: node.sgTo,
+                                to: node.to,
                                 srcIp: this.srcIp,
                                 srcPort: srcPort,
-                                dstIp: dstIp,
+                                dst: dstIp,
                                 dstPort: dstPort,
                                 protocol: node.transport,
                                 status: status,
