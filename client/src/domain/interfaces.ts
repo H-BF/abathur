@@ -1,8 +1,10 @@
 export type TestData = Record<string, IData[]>
 
 export interface IData {
-    sgFrom: string
+    from: string
     to: string
+    fromType: DirectionType 
+    toType: DirectionType
     transport: string
     dst: string[]
     ports: IPorts[]
@@ -21,13 +23,21 @@ export interface IResults {
 }
 
 export interface IResult {
-    sgFrom: string
+    from: string
     to: string
+    fromType: DirectionType 
+    toType: DirectionType
     srcIp: string
     srcPort: string
-    dst: string
+    dstIp: string
     dstPort: string
     protocol: string
     status: string
     msgErr?: string
+}
+
+export enum DirectionType {
+    FQDN = 'fqdn',
+    CIDR = 'cidr',
+    SG = 'SG'
 }

@@ -1,3 +1,5 @@
+import { DirectionType } from "../../../domain/interfaces"
+
 export interface IAssertionCreateReq {
     launchUUID: string
     srcIp: string
@@ -5,8 +7,10 @@ export interface IAssertionCreateReq {
     dstIp: string
     dstPort: string
     protocol: Protocol
-    sgFrom: string
-    sgTo: string
+    from: string
+    to: string
+    fromType: DirectionType 
+    toType: DirectionType
     status: AssertionStatus
     msgErr?: string | null
 }

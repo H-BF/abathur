@@ -4,9 +4,11 @@ import { IRulePorts } from "../../infrastructure/hbf/interfaces/rules";
 import { IToFqdnRule } from "../../infrastructure/hbf/interfaces/rules-to-fqdn";
 import { IToSgRule } from "../../infrastructure/hbf/interfaces/rules-to-sg";
 import { variables } from "../../infrastructure/var_storage/variables-storage";
+import { isCIDR } from "../helpers";
 import { logger } from "../logger/logger.service";
 import { Networks } from "../networks";
-import { IData, IHBFTestData, IPortForServer, IPorts } from "./interfaces";
+import { DirectionType, IData, IHBFTestData, IPortForServer, IPorts } from "./interfaces";
+import net from 'net';
 
 export class HBFDataCollector {
 
@@ -108,17 +110,20 @@ export class HBFDataCollector {
         const results: IHBFTestData = {}
         rules.forEach(rule => {
             const ipsFrom = this.getIPs(rule.sgFrom)
-            const to = (rule as IToSgRule).sgTo ? this.getIPs((rule as IToSgRule).sgTo) : [(rule as IToFqdnRule).FQDN]
+            const to = (rule as IToSgRule).sgTo ?? (rule as IToFqdnRule).FQDN
+            const dst = (rule as IToSgRule).sgTo ? this.getIPs((rule as IToSgRule).sgTo) : [(rule as IToFqdnRule).FQDN]
 
-            if (this.isNeedTo(to)) {
+            if (this.isNeedTo(dst)) {
                 return
             }
 
             const data: IData = {
-                sgFrom: rule.sgFrom,
-                to: (rule as IToSgRule).sgTo ?? (rule as IToFqdnRule).FQDN,
+                from: rule.sgFrom,
+                to: to,
+                fromType: DirectionType.SG,
+                toType: (rule as IToSgRule).sgTo ? DirectionType.SG : DirectionType.FQDN,
                 transport: rule.transport,
-                dst: to,
+                dst: dst,
                 ports: this.transformPorts(rule.ports)
             }
 

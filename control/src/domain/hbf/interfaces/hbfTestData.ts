@@ -1,8 +1,10 @@
 export type IHBFTestData = Record<string, IData[]>
 
 export interface IData {
-    sgFrom: string
+    from: string
     to: string
+    fromType: DirectionType 
+    toType: DirectionType
     transport: string
     dst: string[]
     ports: IPorts[]
@@ -11,4 +13,10 @@ export interface IData {
 export interface IPorts {
     srcPorts: string[]
     dstPorts: string[]
+}
+
+export enum DirectionType {
+    FQDN = 'fqdn',
+    CIDR = 'cidr',
+    SG = 'sg'
 }

@@ -51,15 +51,17 @@ export class TestClient {
                             }
 
                             this.testResults.push({
-                                sgFrom: node.sgFrom,
+                                from: node.from,
                                 to: node.to,
+                                fromType: node.fromType, 
+                                toType: node.toType,
                                 srcIp: this.srcIp,
                                 srcPort: srcPort,
                                 //Здесь мы смотрим чем является dstIp. Изночально в нем реально хранился IP
                                 //А теперь с появлением FQDN мы все так же делаем запрос по dstIP, но он может 
                                 //быть не IP, а именем. В отчет нам нужен все же IP. Поэтому проверяем является ли 
                                 // dstIp IP, если нет торезолвим имя.
-                                dst: net.isIP(dstIp) ? dstIp : await getIpByDNSName(dstIp),
+                                dstIp: net.isIP(dstIp) ? dstIp : await getIpByDNSName(dstIp),
                                 dstPort: dstPort,
                                 protocol: node.transport,
                                 status: status,
