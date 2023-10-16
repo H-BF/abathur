@@ -1,7 +1,8 @@
-import { evalutePorts } from "../helper"
+import { evalutePorts, getIpByDNSName } from "../helper"
 import { IData, IResult } from "./interfaces"
 import { SocketClient } from "../infrastructure/socket/socket";
 import { logger } from "./logger/logger.service";
+import net from 'net';
 
 export class TestClient {
 
@@ -54,7 +55,11 @@ export class TestClient {
                                 to: node.to,
                                 srcIp: this.srcIp,
                                 srcPort: srcPort,
-                                dst: dstIp,
+                                //Здесь мы смотрим чем является dstIp. Изночально в нем реально хранился IP
+                                //А теперь с появлением FQDN мы все так же делаем запрос по dstIP, но он может 
+                                //быть не IP, а именем. В отчет нам нужен все же IP. Поэтому проверяем является ли 
+                                // dstIp IP, если нет торезолвим имя.
+                                dst: net.isIP(dstIp) ? dstIp : await getIpByDNSName(dstIp),
                                 dstPort: dstPort,
                                 protocol: node.transport,
                                 status: status,

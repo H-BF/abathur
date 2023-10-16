@@ -1,4 +1,5 @@
 import { networkInterfaces } from 'os'
+import * as dns from 'dns';
 
 export async function delay(time: number) {
     return new Promise(resolve => setTimeout(resolve, time));
@@ -21,17 +22,21 @@ export function getMyIp(): string {
     return networkInterfaces().eth0!![0].address
 }
 
-// function evalutePorts(ports: string[]): string[] {
-//     let result: string[] = []
-//     ports.forEach(port => {
-//         if(port.includes("-")) {
-//             let elems: string[] = port.split("-")
-//             for (let i = Number(elems[0]); i <= Number(elems[1]); i++) {
-//                 result.push(i.toString())
-//             }
-//         } else {
-//             result.push(port)
-//         }
-//     })
-//     return result
-// }
+export async function resolveHostName(hostName: string): Promise<string[]> {
+    return new Promise((resolve, reject) => {
+        dns.resolve(hostName, (err, addresses) => {
+            if (err) reject(err)
+            resolve(addresses)
+        })
+    })
+}
+
+export async function getIpByDNSName(name: string): Promise<string> {
+    const msg = "Не удалось одназначно разрезолвить"
+    const ips = await resolveHostName(name)
+
+    if (ips.length > 1 || ips.length === 0)
+        throw new Error(`${msg} ${name}`)
+
+    return ips[0]
+}
