@@ -1,10 +1,12 @@
 import { V1ConfigMap, V1Pod, V1Service } from "@kubernetes/client-node";
 import { K8sClient } from "../../infrastructure/k8s/k8sClient";
-import { hbfTestPod } from "../../specifications/hbfTestPod";
+import { hbfTestStend } from "../../specifications/hbfTestStend";
 import { hbfServer } from "../../specifications/hbfServer";
 import { variables } from "../../infrastructure/var_storage/variables-storage";
 import { apiTestPod } from "../../specifications/apiTestPod";
 import { logger } from "../logger/logger.service";
+import { fqdnTestStend } from "../../specifications/fqdnTestStend";
+import { IPortForServer } from "../hbf/interfaces";
 
 export class PSCFabric {
  
@@ -52,7 +54,7 @@ export class PSCFabric {
      * @param testData - тестовые данные, которые надо поместить в ConfigMap
      * @param ports - список портов на которых нужно поднять сервер на данном поде
      */
-    async createHBFTestPod(
+    async createHBFTestStend(
         prefix: string,
         podNumber: number,
         ip: string, 
@@ -61,7 +63,7 @@ export class PSCFabric {
     ) {
         logger.info(`[${prefix}] Готовимся к созданию тестового пода ${podNumber}: ${ip}`)
         //Создаем configMap с тестовыми данными
-        await this.k8sClient.createConfigMap(hbfTestPod.testData({
+        await this.k8sClient.createConfigMap(hbfTestStend.testData({
             prefix: prefix,
             name: `test-data-${podNumber}`,
             component: `test-data-${podNumber}`,
@@ -69,14 +71,14 @@ export class PSCFabric {
         }) as V1ConfigMap)
 
         //Создаем configMap с портами на открытие
-        await this.k8sClient.createConfigMap(hbfTestPod.ports({
+        await this.k8sClient.createConfigMap(hbfTestStend.ports({
             prefix: prefix,
             name: `test-ports-${podNumber}`,
             component: `test-ports-${podNumber}`,
             ports: ports
         }) as V1ConfigMap)
 
-        await this.k8sClient.createPod(hbfTestPod.specPod({
+        await this.k8sClient.createPod(hbfTestStend.specPod({
             prefix: prefix,
             podName: `test-pod-${podNumber}`,
             component: `test-pod-${podNumber}`,
@@ -84,6 +86,33 @@ export class PSCFabric {
             testData: `test-data-${podNumber}`,
             ports: `test-ports-${podNumber}`
         }) as V1Pod)
+    }
+
+    async createFQDNTestStend(
+        prefix: string,
+        fqdn: string,
+        portsData: string,
+        portsJSON: Object
+    ) {
+        await this.k8sClient.createConfigMap(fqdnTestStend.ports({
+            prefix: prefix,
+            name: fqdn,
+            component: `${fqdn}-ports`,
+            ports: portsData
+        }) as V1ConfigMap)
+
+        await this.k8sClient.createPod(fqdnTestStend.specPod({
+            prefix: prefix,
+            podName: fqdn,
+            component: fqdn
+        }) as V1Pod)
+
+        await this.k8sClient.createService(fqdnTestStend.specSrv({
+            prefix: prefix,
+            podName: fqdn,
+            component: fqdn,
+            ports: portsJSON
+        }) as V1Service)
     }
 
 

@@ -2,8 +2,9 @@ import { RestClient } from "../axios";
 import { HBF_HOST, HBF_PORT, HBF_PROTOCOL } from "../../../config/hbf_conf";
 import { ISecurityGroups, ISecurityGroupsReq } from "./interfaces/securityGroups";
 import { INetworks, INetworksReq } from "./interfaces/networks";
-import { IRules, IRulesReq } from "./interfaces/rules";
+import { IToSgRules, IToSgRulesReq } from "./interfaces/rules-to-sg";
 import { logger } from "../../domain/logger/logger.service";
+import { IToFqdnRules, IToFqdnRulesReq } from "./interfaces/rules-to-fqdn";
 
 export class HBFClient extends RestClient {
 
@@ -23,8 +24,13 @@ export class HBFClient extends RestClient {
         return data
     }
 
-    async getRulesBetween(route: IRulesReq): Promise<IRules> {
-        const { data } = await this.post<IRules>('/rules', route)
+    async getToSgRules(route: IToSgRulesReq): Promise<IToSgRules> {
+        const { data } = await this.post<IToSgRules>('/rules', route)
+        return data
+    }
+
+    async getToFqdnRules(route: IToFqdnRulesReq): Promise<IToFqdnRules> {
+        const { data } = await this.post<IToFqdnRules>('/fqdn/rules', route)
         return data
     }
 }

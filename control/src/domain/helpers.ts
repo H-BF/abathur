@@ -1,6 +1,7 @@
 import { logger } from "./logger/logger.service";
 import { ScenarioInterface } from "./scenarios/scenario.interface"
 import * as dns from 'dns';
+import fs from 'fs';
 
 export async function delay(time: number) {
     return new Promise(resolve => setTimeout(resolve, time))
@@ -78,4 +79,42 @@ export async function resolveHostName(hostName: string): Promise<string[]> {
             resolve(addresses)
         })
     })
+}
+
+export function getSvcNameTail(): string {
+    const searchLine = fs.readFileSync("/etc/resolv.conf", "utf-8")
+        .split("\n")
+        .find(line => line.startsWith("search"))
+
+    if(!searchLine)
+        throw new Error("строка не найдена")
+
+    return searchLine.split(" ")[1]
+}
+
+export function isCIDR(str: string): boolean {
+    const cidrRegex = /^(\d{1,3}\.){3}\d{1,3}\/\d{1,2}$/;
+    if (!cidrRegex.test(str)) {
+      return false;
+    }
+  
+    const [ip, mask] = str.split('/');
+    const ipParts = ip.split('.');
+    if (ipParts.length !== 4) {
+      return false;
+    }
+  
+    for (const part of ipParts) {
+      const num = parseInt(part, 10);
+      if (isNaN(num) || num < 0 || num > 255) {
+        return false;
+      }
+    }
+  
+    const maskNum = parseInt(mask, 10);
+    if (isNaN(maskNum) || maskNum < 0 || maskNum > 32) {
+      return false;
+    }
+  
+    return true;
 }

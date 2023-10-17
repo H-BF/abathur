@@ -4,6 +4,7 @@ import { requiredEnvVariablesList } from "./required-env-variables-list"
 import { requiredPropVariablesList } from "./required-prop-variables-list"
 import { resolveHostName } from '../../domain/helpers'
 import { logger } from '../../domain/logger/logger.service'
+import net from 'net';
 
 class VariableStorage {
     
@@ -50,22 +51,22 @@ class VariableStorage {
         return this.variables[name]
     }
 
-    
     async resolveReporterHosts() {
+        const apiName = this.variables["API_REPORTER_HOST"]
+        const hbfName = this.variables["HBF_REPORTER_HOST"]
+        
+        this.variables["API_REPORTER_IP"] = net.isIP(apiName) ? apiName : await this.getIpByDNSName(apiName)
+        this.variables["HBF_REPORTER_IP"] = net.isIP(hbfName) ? hbfName : await this.getIpByDNSName(hbfName)
+    }
+
+    private async getIpByDNSName(name: string): Promise<string> {
         const msg = "Не удалось одназначно разрезолвить"
-        const apiName = variables.get("API_REPORTER_HOST")
-        const hbfName = variables.get("HBF_REPORTER_HOST")
+        const ips = await resolveHostName(name)
 
-        const apiIps = await resolveHostName(apiName)
-        const hbfIps = await resolveHostName(hbfName)
+        if (ips.length > 1 || ips.length === 0)
+            throw new Error(`${msg} ${name}`)
 
-        if (apiIps.length > 1 || apiIps.length === 0)
-            throw new Error(`${msg} ${apiName}`)
-        if (hbfIps.length > 1 || hbfIps.length === 0)
-            throw new Error(`${msg} ${hbfName}`)
-
-        this.variables["API_REPORTER_IP"] = apiIps[0]
-        this.variables["HBF_REPORTER_IP"] = hbfIps[0]
+        return ips[0]
     }
 }
 

@@ -5,7 +5,7 @@ import { podInf } from "./src/domain/k8s/podInformer";
 import { logger } from "./src/domain/logger/logger.service";
 import { proxy } from "./src/domain/proxy/reporter.proxy.server";
 import { HBFApiScenario } from "./src/domain/scenarios/hbf.api.scenario";
-import { HBFFunctionalScenario } from "./src/domain/scenarios/hbf.functional.scenario";
+import { HBFFuncScenario } from "./src/domain/scenarios/hbf.func.scenario";
 import { variables } from "./src/infrastructure/var_storage/variables-storage";
 
 (async () => {
@@ -21,9 +21,9 @@ import { variables } from "./src/infrastructure/var_storage/variables-storage";
         logger.info(`[MAIN] Сценарий: ${scenario}`)
         switch(scenario) {
             case 1: {
-                const funcScenario = new HBFFunctionalScenario()
-                funcScenario.start()
-                await waitScenarioIsFinish([funcScenario])
+                const funcToSgScenario = new HBFFuncScenario()
+                funcToSgScenario.start()
+                await waitScenarioIsFinish([funcToSgScenario])
                 break
             }
             case 2: {
@@ -32,12 +32,15 @@ import { variables } from "./src/infrastructure/var_storage/variables-storage";
                 await waitScenarioIsFinish([apiScenario])
                 break
             }
+            case 3: {
+                break
+            }
             case 99: {
-                const funcScenario = new HBFFunctionalScenario()
+                const funcToSgScenario = new HBFFuncScenario()
                 const apiScenario = new HBFApiScenario()
-                funcScenario.start()
+                funcToSgScenario.start()
                 apiScenario.start()
-                await waitScenarioIsFinish([funcScenario, apiScenario])
+                await waitScenarioIsFinish([funcToSgScenario, apiScenario])
                 break
             }
             default: {

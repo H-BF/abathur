@@ -47,13 +47,21 @@ export class K8sClient {
     getConditionStatus(
         type: PodConditionTypes,
         conditions: Array<V1PodCondition>
-      ) : { status: PodConditionStatus, date: Date} | undefined {
+    ) : { status: PodConditionStatus, date: Date} | undefined {
         const condition = conditions.find(c => c.type === type)
         if (!condition) return;
         const status = condition.status as PodConditionStatus
         const date = condition.lastTransitionTime ? condition.lastTransitionTime : new Date('2000-01-01T00:00:00Z')
         return { status, date };
-      }
+    }
+
+    async getCurrentClusterName() {
+        const corefile = await this.coreAPI.readNamespacedConfigMap('coredns', 'kube-system')
+        const match = corefile.body.data?.Corefile.match(/kubernetes\s(.+)\s\{/)
+        const dnsDomain = match ? match[1] : 'hui'
+        console.log(dnsDomain)
+    }
+
         ///////////////////
         //Работа с подами//
         ///////////////////

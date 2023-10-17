@@ -32,8 +32,10 @@ export class Reporter {
                 dstIp:  elem.dstIp,
                 dstPort: elem.dstPort || 'any',
                 protocol: elem.protocol.toLocaleLowerCase() as Protocol,
-                sgFrom: elem.sgFrom,
-                sgTo: elem.sgTo,
+                from: elem.from,
+                to: elem.to,
+                fromType: elem.fromType, 
+                toType: elem.toType,
                 status: elem.status as AssertionStatus,
                 msgErr: elem.msgErr || null
             })
