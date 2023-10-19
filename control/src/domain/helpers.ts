@@ -1,5 +1,5 @@
 import { logger } from "./logger/logger.service";
-import { ScenarioInterface } from "./scenarios/scenario.interface"
+import { IScenarioInterface } from "./scenarios/interface/scenario.interface"
 import * as dns from 'dns';
 import fs from 'fs';
 
@@ -51,7 +51,7 @@ export async function allRecordsValueIs<T extends string | number>(
 }
 
 export async function waitScenarioIsFinish(
-    scenarios: ScenarioInterface[],
+    scenarios: IScenarioInterface[],
     timeout: number = 300000,
     frequency: number = 1000
 ): Promise<void> {

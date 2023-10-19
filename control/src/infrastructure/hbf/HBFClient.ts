@@ -1,5 +1,4 @@
 import { RestClient } from "../axios";
-import { HBF_HOST, HBF_PORT, HBF_PROTOCOL } from "../../../config/hbf_conf";
 import { ISecurityGroups, ISecurityGroupsReq } from "./interfaces/securityGroups";
 import { INetworks, INetworksReq } from "./interfaces/networks";
 import { IToSgRules, IToSgRulesReq } from "./interfaces/rules-to-sg";
@@ -8,9 +7,13 @@ import { IToFqdnRules, IToFqdnRulesReq } from "./interfaces/rules-to-fqdn";
 
 export class HBFClient extends RestClient {
 
-    constructor() {
-        logger.info(`Создаем REST-client для: ${HBF_HOST}`)
-        super(HBF_HOST,HBF_PORT,HBF_PROTOCOL)
+    constructor(
+        protocol: string,
+        host: string,
+        port: string
+    ) {
+        logger.info(`Создаем REST-client для: ${host}`)
+        super(host,port,protocol)
         this.defaults.baseURL += "/v1"
     }
     

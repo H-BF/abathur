@@ -6,15 +6,15 @@ import { APIReporter } from "../reporter/api.reporter"
 import { PodStatus } from "../k8s/enums"
 import { manager } from "../k8s/PSCFabric"
 import { podInf } from "../k8s/podInformer"
-import { delay, waitSetSize } from "../helpers"
+import { waitSetSize } from "../helpers"
 import { hbfServer } from "../../specifications/hbfServer"
 import { apiTestPod } from "../../specifications/apiTestPod"
 import { streamApiHandler } from "../grpc/stream.api.handler"
 import { LaunchStatus } from "../../infrastructure/reporter";
-import { ScenarioInterface } from "./scenario.interface";
+import { IScenarioInterface } from "./interface/scenario.interface";
 import { logger } from "../logger/logger.service";
 
-export class HBFApiScenario implements ScenarioInterface {
+export class ApiScenario implements IScenarioInterface {
 
     private prefix = 'api'
     private sharedConfigMaps: V1ConfigMap[] = []
@@ -37,7 +37,7 @@ export class HBFApiScenario implements ScenarioInterface {
 
         this.sharedConfigMaps.push(hbfServer.pgConfMap({
             prefix: this.prefix,
-            data: fs.readFileSync(path.resolve(__dirname, "../../../sql/hbf.api.sql"), "utf-8") 
+            data: fs.readFileSync(path.resolve(__dirname, "../../../sql/api/hbf.api.sql"), "utf-8") 
         }) as V1ConfigMap)
         this.sharedConfigMaps.push(hbfServer.hbfConfMap({
             prefix: this.prefix,

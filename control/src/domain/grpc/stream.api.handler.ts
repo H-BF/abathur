@@ -1,5 +1,6 @@
 import { Req } from "../../../gRPC/control/Req"
 import { logger } from "../logger/logger.service";
+import { Status } from '../../../gRPC/control/Status';
 
 class StreamApiHandler {
 
@@ -16,18 +17,20 @@ class StreamApiHandler {
             if(!request.status) 
                 throw new Error('Обязательное поле status отсутствует')
             
-            switch(request.status) {
-                case 1:
+            const status = this.getKeyByValue(request.status as number, Status)    
+
+            switch(status) {
+                case 'ready':
                     logger.info("Попали в ветку ready")
                     call.write({ msg: this.launchUuid })
                     break
-                case 2:
+                case 'finish':
                     logger.info("Попали в ветку finish")
                     if(!request.data) 
                         throw new Error('Обязательное data отсутствует')
                     this.result = JSON.parse(request.data) as { fail: number, pass: number }
                     break
-                case 3:
+                case 'error':
                     logger.info("Попали в ветку error")
                     if(!request.data) 
                         throw new Error('Обязательное data отсутствует')
@@ -55,6 +58,10 @@ class StreamApiHandler {
 
     getResult(): { fail: number, pass: number } {
         return this.result
+    }
+
+    private getKeyByValue(value: number, enumObject: any): string | undefined {
+        return Object.keys(enumObject).find(key => enumObject[key] === value);
     }
 }
 
