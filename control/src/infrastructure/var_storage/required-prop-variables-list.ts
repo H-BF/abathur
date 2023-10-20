@@ -31,7 +31,6 @@ export const requiredPropVariablesList = [
     "ABA_PROXY_PORT",
     'ABA_PROXY_PROTOCOL',
     "IS_DESTROY_AFTER",
-    "SCENARIO",
     "TG_TOKEN",
     "TG_GROUP_ID",
     "API_TEST_REPOSITORY",
