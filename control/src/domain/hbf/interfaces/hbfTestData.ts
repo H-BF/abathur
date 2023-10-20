@@ -1,5 +1,10 @@
 export type IHBFTestData = Record<string, IData[]>
 
+export interface IConfigMapTestData {
+    scenario: string,
+    testData: IData[]
+}
+
 export interface IData {
     from: string
     to: string

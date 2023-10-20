@@ -1,37 +1,31 @@
-import { AbaControlClient } from './src/domain/grpc/AbaControlClient';
+import { IConfigMapTestData, IData } from './src/domain/interfaces';
+import { logger } from './src/domain/logger/logger.service';
+import { SimpleFuncScenario } from './src/domain/scenario/simple.func.scenario';
 import { getMyIp } from './src/helper';
-import { IData } from './src/domain/interfaces';
-import { TestClient } from './src/domain/testClient';
-import { Reporter } from './src/domain/reporter/reporter';
-import { Status } from './gRPC/control/Status';
 import fs from 'fs';
 
 (async () => {
     const myIp = getMyIp()
-    const control = new AbaControlClient(myIp)
 
-    try {
-        const data: IData[] = JSON.parse(fs.readFileSync('./testData/testData.json', 'utf-8'))
-        const test = new TestClient(myIp);
-    
-        control.sendMsg({ status: Status.ready })
-        const luanchUUID = await control.listen()
-    
-        await test.runTests(data)
-        control.sendMsg({
-            status: Status.finish, 
-            data: JSON.stringify({ fail: test.failCount, pass: test.passCount })
-        })
-          
-        const reporter = new Reporter(luanchUUID)
-        await reporter.send(test.getResults())
-    
-    } catch(err) {
-        control.sendMsg({
-            status: Status.error,
-            data: `${err}`
-        })
-    } finally {
-        control.endStream()
+    const testData: IConfigMapTestData = JSON.parse(
+        fs.readFileSync(
+            './testData/testData.json',
+            'utf-8'
+        )
+    )
+
+    const scenario: string = testData.scenario
+    const data: IData[] = testData.testData
+
+    const type = scenario.split("-")[0]
+    const funcType = scenario.split("-")[1]
+
+    switch(type) {
+        case 'simple':
+            const simpleFuncType = new SimpleFuncScenario(myIp, funcType)
+            await simpleFuncType.start(data)
+            break;
+        default:
+            logger.error(`Неизвестный тип тестов: ${type}`)
     }
 })();

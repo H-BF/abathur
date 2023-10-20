@@ -1,4 +1,4 @@
-export interface ScenarioInterface {
+export interface IScenarioInterface {
     start: () => void
     isFinish: () => boolean
 }

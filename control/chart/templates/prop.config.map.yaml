@@ -10,8 +10,10 @@ data:
   config.properties: |
     HBF_SERVER_REPOSITORY={{ .Values.hbfServer.image.repository }}
     HBF_SERVER_TAG={{ .Values.hbfServer.image.tag }}
-    F_HBF_SERVER_IP={{ .Values.hbfServer.scenario.func.ip }}
-    F_HBF_SERVER_PORT={{ .Values.hbfServer.scenario.func.port  | toString }}
+    S2S_HBF_SERVER_IP={{ .Values.hbfServer.scenario.func.s2s.ip }}
+    S2S_HBF_SERVER_PORT={{ .Values.hbfServer.scenario.func.s2s.port  | toString }}
+    S2F_HBF_SERVER_IP={{ .Values.hbfServer.scenario.func.s2f.ip }}
+    S2F_HBF_SERVER_PORT={{ .Values.hbfServer.scenario.func.s2f.port  | toString }}
     A_HBF_SERVER_IP={{ .Values.hbfServer.scenario.api.ip }}
     A_HBF_SERVER_PORT={{ .Values.hbfServer.scenario.api.port | toString }}
     HBF_CLIENT_REPOSITORY={{ .Values.hbfClient.image.repository }}

@@ -4,8 +4,8 @@ import { manager } from "./src/domain/k8s/PSCFabric";
 import { podInf } from "./src/domain/k8s/podInformer";
 import { logger } from "./src/domain/logger/logger.service";
 import { proxy } from "./src/domain/proxy/reporter.proxy.server";
-import { HBFApiScenario } from "./src/domain/scenarios/hbf.api.scenario";
-import { HBFFuncScenario } from "./src/domain/scenarios/hbf.func.scenario";
+import { ApiScenario } from "./src/domain/scenarios/api.scenario";
+import { InitFuncScenarios } from "./src/domain/scenarios/functional/init.func.scenarios";
 import { variables } from "./src/infrastructure/var_storage/variables-storage";
 
 (async () => {
@@ -18,29 +18,33 @@ import { variables } from "./src/infrastructure/var_storage/variables-storage";
         proxy.start()
 
         const scenario = Number(variables.get("SCENARIO"))
+        const funcScenario = variables.get("FUNC_SCENARIO")
+
         logger.info(`[MAIN] Сценарий: ${scenario}`)
+        logger.info(`[MAIN] Функциональные сценарии: ${funcScenario}`)
+
         switch(scenario) {
             case 1: {
-                const funcToSgScenario = new HBFFuncScenario()
-                funcToSgScenario.start()
-                await waitScenarioIsFinish([funcToSgScenario])
+                const funcDefault = new InitFuncScenarios(funcScenario.split(","))
+                funcDefault.start()
+                await waitScenarioIsFinish([funcDefault])
                 break
             }
             case 2: {
-                const apiScenario = new HBFApiScenario()
+                const apiScenario = new ApiScenario()
                 apiScenario.start()
                 await waitScenarioIsFinish([apiScenario])
                 break
             }
-            case 3: {
-                break
-            }
             case 99: {
-                const funcToSgScenario = new HBFFuncScenario()
-                const apiScenario = new HBFApiScenario()
-                funcToSgScenario.start()
+                const funcDefault = new InitFuncScenarios(funcScenario.split(","))
+                const apiScenario = new ApiScenario()
+                funcDefault.start()
                 apiScenario.start()
-                await waitScenarioIsFinish([funcToSgScenario, apiScenario])
+                await waitScenarioIsFinish([
+                    funcDefault,
+                    apiScenario
+                ])
                 break
             }
             default: {

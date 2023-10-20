@@ -11,21 +11,21 @@ export interface ControlClient extends grpc.Client {
   streamApi(metadata: grpc.Metadata, options?: grpc.CallOptions): grpc.ClientDuplexStream<_control_Req, _control_Res__Output>;
   streamApi(options?: grpc.CallOptions): grpc.ClientDuplexStream<_control_Req, _control_Res__Output>;
   
-  streamFunc(metadata: grpc.Metadata, options?: grpc.CallOptions): grpc.ClientDuplexStream<_control_Req, _control_Res__Output>;
-  streamFunc(options?: grpc.CallOptions): grpc.ClientDuplexStream<_control_Req, _control_Res__Output>;
-  streamFunc(metadata: grpc.Metadata, options?: grpc.CallOptions): grpc.ClientDuplexStream<_control_Req, _control_Res__Output>;
-  streamFunc(options?: grpc.CallOptions): grpc.ClientDuplexStream<_control_Req, _control_Res__Output>;
+  streamSimpleFunc(metadata: grpc.Metadata, options?: grpc.CallOptions): grpc.ClientDuplexStream<_control_Req, _control_Res__Output>;
+  streamSimpleFunc(options?: grpc.CallOptions): grpc.ClientDuplexStream<_control_Req, _control_Res__Output>;
+  streamSimpleFunc(metadata: grpc.Metadata, options?: grpc.CallOptions): grpc.ClientDuplexStream<_control_Req, _control_Res__Output>;
+  streamSimpleFunc(options?: grpc.CallOptions): grpc.ClientDuplexStream<_control_Req, _control_Res__Output>;
   
 }
 
 export interface ControlHandlers extends grpc.UntypedServiceImplementation {
   streamApi: grpc.handleBidiStreamingCall<_control_Req__Output, _control_Res>;
   
-  streamFunc: grpc.handleBidiStreamingCall<_control_Req__Output, _control_Res>;
+  streamSimpleFunc: grpc.handleBidiStreamingCall<_control_Req__Output, _control_Res>;
   
 }
 
 export interface ControlDefinition extends grpc.ServiceDefinition {
   streamApi: MethodDefinition<_control_Req, _control_Res, _control_Req__Output, _control_Res__Output>
-  streamFunc: MethodDefinition<_control_Req, _control_Res, _control_Req__Output, _control_Res__Output>
+  streamSimpleFunc: MethodDefinition<_control_Req, _control_Res, _control_Req__Output, _control_Res__Output>
 }

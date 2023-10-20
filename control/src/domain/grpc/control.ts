@@ -2,7 +2,7 @@ import path from 'path'
 import * as grpc from '@grpc/grpc-js'
 import * as protoLoader from '@grpc/proto-loader'
 import { ProtoGrpcType } from '../../../gRPC/control'
-import { streamFuncHandler } from './stream.func.handler'
+import { streamSimpleFuncHandler } from './stream.simple.func.handler'
 import { streamApiHandler } from './stream.api.handler'
 import { variables } from '../../infrastructure/var_storage/variables-storage'
 import { logger } from '../logger/logger.service'
@@ -21,7 +21,7 @@ class ControlServer {
         const grpcObj = (grpc.loadPackageDefinition(packageDef) as unknown) as ProtoGrpcType
 
         this.controlServer.addService(grpcObj.control.Control.service, {
-            streamFunc: streamFuncHandler.stream.bind(streamFuncHandler),
+            streamSimpleFunc: streamSimpleFuncHandler.stream.bind(streamSimpleFuncHandler),
             streamApi: streamApiHandler.stream.bind(streamApiHandler)
         })
     }

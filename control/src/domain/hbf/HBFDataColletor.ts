@@ -4,11 +4,9 @@ import { IRulePorts } from "../../infrastructure/hbf/interfaces/rules";
 import { IToFqdnRule } from "../../infrastructure/hbf/interfaces/rules-to-fqdn";
 import { IToSgRule } from "../../infrastructure/hbf/interfaces/rules-to-sg";
 import { variables } from "../../infrastructure/var_storage/variables-storage";
-import { isCIDR } from "../helpers";
 import { logger } from "../logger/logger.service";
 import { Networks } from "../networks";
 import { DirectionType, IData, IHBFTestData, IPortForServer, IPorts } from "./interfaces";
-import net from 'net';
 
 export class HBFDataCollector {
 
@@ -18,8 +16,12 @@ export class HBFDataCollector {
     private sg: ISecurityGroup[] | undefined
     private networks: INetwork[] | undefined
     
-    constructor() {
-        this.HBFClient = new HBFClient()
+    constructor(
+        protocol: string,
+        host: string,
+        port: string
+    ) {
+        this.HBFClient = new HBFClient(protocol,host,port)
     }
 
     async collect(): Promise<void> {

@@ -12,8 +12,11 @@ export class AbaControlClient {
     private call: any
     private ip: string
 
-    constructor( ip: string, options?: protoLoader.Options) {
-
+    constructor(
+        ip: string,
+        funcType: string,
+        options?: protoLoader.Options
+    ) {
         this.ip = ip
 
         const packageDef = protoLoader.loadSync(
@@ -30,8 +33,9 @@ export class AbaControlClient {
 
         const meta = new grpc.Metadata()
         meta.add('id', this.ip)
+        meta.add('type', funcType)
 
-        this.call = client.streamFunc(meta)
+        this.call = client.streamSimpleFunc(meta)
     }
 
     sendMsg(msg: Req) {

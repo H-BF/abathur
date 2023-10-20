@@ -3,7 +3,7 @@ syntax = "proto3";
 package control;
 
 service Control {
-    rpc streamFunc(stream Req) returns (stream Res);
+    rpc streamSimpleFunc(stream Req) returns (stream Res);
     rpc streamApi(stream Req) returns (stream Res);
 }
 

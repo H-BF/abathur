@@ -178,9 +178,9 @@ const pgConfMap = parse({
         }
     },
     data: {
-        "01-init.sql": fs.readFileSync(path.resolve(__dirname, "../../sql/init.sql"), "utf-8"),
-        "02-migr.sql": fs.readFileSync(path.resolve(__dirname, "../../sql/migr-1.sql"), "utf-8"),
-        "03-migr.sql": fs.readFileSync(path.resolve(__dirname, "../../sql/migr-2.sql"), "utf-8"),
+        "01-init.sql": fs.readFileSync(path.resolve(__dirname, "../../sql/hbf_server/init.sql"), "utf-8"),
+        "02-migr.sql": fs.readFileSync(path.resolve(__dirname, "../../sql/hbf_server/migr-1.sql"), "utf-8"),
+        "03-migr.sql": fs.readFileSync(path.resolve(__dirname, "../../sql/hbf_server/migr-2.sql"), "utf-8"),
         "04-data.sql": "{{data}}"
     }
 })
@@ -198,7 +198,7 @@ const specConfMapWaitDb = parse({
         "wait-db.sh": `
         #!/bin/sh        
         echo "Проверяем что в таблице 'sgroups.tbl_sg_rule' есть хоть одна строка"
-        count=$(psql postgres://nkiver:nkiver@localhost:5432/postgres?sslmode=disable -c "SELECT COUNT(*) FROM sgroups.tbl_sg_rule;" -t -A)
+        count=$(psql postgres://nkiver:nkiver@localhost:5432/postgres?sslmode=disable -c "SELECT COUNT(*) FROM (SELECT 1 FROM sgroups.tbl_sg_rule UNION ALL SELECT 1 FROM sgroups.tbl_fqdn_rule) subquery;" -t -A)
         echo "Количество строк в таблице 'sgroups.tbl_sg_rule': $count"
         
         if [ "$count" -gt 0 ]; then
