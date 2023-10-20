@@ -40,6 +40,8 @@ spec:
               value: {{ .Values.logger.logType }}
             - name: LOG_LVL
               value: {{ .Values.logger.logLevel }}
+            - name: SCENARIO
+              value: "{{ .Values.abathurControl.scenario | toString }}"
             - name: FUNC_SCENARIO
               value: {{ .Values.abathurControl.funcScenario }}
       volumes:
