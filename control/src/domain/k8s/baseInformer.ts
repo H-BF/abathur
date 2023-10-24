@@ -20,7 +20,7 @@ export abstract class BaseInformer {
     start() {
         if(!this.informer)
             throw new Error("Informer not created")
-        logger.info("[MAIN] Запускаем под информер")
+        logger.info("[MAIN] Запускаем информер")
         this.informer.start()
     }
 

@@ -3,7 +3,8 @@ import { KubeConfig, CoreV1Api, V1Pod, V1Service, V1ConfigMap,
      Informer, ObjectCache, V1PodList, V1PodStatus, V1ServiceList,
      V1ConfigMapList, RbacAuthorizationV1Api, AppsV1Api,
      BatchV1Api,  
-     V1PodCondition} from '@kubernetes/client-node';
+     V1PodCondition,
+     V1ServiceSpec} from '@kubernetes/client-node';
 import http from 'http'
 import { PodConditionTypes } from '../../domain/k8s/enums';
 import { PodConditionStatus } from '../../domain/k8s/types/pod.condition.status.type';
@@ -28,7 +29,7 @@ export class K8sClient {
         this.rbacAPI  = this.config.makeApiClient(RbacAuthorizationV1Api)
     }
 
-    getName(metadata: V1ObjectMeta | undefined): string {
+    getMetaName(metadata: V1ObjectMeta | undefined): string {
         if(!metadata) 
             throw new Error("Metadata is missing!")
         if(!metadata.name)
@@ -36,7 +37,7 @@ export class K8sClient {
         return metadata.name
     }
 
-    getStatus(status: V1PodStatus | undefined): string {
+    getPodStatus(status: V1PodStatus | undefined): string {
         if(!status) 
             throw new Error("Status is missing!")
         if(!status.phase)
@@ -44,7 +45,7 @@ export class K8sClient {
         return status.phase
     }
 
-    getConditionStatus(
+    getPodConditionStatus(
         type: PodConditionTypes,
         conditions: Array<V1PodCondition>
     ) : { status: PodConditionStatus, date: Date} | undefined {
@@ -55,12 +56,19 @@ export class K8sClient {
         return { status, date };
     }
 
+    getSvcClusterIP(spec: V1ServiceSpec | undefined): string | undefined {
+        if(!spec) 
+            throw new Error("spec is missing!")
+        return spec.clusterIP
+    }
+
     async getCurrentClusterName() {
         const corefile = await this.coreAPI.readNamespacedConfigMap('coredns', 'kube-system')
         const match = corefile.body.data?.Corefile.match(/kubernetes\s(.+)\s\{/)
         const dnsDomain = match ? match[1] : 'hui'
         console.log(dnsDomain)
     }
+
 
         ///////////////////
         //Работа с подами//
@@ -77,10 +85,10 @@ export class K8sClient {
 
     async createPod(podSpec: V1Pod): Promise<string> {
         try {
-            logger.info(`Создаем Pod: ${this.getName(podSpec.metadata)}`)
+            logger.info(`Создаем Pod: ${this.getMetaName(podSpec.metadata)}`)
             const { response, body } = await this.coreAPI.createNamespacedPod(this.namespace, podSpec)
             logger.info(`Response code: ${response.statusCode}`)
-            return this.getName(body.metadata) 
+            return this.getMetaName(body.metadata) 
         } catch (err) {
             logger.error(err)
             throw new Error(`${err}`)
@@ -135,10 +143,10 @@ export class K8sClient {
 
     async createService(scvSpec: V1Service): Promise<string> {
         try {
-            logger.info(`Создаем сервис: ${this.getName(scvSpec.metadata)}`)
+            logger.info(`Создаем сервис: ${this.getMetaName(scvSpec.metadata)}`)
             const { response, body } = await this.coreAPI.createNamespacedService(this.namespace, scvSpec)
             logger.info(`Response code: ${response.statusCode}`)
-            return this.getName(body.metadata) 
+            return this.getMetaName(body.metadata) 
         } catch (err) {
             logger.error(err)
             throw new Error(`${err}`)
@@ -191,12 +199,13 @@ export class K8sClient {
 
     async createConfigMap(configMap: V1ConfigMap): Promise<string> {
         try {
-            logger.info(`Создаем ConfigMap: ${this.getName(configMap.metadata)}`)
+            logger.info(`Создаем ConfigMap: ${this.getMetaName(configMap.metadata)}`)
             const { response, body } = await this.coreAPI.createNamespacedConfigMap(this.namespace, configMap)
             logger.info(`Response code: ${response.statusCode}`)
-            return this.getName(body.metadata)
+            return this.getMetaName(body.metadata)
         } catch (err) {
-            logger.error(err)
+            console.log(err)
+            // logger.error(err)
             throw new Error(`${err}`)
         }
     }

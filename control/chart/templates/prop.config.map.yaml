@@ -14,6 +14,8 @@ data:
     S2S_HBF_SERVER_PORT={{ .Values.hbfServer.scenario.func.s2s.port  | toString }}
     S2F_HBF_SERVER_IP={{ .Values.hbfServer.scenario.func.s2f.ip }}
     S2F_HBF_SERVER_PORT={{ .Values.hbfServer.scenario.func.s2f.port  | toString }}
+    CANGE_IP_HBF_SERVER_IP={{ .Values.hbfServer.scenario.func.changeIP.ip }}
+    CANGE_IP_HBF_SERVER_PORT={{ .Values.hbfServer.scenario.func.changeIP.port  | toString }}
     A_HBF_SERVER_IP={{ .Values.hbfServer.scenario.api.ip }}
     A_HBF_SERVER_PORT={{ .Values.hbfServer.scenario.api.port | toString }}
     HBF_CLIENT_REPOSITORY={{ .Values.hbfClient.image.repository }}

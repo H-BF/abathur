@@ -2,16 +2,19 @@
 
 export const Status = {
   ready: 1,
-  finish: 2,
-  error: 3,
+  next: 2,
+  finish: 3,
+  error: 4,
 } as const;
 
 export type Status =
   | 'ready'
   | 1
-  | 'finish'
+  | 'next'
   | 2
-  | 'error'
+  | 'finish'
   | 3
+  | 'error'
+  | 4
 
 export type Status__Output = typeof Status[keyof typeof Status]

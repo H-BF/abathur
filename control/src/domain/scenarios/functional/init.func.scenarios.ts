@@ -14,6 +14,9 @@ export class InitFuncScenarios implements IScenarioInterface {
     private scenarios: IScenarioInterface[] = []
     private finish: boolean = false
 
+    failCount: number = 0
+    passCount: number = 0
+
     constructor(funcScenarios: string[]) {
         this.funcScenarios = funcScenarios
         this.reporter = new HBFReporter()
@@ -34,7 +37,7 @@ export class InitFuncScenarios implements IScenarioInterface {
                 "func"
             )
 
-            streamSimpleFuncHandler.setLaunchUUID(this.reporter.launchUUID)
+            variables.set("FUNC_LAUNCH_UUID", this.reporter.launchUUID)
 
             this.funcScenarios.forEach(scenario => {
                 if(!(scenario in scenarioMaping))
@@ -47,9 +50,14 @@ export class InitFuncScenarios implements IScenarioInterface {
             await this.reporter.setStauts(LaunchStatus.IN_PORCESS)
             await waitScenarioIsFinish(this.scenarios)
 
+            this.scenarios.forEach(scenario => {
+                this.failCount += scenario.failCount
+                this.passCount += scenario.passCount
+            })
+
             await this.reporter.closeLaunch(
-                streamSimpleFuncHandler.failCount,
-                streamSimpleFuncHandler.passCount,
+                this.failCount,
+                this.passCount,
                 Date.now() - startTime
             )
         } catch(err) {

@@ -20,7 +20,7 @@ export class Sg2FqdnScenario extends ScenarioTemplate {
     async start() {
         try {
             await super.start()
-
+            
             const { hbfTestData, fqdn, ports } = await this.collectTestData(this.prefix)
             const keys = Object.keys(hbfTestData)
  
@@ -65,6 +65,10 @@ export class Sg2FqdnScenario extends ScenarioTemplate {
                 3_600_000,
                 1_000
             )
+
+            this.failCount = streamSimpleFuncHandler.failCount
+            this.passCount = streamSimpleFuncHandler.passCount
+
         } catch(err) {
             logger.error(`${err}`)
         } finally {

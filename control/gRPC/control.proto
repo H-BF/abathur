@@ -4,7 +4,9 @@ package control;
 
 service Control {
     rpc streamSimpleFunc(stream Req) returns (stream Res);
+    rpc streamChangeIp(stream Req) returns (stream Res);
     rpc streamApi(stream Req) returns (stream Res);
+
 }
 
 message Req {
@@ -18,6 +20,7 @@ message Res {
 
 enum Status {
     ready = 1;
-    finish = 2;
-    error = 3;
+    next = 2;
+    finish = 3;
+    error = 4;
 }

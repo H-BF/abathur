@@ -25,6 +25,9 @@ export class ApiScenario implements IScenarioInterface {
     private reporter: APIReporter
     private finish: boolean = false
 
+    failCount: number = 0
+    passCount: number = 0
+
     constructor() {
         let data = JSON.parse(fs.readFileSync(path.resolve(__dirname, "../../../test_data/swarm.json"), "utf-8"))
         data.variable.forEach((vr: any) => {
@@ -92,9 +95,10 @@ export class ApiScenario implements IScenarioInterface {
             await this.reporter.setStauts(LaunchStatus.IN_PORCESS)
             await waitSetSize(streamApiHandler.getStreamList(), 0, 180_000, 10_000)
     
-            const { fail, pass } = streamApiHandler.getResult()
+            this.failCount = streamApiHandler.failCount
+            this.passCount = streamApiHandler.passCount
     
-            await this.reporter.closeLaunch(fail, pass, Date.now() - startTime)
+            await this.reporter.closeLaunch(this.failCount, this.passCount, Date.now() - startTime)
         } catch(err) {
             await this.reporter.closeLaunchWithError(`${err}`)
         } finally {

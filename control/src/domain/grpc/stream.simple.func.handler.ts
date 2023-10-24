@@ -3,8 +3,10 @@ import { Req } from '../../../gRPC/control/Req'
 import { logger } from '../logger/logger.service';
 import { SimpleFuncType } from './enums/simple.func.types';
 import { Status } from '../../../gRPC/control/Status';
+import { StreamHeandler } from './stream.handler.abstract.class';
+import { variables } from '../../infrastructure/var_storage/variables-storage';
 
-class StreamSimpleFuncHandler {
+class StreamSimpleFuncHandler extends StreamHeandler {
 
     private streamsList: IStreamSimpleFuncList = {
         s2s: new Set(),
@@ -18,9 +20,6 @@ class StreamSimpleFuncHandler {
         s2c: 0,
         c2s: 0
     };
-    private launchUuid!: string;
-    passCount: number = 0
-    failCount: number = 0
 
     stream(call: any) {
 
@@ -43,7 +42,7 @@ class StreamSimpleFuncHandler {
                     const interval = setInterval(() => {
                         if (this.streamsList[simpleFuncType].size == this.clientPodNumbers[simpleFuncType]) {
                             clearInterval(interval)
-                            call.write({ msg: this.launchUuid })
+                            call.write({ msg: variables.get("FUNC_LAUNCH_UUID") })
                         }
                     })
                     break;
@@ -56,7 +55,7 @@ class StreamSimpleFuncHandler {
                     this.failCount += data.fail
                     break;
                 case 'error':
-                    logger.info("Попали в ветку finish")
+                    logger.info("Попали в ветку error")
                     if(!request.data) 
                         throw new Error('Обязательное data отсутствует')
                     throw new Error(request.data)
@@ -73,10 +72,6 @@ class StreamSimpleFuncHandler {
         })
     }
 
-    setLaunchUUID(launchUuid: string) {
-        this.launchUuid = launchUuid
-    }
-
     setClientPodsNumber(
         type: SimpleFuncType,
         clientPodsNumber: number
@@ -86,10 +81,6 @@ class StreamSimpleFuncHandler {
 
     getStreamList(type: SimpleFuncType): Set<string> {
         return this.streamsList[type]
-    }
-
-    private getKeyByValue(value: number, enumObject: any): string | undefined {
-        return Object.keys(enumObject).find(key => enumObject[key] === value);
     }
 }
 
