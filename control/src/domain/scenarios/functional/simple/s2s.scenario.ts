@@ -1,10 +1,10 @@
 import { variables } from "../../../../infrastructure/var_storage/variables-storage";
+import { streamSimpleFuncHandler } from "../../../grpc/stream.simple.func.handler";
+import { SimpleFuncType } from "../../../grpc/enums/simple.func.types";
 import { ScenarioTemplate } from "../scenario.template";
 import { logger } from "../../../logger/logger.service";
 import { manager } from "../../../k8s/PSCFabric";
 import { waitSetSize } from "../../../helpers";
-import { streamSimpleFuncHandler } from "../../../grpc/stream.simple.func.handler";
-import { SimpleFuncType } from "../../../grpc/enums/simple.func.types";
 
 export class Sg2SgScenario extends ScenarioTemplate {
 
@@ -52,6 +52,9 @@ export class Sg2SgScenario extends ScenarioTemplate {
                 3_600_000,
                 1_000
             )
+
+            this.failCount = streamSimpleFuncHandler.errorCounter[SimpleFuncType.S2S].fail
+            this.passCount = streamSimpleFuncHandler.errorCounter[SimpleFuncType.S2S].pass
 
         } catch(err) {
             logger.error(`${err}`)

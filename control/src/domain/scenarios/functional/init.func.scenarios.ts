@@ -1,6 +1,5 @@
 import { LaunchStatus } from "../../../infrastructure/reporter"
 import { variables } from "../../../infrastructure/var_storage/variables-storage"
-import { streamSimpleFuncHandler } from "../../grpc/stream.simple.func.handler"
 import { waitScenarioIsFinish } from "../../helpers"
 import { logger } from "../../logger/logger.service"
 import { HBFReporter } from "../../reporter/hbf.reporter"
@@ -13,6 +12,9 @@ export class InitFuncScenarios implements IScenarioInterface {
     private funcScenarios: string[]
     private scenarios: IScenarioInterface[] = []
     private finish: boolean = false
+
+    failCount: number = 0
+    passCount: number = 0
 
     constructor(funcScenarios: string[]) {
         this.funcScenarios = funcScenarios
@@ -34,7 +36,7 @@ export class InitFuncScenarios implements IScenarioInterface {
                 "func"
             )
 
-            streamSimpleFuncHandler.setLaunchUUID(this.reporter.launchUUID)
+            variables.set("FUNC_LAUNCH_UUID", this.reporter.launchUUID)
 
             this.funcScenarios.forEach(scenario => {
                 if(!(scenario in scenarioMaping))
@@ -47,9 +49,16 @@ export class InitFuncScenarios implements IScenarioInterface {
             await this.reporter.setStauts(LaunchStatus.IN_PORCESS)
             await waitScenarioIsFinish(this.scenarios)
 
+            console.log("Scenarios size: " + this.scenarios.length)
+
+            this.scenarios.forEach(scenario => {
+                this.failCount += scenario.failCount
+                this.passCount += scenario.passCount
+            })
+
             await this.reporter.closeLaunch(
-                streamSimpleFuncHandler.failCount,
-                streamSimpleFuncHandler.passCount,
+                this.failCount,
+                this.passCount,
                 Date.now() - startTime
             )
         } catch(err) {

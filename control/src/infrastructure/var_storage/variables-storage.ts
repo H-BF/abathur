@@ -51,6 +51,12 @@ class VariableStorage {
         return this.variables[name]
     }
 
+    set(name: string, value: string) {
+        if (name in this.variables) 
+            throw new Error(`Переменная ${name} занята. Выберите другое название`)
+        this.variables[name] = value 
+    }
+
     async resolveReporterHosts() {
         const apiName = this.variables["API_REPORTER_HOST"]
         const hbfName = this.variables["HBF_REPORTER_HOST"]

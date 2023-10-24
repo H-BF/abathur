@@ -1,13 +1,13 @@
-import { V1Pod } from "@kubernetes/client-node"
-import { BaseInformer } from "./baseInformer";
-import { PodConditionTypes, PodStatus } from "./enums";
 import { variables } from "../../infrastructure/var_storage/variables-storage";
 import { IPodData } from "./interfaces/pod.data.interface";
+import { PodConditionTypes, PodStatus } from "./enums";
 import { logger } from "../logger/logger.service";
+import { V1Pod } from "@kubernetes/client-node"
+import { BaseInformer } from "./baseInformer";
 
-export class PodInformer extends BaseInformer {
+class PodInformer extends BaseInformer {
 
-    protected podDataRecord: Record<string, IPodData> = {}
+    private podDataRecord: Record<string, IPodData> = {}
 
     constructor() {
         super(variables.get("NAMESPACE"))
@@ -86,11 +86,11 @@ export class PodInformer extends BaseInformer {
     private addToPodDataRecord(pod: V1Pod) {
 
         let ready = undefined
-        const name = this.k8sClient.getName(pod.metadata)
-        const status = this.k8sClient.getStatus(pod.status)
+        const name = this.k8sClient.getMetaName(pod.metadata)
+        const status = this.k8sClient.getPodStatus(pod.status)
         
         if (pod.status && pod.status.conditions) {
-            ready = this.k8sClient.getConditionStatus(
+            ready = this.k8sClient.getPodConditionStatus(
                 PodConditionTypes.CONTAINERS_READY, 
                 pod.status.conditions
         )}
@@ -102,7 +102,7 @@ export class PodInformer extends BaseInformer {
     }
 
     private deleteFromPodDataRecord(pod: V1Pod) {
-        delete this.podDataRecord[this.k8sClient.getName(pod.metadata)]
+        delete this.podDataRecord[this.k8sClient.getMetaName(pod.metadata)]
     }
 }
 

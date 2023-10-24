@@ -6,6 +6,7 @@ import { streamSimpleFuncHandler } from './stream.simple.func.handler'
 import { streamApiHandler } from './stream.api.handler'
 import { variables } from '../../infrastructure/var_storage/variables-storage'
 import { logger } from '../logger/logger.service'
+import { streamChangeIpHandler } from './stream.change-ip.handler'
 
 class ControlServer {
 
@@ -22,6 +23,7 @@ class ControlServer {
 
         this.controlServer.addService(grpcObj.control.Control.service, {
             streamSimpleFunc: streamSimpleFuncHandler.stream.bind(streamSimpleFuncHandler),
+            streamChangeIp: streamChangeIpHandler.stream.bind(streamChangeIpHandler),
             streamApi: streamApiHandler.stream.bind(streamApiHandler)
         })
     }

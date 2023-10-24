@@ -1,12 +1,15 @@
 import { Req } from "../../../gRPC/control/Req"
 import { logger } from "../logger/logger.service";
 import { Status } from '../../../gRPC/control/Status';
+import { StreamHeandler } from "./stream.handler.abstract.class";
 
-class StreamApiHandler {
+class StreamApiHandler extends StreamHeandler {
 
     private launchUuid!: string;
     private streamsList: Set<string> = new Set;
-    private result! : { fail: number, pass: number }
+
+    failCount: number = 0
+    passCount: number = 0
     
     stream(call: any) {
 
@@ -17,8 +20,8 @@ class StreamApiHandler {
             if(!request.status) 
                 throw new Error('Обязательное поле status отсутствует')
             
-            const status = this.getKeyByValue(request.status as number, Status)    
-
+            const status = this.getKeyByValue(request.status as number, Status)
+            
             switch(status) {
                 case 'ready':
                     logger.info("Попали в ветку ready")
@@ -28,7 +31,9 @@ class StreamApiHandler {
                     logger.info("Попали в ветку finish")
                     if(!request.data) 
                         throw new Error('Обязательное data отсутствует')
-                    this.result = JSON.parse(request.data) as { fail: number, pass: number }
+                    const { fail, pass } = JSON.parse(request.data)
+                    this.passCount = pass
+                    this.failCount = fail
                     break
                 case 'error':
                     logger.info("Попали в ветку error")
@@ -54,14 +59,6 @@ class StreamApiHandler {
 
     getStreamList(): Set<string> {
         return this.streamsList
-    }
-
-    getResult(): { fail: number, pass: number } {
-        return this.result
-    }
-
-    private getKeyByValue(value: number, enumObject: any): string | undefined {
-        return Object.keys(enumObject).find(key => enumObject[key] === value);
     }
 }
 

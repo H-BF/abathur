@@ -1,5 +1,6 @@
 import { IConfigMapTestData, IData } from './src/domain/interfaces';
 import { logger } from './src/domain/logger/logger.service';
+import { advancedScenarioMaping } from './src/domain/scenario/advanced.scenario.maping';
 import { SimpleFuncScenario } from './src/domain/scenario/simple.func.scenario';
 import { getMyIp } from './src/helper';
 import fs from 'fs';
@@ -22,8 +23,12 @@ import fs from 'fs';
 
     switch(type) {
         case 'simple':
-            const simpleFuncType = new SimpleFuncScenario(myIp, funcType)
-            await simpleFuncType.start(data)
+            const simpleScenario = new SimpleFuncScenario(myIp, funcType)
+            await simpleScenario.start(data)
+            break;
+        case 'advanced':
+            const advancedScenario = new advancedScenarioMaping[funcType](myIp, funcType)
+            advancedScenario.start(data)
             break;
         default:
             logger.error(`Неизвестный тип тестов: ${type}`)

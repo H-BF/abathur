@@ -2,6 +2,7 @@ import { controlServer } from "./src/domain/grpc/control";
 import { waitScenarioIsFinish } from "./src/domain/helpers";
 import { manager } from "./src/domain/k8s/PSCFabric";
 import { podInf } from "./src/domain/k8s/podInformer";
+import { svcInf } from "./src/domain/k8s/svcInformer";
 import { logger } from "./src/domain/logger/logger.service";
 import { proxy } from "./src/domain/proxy/reporter.proxy.server";
 import { ApiScenario } from "./src/domain/scenarios/api.scenario";
@@ -11,8 +12,10 @@ import { variables } from "./src/infrastructure/var_storage/variables-storage";
 (async () => {
     try {
         await podInf.create()
+        await svcInf.create()
 
         podInf.start()
+        svcInf.start()
         controlServer.start()
         await variables.resolveReporterHosts()
         proxy.start()

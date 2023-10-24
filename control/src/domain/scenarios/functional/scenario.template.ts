@@ -20,11 +20,15 @@ export abstract class ScenarioTemplate implements IScenarioInterface {
     protected sharedConfigMaps: V1ConfigMap[] = []
     protected finish: boolean = false
 
+    failCount: number = 0
+    passCount: number = 0
+
     constructor(
         prefix: string,
         ip: string,
         port: string,
-        sqlFilePath: string 
+        sqlFilePath: string,
+        exitOnSuccess: boolean = true
     ) {
         this.prefix = prefix
         this.hbfServerIP = ip
@@ -44,7 +48,8 @@ export abstract class ScenarioTemplate implements IScenarioInterface {
          this.sharedConfigMaps.push(hbfTestStend.specConfMapHbfClient({
              prefix: this.prefix,
              ip: this.hbfServerIP,
-             port: this.hbfServerPort            
+             port: this.hbfServerPort,
+             exitOnSuccess: exitOnSuccess         
          }) as V1ConfigMap)
          this.sharedConfigMaps.push(hbfServer.specConfMapWaitDb({
              prefix: this.prefix            
@@ -77,6 +82,8 @@ export abstract class ScenarioTemplate implements IScenarioInterface {
     isFinish(): boolean {
         return this.finish
     }
+
+    setLaunchUuid() {};
 
     protected async collectTestData(prefix: string): Promise<{hbfTestData: IHBFTestData, fqdn: string[], ports: IPortForServer}> {
         const hbf = new HBFDataCollector(

@@ -3,13 +3,15 @@ import * as protoLoader from '@grpc/proto-loader'
 import * as grpc from '@grpc/grpc-js'
 import { ProtoGrpcType } from '../../../gRPC/control';
 import { CONTROL_IP, CONTROL_PORT, CONTROL_PROTO_PATH } from '../../../config';
-import { Res } from '../../../gRPC/control/Res';
+import { Res, Res__Output } from '../../../gRPC/control/Res';
 import { Req } from '../../../gRPC/control/Req';
 import { logger } from '../logger/logger.service';
+import { ControlClient } from '../../../gRPC/control/Control';
 
 export class AbaControlClient {
 
-    private call: any
+    private call: grpc.ClientDuplexStream<Req, Res__Output>
+    private client: ControlClient
     private ip: string
 
     constructor(
@@ -26,7 +28,7 @@ export class AbaControlClient {
         
         const grpcObj = (grpc.loadPackageDefinition(packageDef) as unknown) as ProtoGrpcType
 
-        const client = new grpcObj.control.Control(
+        this.client = new grpcObj.control.Control(
             `${CONTROL_IP}:${CONTROL_PORT}`,
             grpc.credentials.createInsecure()
         )
@@ -35,7 +37,7 @@ export class AbaControlClient {
         meta.add('id', this.ip)
         meta.add('type', funcType)
 
-        this.call = client.streamSimpleFunc(meta)
+        this.call = this.selectStream(funcType, meta)
     }
 
     sendMsg(msg: Req) {
@@ -59,5 +61,24 @@ export class AbaControlClient {
                 resolve(response.msg)
             })
         })
+    }
+
+    private selectStream(
+        funcType: string,
+        meta: grpc.Metadata
+    ): grpc.ClientDuplexStream<Req, Res__Output> {
+        let call: grpc.ClientDuplexStream<Req, Res__Output>
+        switch(funcType) {
+            case 's2s':
+            case 's2f':
+                call = this.client.streamSimpleFunc(meta)
+                break;
+            case 'changeip':
+                call = this.client.streamChangeIp(meta)
+                break;
+            default:
+                throw new Error(`Неизвестный сценарий: ${funcType}`)
+        }
+        return call
     }
 }

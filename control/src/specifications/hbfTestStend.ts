@@ -1,7 +1,7 @@
 import parse from 'json-templates';
 import { variables } from "../infrastructure/var_storage/variables-storage";
 
-const specPod = parse({
+const specPodHbfClientIsInitContainer = parse({
     metadata: {
         name: `{{prefix}}-p${variables.get("PIPELINE_ID")}-{{podName}}`,
         labels: {
@@ -37,7 +37,6 @@ const specPod = parse({
                     }
                 },
                 command: [ "./bin/to-nft", "-config", "/app/hack/configs/to-nft.yaml" ]
-
             }
         ],
         containers: [
@@ -105,28 +104,154 @@ const specPod = parse({
                     }
                 }
             }
-            // {
-            //     name: "debugger",
-            //     image: "debugger:latest",
-            //     imagePullPolicy: "IfNotPresent",
-            //     securityContext: {
-            //         privileged: true  
-            //     },
-            //     resources: {
-            //         limits: {
-            //             cpu: "1",
-            //             memory: "500Mi"
-            //         },
-            //         requests: {
-            //             cpu: "1",
-            //             memory: "500Mi"
-            //         }
-            //     },
-            //     env: [{
-            //         name: "HOST",
-            //         value: "127.0.0.1"
-            //     }]
-            // }
+        ],
+        restartPolicy: "Never",
+        volumes: [
+            {
+                name: "{{prefix}}-hbf-client",
+                configMap: {
+                    name: `{{prefix}}-p${variables.get("PIPELINE_ID")}-hbf-client`
+                }
+            },
+            {
+                name: "{{prefix}}-test-data",
+                configMap: {
+                    name: `{{prefix}}-p${variables.get("PIPELINE_ID")}-{{testData}}`
+                }
+            },
+            {
+                name: "{{prefix}}-test-ports",
+                configMap: {
+                    name: `{{prefix}}-p${variables.get("PIPELINE_ID")}-{{ports}}`
+                }
+            }
+        ]
+    }
+})
+
+const specPodHbfClientIsContainer = parse({
+    metadata: {
+        name: `{{prefix}}-p${variables.get("PIPELINE_ID")}-{{podName}}`,
+        labels: {
+            component: "{{component}}",
+            instance: `{{prefix}}-p${variables.get("PIPELINE_ID")}`
+        },
+        annotations: {
+            "cni.projectcalico.org/ipAddrs": "[\"{{ip}}\"]"
+        }
+    },
+    spec: {
+        containers: [
+            {
+                name: "hbf-client",
+                image: `${variables.get("HBF_CLIENT_REPOSITORY")}:${variables.get("HBF_CLIENT_TAG")}`,
+                securityContext: {
+                    privileged: true,
+                    allowPrivilegeEscalation: true,
+                    runAsUser: 0
+                },
+                volumeMounts: [{
+                    name: "{{prefix}}-hbf-client",
+                    mountPath: "/app/hack/configs"
+                }],
+                resources: {
+                    limits: {
+                        cpu: variables.get("HBF_CLIENT_CPU"),
+                        memory: variables.get("HBF_CLIENT_MEM")
+                    },
+                    requests: {
+                        cpu: variables.get("HBF_CLIENT_CPU"),
+                        memory: variables.get("HBF_CLIENT_MEM")
+                    }
+                },
+                command: [ "./bin/to-nft", "-config", "/app/hack/configs/to-nft.yaml" ]
+            },
+            {
+                name: "server",
+                image: `${variables.get("ABA_SERVER_REPOSITORY")}:${variables.get("ABA_SERVER_TAG")}`,
+                volumeMounts: [{
+                    name: "{{prefix}}-test-ports",
+                    mountPath: "/usr/src/server/ports"
+                }],
+                imagePullPolicy: "IfNotPresent",
+                resources: {
+                    limits: {
+                        cpu: variables.get("ABA_SERVER_CPU"),
+                        memory: variables.get("ABA_SERVER_MEM")
+                    },
+                    requests: {
+                        cpu: variables.get("ABA_SERVER_CPU"),
+                        memory: variables.get("ABA_SERVER_MEM")
+                    }
+                },
+                env: [{
+                    name: "LOG_TYPE",
+                    value: variables.get("LOG_TYPE")
+                }, {
+                    name: "LOG_LVL",
+                    value: variables.get("LOG_LVL")
+                }]
+            },
+            {
+                name: "client",
+                image: `${variables.get("ABA_CLIENT_REPOSITORY")}:${variables.get("ABA_CLIENT_TAG")}`,
+                volumeMounts: [{
+                    name: "{{prefix}}-test-data",
+                    mountPath: "/usr/src/client/testData"
+                }],
+                imagePullPolicy: "IfNotPresent",
+                env: [{
+                    name: "ABA_CONTORL_PROXY_PROTOCOL",
+                    value: variables.get("ABA_PROXY_PROTOCOL")
+                },{
+                    name: "ABA_CONTORL_PROXY_PORT",
+                    value: variables.get("ABA_PROXY_PORT")
+                },{
+                    name: "ABA_CONTROL_IP",
+                    value: variables.get("ABA_CONTROL_IP")
+                }, {
+                    name: "ABA_CONTROL_PORT",
+                    value: variables.get("ABA_CONTROL_PORT")
+                }, {
+                    name: "LOG_TYPE",
+                    value: variables.get("LOG_TYPE")
+                }, {
+                    name: "LOG_LVL",
+                    value: variables.get("LOG_LVL")
+                }],
+                resources: {
+                    limits: {
+                        cpu: variables.get("ABA_CLIENT_CPU"),
+                        memory: variables.get("ABA_CLIENT_MEM")
+                    },
+                    requests: {
+                        cpu: variables.get("ABA_CLIENT_CPU"),
+                        memory: variables.get("ABA_CLIENT_MEM")
+                    }
+                }
+            },
+            {
+                name: "debugger",
+                image: "debugger:latest",
+                imagePullPolicy: "Never",
+                securityContext: {
+                    privileged: true
+                },
+                resources: {
+                    limits: {
+                        cpu: variables.get("ABA_CLIENT_CPU"),
+                        memory: variables.get("ABA_CLIENT_MEM")
+                    },
+                    requests: {
+                        cpu: variables.get("ABA_CLIENT_CPU"),
+                        memory: variables.get("ABA_CLIENT_MEM")
+                    }
+                },
+                env: [{
+                    name: "HOST",
+                    value: ""
+                }]
+            }
         ],
         restartPolicy: "Never",
         volumes: [
@@ -163,7 +288,7 @@ const specConfMapHbfClient = parse({
     data: {
         "to-nft.yaml":
             `
-            exit-on-success: true
+            exit-on-success: {{exitOnSuccess}}
             graceful-shutdown: 10s
             logger:
                 level: DEBUG
@@ -218,4 +343,10 @@ const ports = parse({
     }
 })
 
-export const hbfTestStend = { specPod, specConfMapHbfClient, testData, ports }
+export const hbfTestStend = { 
+    specPodHbfClientIsInitContainer,
+    specPodHbfClientIsContainer,
+    specConfMapHbfClient,
+    testData,
+    ports 
+}

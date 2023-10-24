@@ -59,7 +59,8 @@ export class PSCFabric {
         podNumber: number,
         ip: string, 
         testData: string,
-        ports: string
+        ports: string,
+        isHbfClientInit: boolean = true
     ) {
         logger.info(`[${prefix}] Готовимся к созданию тестового пода ${podNumber}: ${ip}`)
         //Создаем configMap с тестовыми данными
@@ -78,14 +79,25 @@ export class PSCFabric {
             ports: ports
         }) as V1ConfigMap)
 
-        await this.k8sClient.createPod(hbfTestStend.specPod({
-            prefix: prefix,
-            podName: `test-pod-${podNumber}`,
-            component: `test-pod-${podNumber}`,
-            ip: ip,
-            testData: `test-data-${podNumber}`,
-            ports: `test-ports-${podNumber}`
-        }) as V1Pod)
+        if(isHbfClientInit) {
+            await this.k8sClient.createPod(hbfTestStend.specPodHbfClientIsInitContainer({
+                prefix: prefix,
+                podName: `test-pod-${podNumber}`,
+                component: `test-pod-${podNumber}`,
+                ip: ip,
+                testData: `test-data-${podNumber}`,
+                ports: `test-ports-${podNumber}`
+            }) as V1Pod)
+        } else {
+            await this.k8sClient.createPod(hbfTestStend.specPodHbfClientIsContainer({
+                prefix: prefix,
+                podName: `test-pod-${podNumber}`,
+                component: `test-pod-${podNumber}`,
+                ip: ip,
+                testData: `test-data-${podNumber}`,
+                ports: `test-ports-${podNumber}`
+            }) as V1Pod)
+        }
     }
 
     async createFQDNTestStend(
@@ -113,6 +125,19 @@ export class PSCFabric {
             component: fqdn,
             ports: portsJSON
         }) as V1Service)
+    }
+
+    async createFqdnService(
+        prefix: string,
+        fqdn: string,
+        portsJSON: Object
+    ) {
+        await this.k8sClient.createService(fqdnTestStend.specSrv({
+            prefix: prefix,
+            podName: fqdn,
+            component: fqdn,
+            ports: portsJSON
+        }) as V1Service)        
     }
 
 
@@ -149,6 +174,10 @@ export class PSCFabric {
         await this.k8sClient.deleteAllPodByLabel(label)
         await this.k8sClient.deleteAllConfMapBylabel(label)
     }
+
+    async destroySVC(svcName: string) {
+        await this.k8sClient.deleteService(svcName)
+    } 
 }
 
 export const manager = new PSCFabric()
