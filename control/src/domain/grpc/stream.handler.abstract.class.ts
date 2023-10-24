@@ -2,9 +2,6 @@ import { IStreamHandler } from "./interfaces/stream.handler.interface";
 
 export abstract class StreamHeandler implements IStreamHandler {
 
-    passCount: number = 0
-    failCount: number = 0
-
     stream(_call: any) {}
 
     /**

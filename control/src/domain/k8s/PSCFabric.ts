@@ -175,9 +175,8 @@ export class PSCFabric {
         await this.k8sClient.deleteAllConfMapBylabel(label)
     }
 
-    async destroySVC(prefix: string) {
-        const label = `instance=${prefix}-p${variables.get("PIPELINE_ID")}`
-        await this.k8sClient.deleteService(label)
+    async destroySVC(svcName: string) {
+        await this.k8sClient.deleteService(svcName)
     } 
 }
 

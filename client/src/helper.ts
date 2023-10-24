@@ -32,11 +32,12 @@ export async function resolveHostName(hostName: string): Promise<string[]> {
 }
 
 export async function getIpByDNSName(name: string): Promise<string> {
+    console.log("NAME: " + name)
     const msg = "Не удалось одназначно разрезолвить"
     const ips = await resolveHostName(name)
 
     if (ips.length > 1 || ips.length === 0)
         throw new Error(`${msg} ${name}`)
-
+        console.log("IPS[0]: "  + ips[0])
     return ips[0]
 }

@@ -9,6 +9,9 @@ class StreamChangeIpHandler extends StreamHeandler {
 
     phase!: Phase
 
+    passCount: number = 0
+    failCount: number = 0
+
     stream(call: any) {
 
         call.on("data", async (request: Req) => {

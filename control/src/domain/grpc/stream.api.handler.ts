@@ -7,6 +7,9 @@ class StreamApiHandler extends StreamHeandler {
 
     private launchUuid!: string;
     private streamsList: Set<string> = new Set;
+
+    failCount: number = 0
+    passCount: number = 0
     
     stream(call: any) {
 

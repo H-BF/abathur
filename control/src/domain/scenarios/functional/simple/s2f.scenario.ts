@@ -66,8 +66,8 @@ export class Sg2FqdnScenario extends ScenarioTemplate {
                 1_000
             )
 
-            this.failCount = streamSimpleFuncHandler.failCount
-            this.passCount = streamSimpleFuncHandler.passCount
+            this.failCount = streamSimpleFuncHandler.errorCounter[SimpleFuncType.S2F].fail
+            this.passCount = streamSimpleFuncHandler.errorCounter[SimpleFuncType.S2F].pass
 
         } catch(err) {
             logger.error(`${err}`)

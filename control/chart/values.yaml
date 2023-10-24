@@ -16,10 +16,10 @@ abathurControl:
   # securityContext:
   #   privileged: true
   restartPolicy: Never
-  destroy: false
-  scenario: 1
+  destroy: true
+  scenario: 99
   #simple-s2s,simple-s2f,advanced-changeip
-  funcScenario: advanced-changeip
+  funcScenario: simple-s2f,simple-s2s,advanced-changeip
 
 abathurClient:
   image:
@@ -55,7 +55,7 @@ hbfServer:
       changeIP:
         ip: 29.64.2.232
         port: 9006
-        
+
     api:
       ip: 29.64.0.233
       port: 9006
@@ -82,16 +82,16 @@ apiTests:
     memory: 300Mi
 
 # LOCAL
-# hbfReporter:
-#   protocol: http
-#   host: 172.25.143.81
-#   port: 9000
-
-#LOCAL-MAC
 hbfReporter:
   protocol: http
-  host: 10.96.227.36
+  host: 172.25.143.81
   port: 9000
+
+#LOCAL-MAC
+# hbfReporter:
+#   protocol: http
+#   host: 10.96.227.36
+#   port: 9000
 
 # WB-TEST
 # hbfReporter:
@@ -106,16 +106,16 @@ hbfReporter:
 #   port: 80
 
 # LOCAL
-# apiReporter:
-#   protocol: http
-#   host: 172.25.143.81
-#   port: 9001
-
-#LOCAL-MAC
 apiReporter:
   protocol: http
-  host: 10.104.171.184
+  host: 172.25.143.81
   port: 9001
+
+#LOCAL-MAC
+# apiReporter:
+#   protocol: http
+#   host: 10.104.171.184
+#   port: 9001
 
 # WB-TEST
 # apiReporter:

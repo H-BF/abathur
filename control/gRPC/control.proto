@@ -6,7 +6,6 @@ service Control {
     rpc streamSimpleFunc(stream Req) returns (stream Res);
     rpc streamChangeIp(stream Req) returns (stream Res);
     rpc streamApi(stream Req) returns (stream Res);
-
 }
 
 message Req {

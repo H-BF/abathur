@@ -5,6 +5,7 @@ import { streamChangeIpHandler } from "../../../grpc/stream.change-ip.handler";
 import { Phase } from "../../../grpc/enums/change-ip.phase";
 import { svcInf } from "../../../k8s/svcInformer";
 import { logger } from "../../../logger/logger.service";
+import { delay } from "../../../helpers";
 
 export class ChangeIpScenario extends ScenarioTemplate {
     
@@ -25,6 +26,9 @@ export class ChangeIpScenario extends ScenarioTemplate {
             const { hbfTestData, fqdn, ports } = await this.collectTestData(this.prefix)
             const ip = Object.keys(hbfTestData)[0]
             const serviceName = fqdn[0].split(".")[0]
+            
+            console.log("SERVICE NAME")
+            console.log(serviceName)
     
             await manager.createHBFTestStend(
                 this.prefix,
@@ -49,7 +53,7 @@ export class ChangeIpScenario extends ScenarioTemplate {
             //Ждем завершения первой фазы теста: Правила считались запрос сделан
             await streamChangeIpHandler.waitPhaseIs(Phase.FINISH_ONE)
             
-            await manager.destroySVC(this.prefix)
+            await manager.destroySVC(serviceName)
     
             await svcInf.waitUntilDataIsMissing(serviceName)
     
@@ -64,6 +68,8 @@ export class ChangeIpScenario extends ScenarioTemplate {
             )
     
             await svcInf.waitClusterIpForSvc(serviceName)
+
+            await delay(60_000)
     
             streamChangeIpHandler.phase = Phase.START_TWO
 

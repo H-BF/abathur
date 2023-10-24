@@ -21,6 +21,25 @@ class StreamSimpleFuncHandler extends StreamHeandler {
         c2s: 0
     };
 
+    errorCounter: Record<string, { pass: number, fail: number }> = {
+        s2s: {
+            pass: 0,
+            fail: 0
+        },
+        s2f: {
+            pass: 0,
+            fail: 0
+        },
+        s2c: {
+            pass: 0,
+            fail: 0
+        },
+        c2s: {
+            pass: 0,
+            fail: 0
+        }
+    }
+
     stream(call: any) {
 
         const streamID = call.metadata.get("id")[0]
@@ -51,8 +70,10 @@ class StreamSimpleFuncHandler extends StreamHeandler {
                     if(!request.data) 
                         throw new Error('Обязательное data status отсутствует')
                     const data = JSON.parse(request.data) as { fail: number, pass: number }
-                    this.passCount += data.pass
-                    this.failCount += data.fail
+                    this.errorCounter[simpleFuncType].fail += data.fail
+                    this.errorCounter[simpleFuncType].pass += data.pass
+                    // this.passCount += data.pass
+                    // this.failCount += data.fail
                     break;
                 case 'error':
                     logger.info("Попали в ветку error")

@@ -22,7 +22,6 @@ export class ChangeIpScenario implements IAdvancedScenario {
             const reporter = new Reporter(luanchUUID)
 
             await this.client.runTests(data)
-            await reporter.send(this.client.getResults())
 
             this.control.sendMsg({ status: Status.next })
             await this.control.listen()

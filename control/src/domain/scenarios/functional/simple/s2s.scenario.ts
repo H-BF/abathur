@@ -53,8 +53,8 @@ export class Sg2SgScenario extends ScenarioTemplate {
                 1_000
             )
 
-            this.failCount = streamSimpleFuncHandler.failCount
-            this.passCount = streamSimpleFuncHandler.passCount
+            this.failCount = streamSimpleFuncHandler.errorCounter[SimpleFuncType.S2S].fail
+            this.passCount = streamSimpleFuncHandler.errorCounter[SimpleFuncType.S2S].pass
 
         } catch(err) {
             logger.error(`${err}`)
