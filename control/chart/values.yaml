@@ -82,9 +82,15 @@ apiTests:
     memory: 300Mi
 
 # LOCAL
+# hbfReporter:
+#   protocol: http
+#   host: 172.25.143.81
+#   port: 9000
+
+#LOCAL-MAC
 hbfReporter:
   protocol: http
-  host: 172.25.143.81
+  host: 10.96.227.36
   port: 9000
 
 # WB-TEST
@@ -99,11 +105,16 @@ hbfReporter:
 #   host: testops-ingress-controller.testops.svc.k8s.prod-dl
 #   port: 80
 
-
 # LOCAL
+# apiReporter:
+#   protocol: http
+#   host: 172.25.143.81
+#   port: 9001
+
+#LOCAL-MAC
 apiReporter:
   protocol: http
-  host: 172.25.143.81
+  host: 10.104.171.184
   port: 9001
 
 # WB-TEST
