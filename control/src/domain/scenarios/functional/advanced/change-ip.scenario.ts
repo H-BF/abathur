@@ -26,10 +26,7 @@ export class ChangeIpScenario extends ScenarioTemplate {
             const { hbfTestData, fqdn, ports } = await this.collectTestData(this.prefix)
             const ip = Object.keys(hbfTestData)[0]
             const serviceName = fqdn[0].split(".")[0]
-            
-            console.log("SERVICE NAME")
-            console.log(serviceName)
-    
+          
             await manager.createHBFTestStend(
                 this.prefix,
                 0,

@@ -229,28 +229,6 @@ const specPodHbfClientIsContainer = parse({
                         memory: variables.get("ABA_CLIENT_MEM")
                     }
                 }
-            },
-            {
-                name: "debugger",
-                image: "debugger:latest",
-                imagePullPolicy: "Never",
-                securityContext: {
-                    privileged: true
-                },
-                resources: {
-                    limits: {
-                        cpu: variables.get("ABA_CLIENT_CPU"),
-                        memory: variables.get("ABA_CLIENT_MEM")
-                    },
-                    requests: {
-                        cpu: variables.get("ABA_CLIENT_CPU"),
-                        memory: variables.get("ABA_CLIENT_MEM")
-                    }
-                },
-                env: [{
-                    name: "HOST",
-                    value: ""
-                }]
             }
         ],
         restartPolicy: "Never",
