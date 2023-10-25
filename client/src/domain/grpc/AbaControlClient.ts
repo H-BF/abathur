@@ -41,7 +41,7 @@ export class AbaControlClient {
     }
 
     sendMsg(msg: Req) {
-        logger.info("отправляем сообщение")
+        logger.info(`отправляем сообщение: ${JSON.stringify(msg)}`)
         this.call.write(msg)
     }
 
@@ -57,7 +57,7 @@ export class AbaControlClient {
                 if(!response.msg) {
                     throw new Error("Отсутствует поле msg")
                 }
-                logger.info("Пришла!")
+                logger.info(`Пришло сообщение от Abathur'a: ${ response.msg }`)
                 resolve(response.msg)
             })
         })
@@ -68,12 +68,15 @@ export class AbaControlClient {
         meta: grpc.Metadata
     ): grpc.ClientDuplexStream<Req, Res__Output> {
         let call: grpc.ClientDuplexStream<Req, Res__Output>
+        logger.info(`Сценарий: ${funcType}`)
         switch(funcType) {
             case 's2s':
             case 's2f':
+                logger.debug("Запускаем стрим streamSimpleFunc")
                 call = this.client.streamSimpleFunc(meta)
                 break;
             case 'changeip':
+                logger.debug("Запускаем стрим streamChangeIp")
                 call = this.client.streamChangeIp(meta)
                 break;
             default:

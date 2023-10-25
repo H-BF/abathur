@@ -19,7 +19,7 @@ abathurControl:
   destroy: true
   scenario: 1
   #simple-s2s,simple-s2f,advanced-changeip
-  funcScenario: simple-s2s,simple-s2f
+  funcScenario: advanced-changeip
 
 abathurClient:
   image:
@@ -82,10 +82,10 @@ apiTests:
     memory: 300Mi
 
 # LOCAL
-# hbfReporter:
-#   protocol: http
-#   host: 172.25.143.81
-#   port: 9000
+hbfReporter:
+  protocol: http
+  host: 172.25.143.81
+  port: 9000
 
 #LOCAL-MAC
 # hbfReporter:
@@ -100,10 +100,10 @@ apiTests:
 #   port: 80
 
 # WB-PORD
-hbfReporter:
-  protocol: http
-  host: testops-ingress-controller.testops.svc.k8s.prod-dl
-  port: 80
+# hbfReporter:
+#   protocol: http
+#   host: testops-ingress-controller.testops.svc.k8s.prod-dl
+#   port: 80
 
 # LOCAL
 apiReporter:
