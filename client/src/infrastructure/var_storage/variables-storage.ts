@@ -24,6 +24,12 @@ class VariableStorage {
 
         return this.variables[name]
     }
+
+    set(name: string, value: string) {
+        if (name in this.variables) 
+            throw new Error(`Переменная ${name} занята. Выберите другое название`)
+        this.variables[name] = value 
+    }
 }
 
 export const variables = new VariableStorage(requiredVariablesList)

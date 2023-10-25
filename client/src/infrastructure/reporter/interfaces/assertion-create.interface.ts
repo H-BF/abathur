@@ -13,6 +13,7 @@ export interface IAssertionCreateReq {
     toType: DirectionType
     status: AssertionStatus
     msgErr?: string | null
+    testName: string
 }
 
 export interface IAssertionsCreateRes {
