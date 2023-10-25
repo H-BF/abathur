@@ -1,5 +1,6 @@
 import { AssertionStatus, IAssertionCreateReq, Protocol } from "../../infrastructure/reporter/interfaces/assertion-create.interface";
 import { ReporterClient } from "../../infrastructure/reporter/reporter";
+import { variables } from "../../infrastructure/var_storage/variables-storage";
 import { IResult } from "../interfaces";
 import { logger } from "../logger/logger.service";
 
@@ -37,7 +38,8 @@ export class Reporter {
                 fromType: elem.fromType, 
                 toType: elem.toType,
                 status: elem.status as AssertionStatus,
-                msgErr: elem.msgErr || null
+                msgErr: elem.msgErr || null,
+                testName: variables.get("TEST_NAME")
             })
         })
         return result

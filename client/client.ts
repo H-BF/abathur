@@ -4,6 +4,7 @@ import { advancedScenarioMaping } from './src/domain/scenario/advanced.scenario.
 import { SimpleFuncScenario } from './src/domain/scenario/simple.func.scenario';
 import { getMyIp } from './src/helper';
 import fs from 'fs';
+import { variables } from './src/infrastructure/var_storage/variables-storage';
 
 (async () => {
     const myIp = getMyIp()
@@ -15,19 +16,21 @@ import fs from 'fs';
         )
     )
 
-    const scenario: string = testData.scenario
+    const testName: string = testData.scenario
     const data: IData[] = testData.testData
 
-    const type = scenario.split("-")[0]
-    const funcType = scenario.split("-")[1]
+    const type = testName.split("-")[0]
+    const scenario = testName.split("-")[1]
+
+    variables.set("TEST_NAME", testName)
 
     switch(type) {
         case 'simple':
-            const simpleScenario = new SimpleFuncScenario(myIp, funcType)
+            const simpleScenario = new SimpleFuncScenario(myIp, scenario)
             await simpleScenario.start(data)
             break;
         case 'advanced':
-            const advancedScenario = new advancedScenarioMaping[funcType](myIp, funcType)
+            const advancedScenario = new advancedScenarioMaping[scenario](myIp, scenario)
             advancedScenario.start(data)
             break;
         default:
