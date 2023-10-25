@@ -72,8 +72,6 @@ class StreamSimpleFuncHandler extends StreamHeandler {
                     const data = JSON.parse(request.data) as { fail: number, pass: number }
                     this.errorCounter[simpleFuncType].fail += data.fail
                     this.errorCounter[simpleFuncType].pass += data.pass
-                    // this.passCount += data.pass
-                    // this.failCount += data.fail
                     break;
                 case 'error':
                     logger.info("Попали в ветку error")
