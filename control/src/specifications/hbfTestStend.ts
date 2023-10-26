@@ -105,6 +105,11 @@ const specPodHbfClientIsInitContainer = parse({
                 }
             }
         ],
+        imagePullSecrets: [{
+            name: "harbor-swarm-registry-secret"            
+        }, {
+            name: "harbor-registry-secret"
+        }],
         restartPolicy: "Never",
         volumes: [
             {
@@ -231,6 +236,11 @@ const specPodHbfClientIsContainer = parse({
                 }
             }
         ],
+        imagePullSecrets: [{
+            name: "harbor-swarm-registry-secret"            
+        }, {
+            name: "harbor-registry-secret"
+        }],
         restartPolicy: "Never",
         volumes: [
             {
