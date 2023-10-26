@@ -31,7 +31,11 @@ class StreamChangeIpHandler extends StreamHeandler {
                     this.phase = Phase.FINISH_ONE
                     await this.waitPhaseIs(Phase.START_TWO)
                     logger.debug(`отправляем сообщение: start`)
-                    call.write({ msg: "start" })
+                    try {
+                        call.write({ msg: "start" })
+                    } catch(err) {
+                        console.log(err)
+                    }
                     break;
                 case "finish":
                     if(!request.data) 
