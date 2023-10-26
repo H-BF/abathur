@@ -8,6 +8,7 @@ metadata:
     instance: p{{ .Values.gitlab.pipeline }}-abathur-control
 data:
   config.properties: |
+    IMAGE_PULL_SECRETS={{ .Values.abathurControl.image.imagePullSecrets }}
     HBF_SERVER_REPOSITORY={{ .Values.hbfServer.image.repository }}
     HBF_SERVER_TAG={{ .Values.hbfServer.image.tag }}
     S2S_HBF_SERVER_IP={{ .Values.hbfServer.scenario.func.s2s.ip }}
