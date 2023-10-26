@@ -94,6 +94,11 @@ const specPod = parse({
                 },
             }
         ],
+        imagePullSecrets: [{
+            name: "harbor-swarm-registry-secret"            
+        }, {
+            name: "harbor-registry-secret"
+        }],
         volumes: [{
             name: "{{prefix}}-hbf-server",
             configMap: {
