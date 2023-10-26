@@ -23,11 +23,14 @@ class StreamChangeIpHandler extends StreamHeandler {
             switch(status) {
                 case "ready":
                     this.phase = Phase.START_ONE
-                    call.write({ msg: variables.get("FUNC_LAUNCH_UUID") })
+                    const msg = variables.get("FUNC_LAUNCH_UUID")
+                    logger.debug(`отправляем сообщение: ${msg}`)
+                    call.write({ msg: msg })
                     break;
                 case "next":
                     this.phase = Phase.FINISH_ONE
                     await this.waitPhaseIs(Phase.START_TWO)
+                    logger.debug(`отправляем сообщение: start`)
                     call.write({ msg: "start" })
                     break;
                 case "finish":
@@ -60,6 +63,7 @@ class StreamChangeIpHandler extends StreamHeandler {
         timeout: number = 300000,
         frequency: number = 1000
     ): Promise<void> {
+        logger.info(`Ждем фазу: ${phase}`)
         return new Promise((resolve, reject) => {
             const startTime = Date.now()
             const interval = setInterval(() => {

@@ -60,9 +60,12 @@ class SvcInformer extends BaseInformer {
         timeout: number = 30000,
         frequency: number = 1000
     ): Promise<void> {
+        logger.info(`Ждем назначение clusterIP для сервиса: ${svcName}`)
         return new Promise((resolve, reject) => {
             const startTime = Date.now()
             const interval = setInterval(() => {
+                console.log(svcName)
+                console.log(this.svcDataRecord[svcName].clusterIP)
                 if (typeof this.svcDataRecord[svcName].clusterIP === 'string') {
                     clearInterval(interval)
                     resolve()
