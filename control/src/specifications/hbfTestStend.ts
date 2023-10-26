@@ -147,30 +147,30 @@ const specPodHbfClientIsContainer = parse({
     },
     spec: {
         containers: [
-            // {
-            //     name: "hbf-client",
-            //     image: `${variables.get("HBF_CLIENT_REPOSITORY")}:${variables.get("HBF_CLIENT_TAG")}`,
-            //     securityContext: {
-            //         privileged: true,
-            //         allowPrivilegeEscalation: true,
-            //         runAsUser: 0
-            //     },
-            //     volumeMounts: [{
-            //         name: "{{prefix}}-hbf-client",
-            //         mountPath: "/app/hack/configs"
-            //     }],
-            //     resources: {
-            //         limits: {
-            //             cpu: variables.get("HBF_CLIENT_CPU"),
-            //             memory: variables.get("HBF_CLIENT_MEM")
-            //         },
-            //         requests: {
-            //             cpu: variables.get("HBF_CLIENT_CPU"),
-            //             memory: variables.get("HBF_CLIENT_MEM")
-            //         }
-            //     },
-            //     command: [ "./bin/to-nft", "-config", "/app/hack/configs/to-nft.yaml" ]
-            // },
+            {
+                name: "hbf-client",
+                image: `${variables.get("HBF_CLIENT_REPOSITORY")}:${variables.get("HBF_CLIENT_TAG")}`,
+                securityContext: {
+                    privileged: true,
+                    allowPrivilegeEscalation: true,
+                    runAsUser: 0
+                },
+                volumeMounts: [{
+                    name: "{{prefix}}-hbf-client",
+                    mountPath: "/app/hack/configs"
+                }],
+                resources: {
+                    limits: {
+                        cpu: variables.get("HBF_CLIENT_CPU"),
+                        memory: variables.get("HBF_CLIENT_MEM")
+                    },
+                    requests: {
+                        cpu: variables.get("HBF_CLIENT_CPU"),
+                        memory: variables.get("HBF_CLIENT_MEM")
+                    }
+                },
+                command: [ "./bin/to-nft", "-config", "/app/hack/configs/to-nft.yaml" ]
+            },
             {
                 name: "server",
                 image: `${variables.get("ABA_SERVER_REPOSITORY")}:${variables.get("ABA_SERVER_TAG")}`,
