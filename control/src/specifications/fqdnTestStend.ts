@@ -36,6 +36,11 @@ const specPod = parse({
                 value: variables.get("LOG_LVL")
             }]       
         }],
+        imagePullSecrets: [{
+            name: "harbor-swarm-registry-secret"            
+        }, {
+            name: "harbor-registry-secret"
+        }],
         restartPolicy: "Never",
         volumes: [
             {
