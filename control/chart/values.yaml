@@ -2,6 +2,7 @@ abathurControl:
   image:
     imagePullPolicy: Never
     repository: abathur_control
+    imagePullSecrets: harbor-swarm-registry-secret,harbor-registry-secret
     tag: latest
   ip: 29.64.0.231
   port: 9091
@@ -15,7 +16,7 @@ abathurControl:
     memory: 500Mi
   # securityContext:
   #   privileged: true
-  restartPolicy: Never
+  restartPolicy: Never 
   destroy: false
   scenario: 1
   #simple-s2s,simple-s2f,advanced-changeip

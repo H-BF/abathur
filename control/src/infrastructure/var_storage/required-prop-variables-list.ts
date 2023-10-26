@@ -1,4 +1,5 @@
 export const requiredPropVariablesList = [
+    "IMAGE_PULL_SECRETS",
     "HBF_SERVER_REPOSITORY",
     "HBF_SERVER_TAG",
     "S2S_HBF_SERVER_IP",

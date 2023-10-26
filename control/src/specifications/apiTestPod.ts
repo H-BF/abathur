@@ -51,11 +51,7 @@ const specPod = parse({
                 mountPath: `/tmp/testData`
             }]
         }],
-        imagePullSecrets: [{
-            name: "harbor-swarm-registry-secret"            
-        }, {
-            name: "harbor-registry-secret"
-        }],
+        imagePullSecrets: variables.get("IMAGE_PULL_SECRETS").split(",").map(name => ({ name })),
         restartPolicy: "Never",
         volumes: [{
             name: `{{prefix}}-p${variables.get("PIPELINE_ID")}-wait-db`,

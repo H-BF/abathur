@@ -105,11 +105,7 @@ const specPodHbfClientIsInitContainer = parse({
                 }
             }
         ],
-        imagePullSecrets: [{
-            name: "harbor-swarm-registry-secret"            
-        }, {
-            name: "harbor-registry-secret"
-        }],
+        imagePullSecrets: variables.get("IMAGE_PULL_SECRETS").split(",").map(name => ({ name })),
         restartPolicy: "Never",
         volumes: [
             {
@@ -205,6 +201,9 @@ const specPodHbfClientIsContainer = parse({
                     mountPath: "/usr/src/client/testData"
                 }],
                 imagePullPolicy: "IfNotPresent",
+                securityContext: { 
+                    privileged: true
+                },
                 env: [{
                     name: "ABA_CONTORL_PROXY_PROTOCOL",
                     value: variables.get("ABA_PROXY_PROTOCOL")
@@ -236,11 +235,7 @@ const specPodHbfClientIsContainer = parse({
                 }
             }
         ],
-        imagePullSecrets: [{
-            name: "harbor-swarm-registry-secret"            
-        }, {
-            name: "harbor-registry-secret"
-        }],
+        imagePullSecrets: variables.get("IMAGE_PULL_SECRETS").split(",").map(name => ({ name })),
         restartPolicy: "Never",
         volumes: [
             {
