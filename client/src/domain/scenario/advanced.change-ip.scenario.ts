@@ -21,7 +21,10 @@ export class ChangeIpScenario implements IAdvancedScenario {
             const luanchUUID = await this.control.listen()
             const reporter = new Reporter(luanchUUID)
 
+            console.log("Ждем 60 секунд")
+            await this.delay(60_000)
             await this.client.runTests(data)
+            console.log(this.client.getResults())
 
             this.control.sendMsg({ status: Status.next })
             await this.control.listen()
@@ -44,5 +47,9 @@ export class ChangeIpScenario implements IAdvancedScenario {
         } finally {
             this.control.endStream() 
         }
+    }
+
+    async delay(time: number) {
+        return new Promise(resolve => setTimeout(resolve, time))
     }
 }
