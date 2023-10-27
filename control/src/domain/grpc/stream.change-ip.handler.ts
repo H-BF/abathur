@@ -25,7 +25,6 @@ class StreamChangeIpHandler extends StreamHeandler {
                 case "ready":
                     this.phase = Phase.START_ONE
                     const msg = variables.get("FUNC_LAUNCH_UUID")
-                    await delay(60_000)//Даем время что бы HBF агент прописал правила
                     logger.debug(`отправляем сообщение: ${msg}`)
                     call.write({ msg: msg })
                     break;
