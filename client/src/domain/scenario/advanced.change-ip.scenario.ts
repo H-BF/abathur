@@ -1,6 +1,7 @@
 import { Status } from "../../../gRPC/control/Status";
 import { AbaControlClient } from "../grpc/AbaControlClient";
 import { IData } from "../interfaces";
+import { logger } from "../logger/logger.service";
 import { Reporter } from "../reporter/reporter";
 import { TestClient } from "../testClient";
 import { IAdvancedScenario } from "./advanced.scenario.interface";
@@ -21,7 +22,7 @@ export class ChangeIpScenario implements IAdvancedScenario {
             const luanchUUID = await this.control.listen()
             const reporter = new Reporter(luanchUUID)
 
-            console.log("Ждем 60 секунд")
+            logger.info("Ждем 60 секунд")
             await this.delay(60_000)
             await this.client.runTests(data)
 
