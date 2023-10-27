@@ -4,6 +4,7 @@ import { Status } from '../../../gRPC/control/Status';
 import { logger } from '../logger/logger.service';
 import { Req } from '../../../gRPC/control/Req'
 import { Phase } from './enums/change-ip.phase';
+import { delay } from '../helpers';
 
 class StreamChangeIpHandler extends StreamHeandler {
 
@@ -24,6 +25,7 @@ class StreamChangeIpHandler extends StreamHeandler {
                 case "ready":
                     this.phase = Phase.START_ONE
                     const msg = variables.get("FUNC_LAUNCH_UUID")
+                    await delay(60_000)//Даем время что бы HBF агент прописал правила
                     logger.debug(`отправляем сообщение: ${msg}`)
                     call.write({ msg: msg })
                     break;

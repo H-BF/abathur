@@ -50,10 +50,6 @@ export class ChangeIpScenario extends ScenarioTemplate {
             //Ждем завершения первой фазы теста: Правила считались запрос сделан
             await streamChangeIpHandler.waitPhaseIs(Phase.FINISH_ONE)
             
-            console.log("ЖДЕМ 120 СЕКУНД")
-            await delay(120_000)
-            console.log("ДОЖДАЛИСЬ")
-
             await manager.destroySVC(serviceName)
     
             await svcInf.waitUntilDataIsMissing(serviceName)
@@ -70,6 +66,7 @@ export class ChangeIpScenario extends ScenarioTemplate {
     
             await svcInf.waitClusterIpForSvc(serviceName)
 
+            //Даем время что бы HBF агент прописал правила после подъема сервиса
             await delay(60_000)
     
             streamChangeIpHandler.phase = Phase.START_TWO
