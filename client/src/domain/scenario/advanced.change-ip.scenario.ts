@@ -23,12 +23,13 @@ export class ChangeIpScenario implements IAdvancedScenario {
             const reporter = new Reporter(luanchUUID)
 
             logger.info("Ждем 60 секунд")
-            await this.delay(60_000)
+            await this.sleep(60_000)
             await this.client.runTests(data)
 
             this.control.sendMsg({ status: Status.next })
             await this.control.listen()
 
+            await this.sleep(10_000)
             await this.client.runTests(data)
             await reporter.send(this.client.getResults())
 
@@ -49,7 +50,7 @@ export class ChangeIpScenario implements IAdvancedScenario {
         }
     }
 
-    async delay(time: number) {
+    async sleep(time: number) {
         return new Promise(resolve => setTimeout(resolve, time))
     }
 }
