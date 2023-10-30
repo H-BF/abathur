@@ -64,7 +64,7 @@ class PodInformer extends BaseInformer {
     async waitContainerIsReady(
         podName: string,
         context: string,        
-        timeout: number = 30000,
+        timeout: number = 60000,
         frequency: number = 1000
     ): Promise<void> {
         return new Promise((resolve, reject) => {

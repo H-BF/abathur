@@ -3,7 +3,7 @@ import { IScenarioInterface } from "./scenarios/interface/scenario.interface"
 import * as dns from 'dns';
 import fs from 'fs';
 
-export async function delay(time: number) {
+export async function sleep(time: number) {
     return new Promise(resolve => setTimeout(resolve, time))
 }
 

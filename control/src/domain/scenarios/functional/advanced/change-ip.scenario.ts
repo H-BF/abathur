@@ -5,7 +5,7 @@ import { streamChangeIpHandler } from "../../../grpc/stream.change-ip.handler";
 import { Phase } from "../../../grpc/enums/change-ip.phase";
 import { svcInf } from "../../../k8s/svcInformer";
 import { logger } from "../../../logger/logger.service";
-import { delay } from "../../../helpers";
+import { sleep } from "../../../helpers";
 
 export class ChangeIpScenario extends ScenarioTemplate {
     
@@ -67,7 +67,7 @@ export class ChangeIpScenario extends ScenarioTemplate {
             await svcInf.waitClusterIpForSvc(serviceName)
 
             //Даем время что бы HBF агент прописал правила после подъема сервиса
-            await delay(60_000)
+            await sleep(60_000)
     
             streamChangeIpHandler.phase = Phase.START_TWO
 

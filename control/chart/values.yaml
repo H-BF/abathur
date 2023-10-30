@@ -17,10 +17,10 @@ abathurControl:
   # securityContext:
   #   privileged: true
   restartPolicy: Never 
-  destroy: false
+  destroy: true
   scenario: 1
   #simple-s2s,simple-s2f,advanced-changeip
-  funcScenario: advanced-changeip
+  funcScenario: simple-s2s,simple-s2f,advanced-changeip
 
 abathurClient:
   image:

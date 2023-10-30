@@ -4,7 +4,7 @@ import { Status } from '../../../gRPC/control/Status';
 import { logger } from '../logger/logger.service';
 import { Req } from '../../../gRPC/control/Req'
 import { Phase } from './enums/change-ip.phase';
-import { delay } from '../helpers';
+import { sleep } from '../helpers';
 
 class StreamChangeIpHandler extends StreamHeandler {
 
