@@ -17,8 +17,8 @@ abathurControl:
   # securityContext:
   #   privileged: true
   restartPolicy: Never 
-  destroy: true
-  scenario: 1
+  destroy: false
+  scenario: 2
   #simple-s2s,simple-s2f,advanced-changeip
   funcScenario: simple-s2s,simple-s2f,advanced-changeip
 
@@ -41,7 +41,7 @@ abathurServer:
 hbfServer:
   image:
     repository: harbor.wildberries.ru/swarm/swarm/swarm/sgroups/sgroups
-    tag: v1-0-3-rc4-812331a1
+    tag: feature-swarm-118-25c73466
   resources:
     cpu: 100m
     memory: 100Mi
@@ -64,7 +64,7 @@ hbfServer:
 hbfClient:
   image:
     repository: harbor.wildberries.ru/swarm/swarm/swarm/sgroups/to-nft
-    tag: v1-0-3-rc4-812331a1
+    tag: feature-swarm-118-25c73466
   resources:
     cpu: 100m
     memory:  100Mi
