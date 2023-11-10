@@ -78,5 +78,55 @@
                     ]::sgroups.sg_rule_ports[],
                     false
                 );
+            INSERT INTO
+                sgroups.tbl_sg_icmp_rule (ip_v, types, sg, logs, trace)
+            VALUES
+                ('IPv4', '{0}'::sgroups.icmp_types, (SELECT id FROM sgroups.tbl_sg WHERE name = 'sg-0'), true, true),
+                ('IPv4', '{10,255}'::sgroups.icmp_types, (SELECT id FROM sgroups.tbl_sg WHERE name = 'sg-1'), true, false),
+                ('IPv6', '{0,8,100}'::sgroups.icmp_types, (SELECT id FROM sgroups.tbl_sg WHERE name = 'sg-0'), false, true),
+                ('IPv6', '{15}'::sgroups.icmp_types, (SELECT id FROM sgroups.tbl_sg WHERE name = 'sg-2'), false, false);
+            INSERT INTO
+                sgroups.tbl_sg_sg_icmp_rule (ip_v, types, sg_from, sg_to, logs, trace)
+            VALUES
+                (
+                    'IPv4',
+                    '{0}'::sgroups.icmp_types,
+                    (SELECT id FROM sgroups.tbl_sg WHERE name = 'sg-0'),
+                    (SELECT id FROM sgroups.tbl_sg WHERE name = 'sg-1'),
+                    true,
+                    true
+                ),
+                (
+                    'IPv6',
+                    '{8,10}'::sgroups.icmp_types,
+                    (SELECT id FROM sgroups.tbl_sg WHERE name = 'sg-0'),
+                    (SELECT id FROM sgroups.tbl_sg WHERE name = 'sg-1'),
+                    true,
+                    false
+                ),
+                (
+                    'IPv4',
+                    '{255,3,111}'::sgroups.icmp_types,
+                    (SELECT id FROM sgroups.tbl_sg WHERE name = 'sg-1'),
+                    (SELECT id FROM sgroups.tbl_sg WHERE name = 'sg-2'),
+                    false,
+                    true
+                ),
+                (
+                    'IPv6',
+                    '{8}'::sgroups.icmp_types,
+                    (SELECT id FROM sgroups.tbl_sg WHERE name = 'sg-2'),
+                    (SELECT id FROM sgroups.tbl_sg WHERE name = 'sg-3'),
+                    false,
+                    false
+                ),
+                (
+                    'IPv4',
+                    '{100,101,102}'::sgroups.icmp_types,
+                    (SELECT id FROM sgroups.tbl_sg WHERE name = 'sg-2'),
+                    (SELECT id FROM sgroups.tbl_sg WHERE name = 'sg-0'),
+                    true,
+                    true
+                );
             COMMIT;
         END $$;
