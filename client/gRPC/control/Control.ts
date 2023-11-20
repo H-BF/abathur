@@ -16,6 +16,11 @@ export interface ControlClient extends grpc.Client {
   streamChangeIp(metadata: grpc.Metadata, options?: grpc.CallOptions): grpc.ClientDuplexStream<_control_Req, _control_Res__Output>;
   streamChangeIp(options?: grpc.CallOptions): grpc.ClientDuplexStream<_control_Req, _control_Res__Output>;
   
+  streamIcmp(metadata: grpc.Metadata, options?: grpc.CallOptions): grpc.ClientDuplexStream<_control_Req, _control_Res__Output>;
+  streamIcmp(options?: grpc.CallOptions): grpc.ClientDuplexStream<_control_Req, _control_Res__Output>;
+  streamIcmp(metadata: grpc.Metadata, options?: grpc.CallOptions): grpc.ClientDuplexStream<_control_Req, _control_Res__Output>;
+  streamIcmp(options?: grpc.CallOptions): grpc.ClientDuplexStream<_control_Req, _control_Res__Output>;
+  
   streamSimpleFunc(metadata: grpc.Metadata, options?: grpc.CallOptions): grpc.ClientDuplexStream<_control_Req, _control_Res__Output>;
   streamSimpleFunc(options?: grpc.CallOptions): grpc.ClientDuplexStream<_control_Req, _control_Res__Output>;
   streamSimpleFunc(metadata: grpc.Metadata, options?: grpc.CallOptions): grpc.ClientDuplexStream<_control_Req, _control_Res__Output>;
@@ -28,6 +33,8 @@ export interface ControlHandlers extends grpc.UntypedServiceImplementation {
   
   streamChangeIp: grpc.handleBidiStreamingCall<_control_Req__Output, _control_Res>;
   
+  streamIcmp: grpc.handleBidiStreamingCall<_control_Req__Output, _control_Res>;
+  
   streamSimpleFunc: grpc.handleBidiStreamingCall<_control_Req__Output, _control_Res>;
   
 }
@@ -35,5 +42,6 @@ export interface ControlHandlers extends grpc.UntypedServiceImplementation {
 export interface ControlDefinition extends grpc.ServiceDefinition {
   streamApi: MethodDefinition<_control_Req, _control_Res, _control_Req__Output, _control_Res__Output>
   streamChangeIp: MethodDefinition<_control_Req, _control_Res, _control_Req__Output, _control_Res__Output>
+  streamIcmp: MethodDefinition<_control_Req, _control_Res, _control_Req__Output, _control_Res__Output>
   streamSimpleFunc: MethodDefinition<_control_Req, _control_Res, _control_Req__Output, _control_Res__Output>
 }

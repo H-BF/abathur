@@ -1,15 +1,15 @@
 import { IRulePorts } from "./rules"
 
-export interface IToSgRulesReq {
+export interface ISgToSgRulesReq {
     sgFrom: string[]
     sgTo: string[]
 }
 
-export interface IToSgRules {
-    rules: IToSgRule[]
+export interface ISgToSgRules {
+    rules: ISgToSgRule[]
 }
 
-export interface IToSgRule {
+export interface ISgToSgRule {
     ports: IRulePorts[]
     sgFrom: string
     sgTo: string

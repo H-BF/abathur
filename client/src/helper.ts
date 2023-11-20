@@ -1,5 +1,6 @@
 import { networkInterfaces } from 'os'
 import * as dns from 'dns';
+import { IIcmpResult, IIcmpTestData, ITcpUdpResult, ITcpUdpTestData, TResult, TestDataType } from './domain/interfaces';
 
 export async function delay(time: number) {
     return new Promise(resolve => setTimeout(resolve, time));
@@ -38,4 +39,21 @@ export async function getIpByDNSName(name: string): Promise<string> {
     if (ips.length > 1 || ips.length === 0)
         throw new Error(`${msg} ${name}`)
     return ips[0]
+}
+
+
+export function isTcpTestData(data: TestDataType[]): data is ITcpUdpTestData[] {
+    return data.every(d => 'ports' in d)
+}
+
+export function isIcmpTestData(data: TestDataType[]): data is IIcmpTestData[] {
+    return data.every(d => 'types' in d)
+}
+
+export function isIcmpResult(data: TResult[]): data is IIcmpResult[] {
+    return data.every( d => 'icmpCommand' in d)
+}
+
+export function isTcpUdpResult(data: TResult[]): data is ITcpUdpResult[] {
+    return data.every(d => 'srcPort' in d)
 }

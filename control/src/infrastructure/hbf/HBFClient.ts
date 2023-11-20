@@ -1,10 +1,12 @@
 import { RestClient } from "../axios";
 import { ISecurityGroups, ISecurityGroupsReq } from "./interfaces/securityGroups";
 import { INetworks, INetworksReq } from "./interfaces/networks";
-import { IToSgRules, IToSgRulesReq } from "./interfaces/rules-to-sg";
+import { ISgToSgRules, ISgToSgRulesReq } from "./interfaces/rules-sg-to-sg";
 import { logger } from "../../domain/logger/logger.service";
-import { IToFqdnRules, IToFqdnRulesReq } from "./interfaces/rules-to-fqdn";
+import { ISgToFqdnRules, ISgToFqdnRulesReq } from "./interfaces/rules-sg-to-fqdn";
 import { retry } from "../../domain/decorator/retry.decorator";
+import { ISgIcmpRules, ISgIcmpRulesReq } from "./interfaces/rules-sg-icmp";
+import { ISgToSgIcmpRules, ISgToSgIcmpRulesReq } from "./interfaces/rules-sg-to-sg-icmp";
 
 export class HBFClient extends RestClient {
 
@@ -31,14 +33,26 @@ export class HBFClient extends RestClient {
     }
 
     @retry()
-    async getToSgRules(route: IToSgRulesReq): Promise<IToSgRules> {
-        const { data } = await this.post<IToSgRules>('/rules', route)
+    async getSgToSgRules(route: ISgToSgRulesReq): Promise<ISgToSgRules> {
+        const { data } = await this.post<ISgToSgRules>('/rules', route)
         return data
     }
 
     @retry()
-    async getToFqdnRules(route: IToFqdnRulesReq): Promise<IToFqdnRules> {
-        const { data } = await this.post<IToFqdnRules>('/fqdn/rules', route)
+    async getToFqdnRules(route: ISgToFqdnRulesReq): Promise<ISgToFqdnRules> {
+        const { data } = await this.post<ISgToFqdnRules>('/fqdn/rules', route)
+        return data
+    }
+
+    @retry()
+    async getSgIcmpRules(route: ISgIcmpRulesReq): Promise<ISgIcmpRules> {
+        const { data } = await this.post<ISgIcmpRules>('/sg-icmp/rules', route)
+        return data
+    }
+
+    @retry()
+    async getSgToSgIcmpRules(route: ISgToSgIcmpRulesReq): Promise<ISgToSgIcmpRules> {
+        const { data } = await this.post<ISgToSgIcmpRules>('/sg-sg-icmp/rules', route)
         return data
     }
 }

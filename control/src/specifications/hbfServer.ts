@@ -200,7 +200,7 @@ const specConfMapWaitDb = parse({
         "wait-db.sh": `
         #!/bin/sh        
         echo "Проверяем что в таблице 'sgroups.tbl_sg_rule' есть хоть одна строка"
-        count=$(psql postgres://nkiver:nkiver@localhost:5432/postgres?sslmode=disable -c "SELECT COUNT(*) FROM (SELECT 1 FROM sgroups.tbl_sg_rule UNION ALL SELECT 1 FROM sgroups.tbl_fqdn_rule) subquery;" -t -A)
+        count=$(psql postgres://nkiver:nkiver@localhost:5432/postgres?sslmode=disable -c "SELECT SUM(n_live_tup) FROM pg_stat_user_tables WHERE relname LIKE '%rule%' AND schemaname = 'sgroups';" -t -A)
         echo "Количество строк в таблице 'sgroups.tbl_sg_rule': $count"
         
         if [ "$count" -gt 0 ]; then

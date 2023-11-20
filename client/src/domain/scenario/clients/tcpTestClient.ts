@@ -1,13 +1,14 @@
-import { evalutePorts, getIpByDNSName } from "../helper"
-import { IData, IResult } from "./interfaces"
-import { SocketClient } from "../infrastructure/socket/socket";
-import { logger } from "./logger/logger.service";
+import { evalutePorts, getIpByDNSName } from "../../../helper"
+import { ITcpUdpTestData, TResult } from "../../interfaces"
+import { SocketClient } from "../../../infrastructure/socket/socket";
+import { logger } from "../../logger/logger.service";
 import net from 'net';
+import { ITestClient } from "./test.client.interface";
 
-export class TestClient {
+export class TcpTestClient implements ITestClient {
 
     private srcIp: string
-    private testResults: IResult[] = [];
+    private testResults: TResult[] = [];
     passCount: number = 0
     failCount: number = 0
 
@@ -15,7 +16,7 @@ export class TestClient {
         this.srcIp = scrIp
     }
 
-   async runTests(data: IData[]) {
+   async runTests(data: ITcpUdpTestData[]) {
         for (const node of data) {
             for (const dstIp of node.dst) {
                 for (const ports of node.ports) {
@@ -74,7 +75,7 @@ export class TestClient {
         }
     }
     
-    getResults(): IResult[] {
+    getResults(): TResult[] {
        return this.testResults
     }
 }

@@ -1,1 +1,1 @@
-export * from './HBFDataColletor'
+export * from './hbf-data-collector.abstract'

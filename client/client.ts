@@ -1,6 +1,6 @@
-import { IConfigMapTestData, IData } from './src/domain/interfaces';
+import { IConfigMapTestData, ITcpUdpTestData, TestDataType } from './src/domain/interfaces';
 import { logger } from './src/domain/logger/logger.service';
-import { advancedScenarioMaping } from './src/domain/scenario/advanced.scenario.maping';
+import { advancedScenarioMaping } from './src/domain/scenario/advanced/advanced.scenario.maping';
 import { SimpleFuncScenario } from './src/domain/scenario/simple.func.scenario';
 import { getMyIp } from './src/helper';
 import fs from 'fs';
@@ -17,7 +17,7 @@ import { variables } from './src/infrastructure/var_storage/variables-storage';
     )
 
     const testName: string = testData.scenario
-    const data: IData[] = testData.testData
+    const data: TestDataType[] = testData.testData
 
     const type = testName.split("-")[0]
     const scenario = testName.split("-")[1]
@@ -31,7 +31,7 @@ import { variables } from './src/infrastructure/var_storage/variables-storage';
             break;
         case 'advanced':
             const advancedScenario = new advancedScenarioMaping[scenario](myIp, scenario)
-            advancedScenario.start(data)
+            await advancedScenario.start(data)
             break;
         default:
             logger.error(`Неизвестный тип тестов: ${type}`)

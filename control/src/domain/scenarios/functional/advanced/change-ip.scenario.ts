@@ -6,6 +6,7 @@ import { Phase } from "../../../grpc/enums/change-ip.phase";
 import { svcInf } from "../../../k8s/svcInformer";
 import { logger } from "../../../logger/logger.service";
 import { sleep } from "../../../helpers";
+import { S2FTcpUdpDataCollector } from "../../../hbf/s2f.tcp-udp.data.collector";
 
 export class ChangeIpScenario extends ScenarioTemplate {
     
@@ -18,29 +19,39 @@ export class ChangeIpScenario extends ScenarioTemplate {
             false
         )
     }
-
+    
     async start() {
         try {
             await super.start()
 
-            const { hbfTestData, fqdn, ports } = await this.collectTestData(this.prefix)
-            const ip = Object.keys(hbfTestData)[0]
+
+            const collector = new S2FTcpUdpDataCollector(
+                "http",
+                `${this.prefix}-p${variables.get("PIPELINE_ID")}-hbf-server`,
+                "80"
+            )
+
+            await collector.collect()
+            collector.convert()
+            const { testData, serverPorts, fqdn } = collector.get()
+
+            const ip = Object.keys(testData)[0]
             const serviceName = fqdn[0].split(".")[0]
           
             await manager.createHBFTestStend(
                 this.prefix,
                 0,
                 ip,
-                JSON.stringify({ scenario: this.prefix, testData: hbfTestData[ip] }),
-                JSON.stringify(ports[ip]),
+                JSON.stringify({ scenario: this.prefix, testData: testData[ip] }),
+                JSON.stringify(serverPorts[ip]),
                 false
             )
     
             await manager.createFQDNTestStend(
                 this.prefix,
                 serviceName,
-                JSON.stringify(ports[fqdn[0]]),
-                this.evalutePorts(ports[fqdn[0]]).map((item, index) => ({
+                JSON.stringify(serverPorts[fqdn[0]]),
+                this.evalutePorts(serverPorts[fqdn[0]]).map((item, index) => ({
                     name: `${fqdn[0].split(".")[0]}-${index}`,
                     port: Number(item),
                     targetPort: Number(item)
@@ -57,7 +68,7 @@ export class ChangeIpScenario extends ScenarioTemplate {
             await manager.createFqdnService(
                 this.prefix,
                 serviceName,
-                this.evalutePorts(ports[fqdn[0]]).map((item, index) => ({
+                this.evalutePorts(serverPorts[fqdn[0]]).map((item, index) => ({
                     name: `${fqdn[0].split(".")[0]}-${index}`,
                     port: Number(item),
                     targetPort: Number(item)

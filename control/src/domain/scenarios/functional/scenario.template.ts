@@ -1,6 +1,5 @@
 import fs from 'fs';
 import path from 'path';
-import { HBFDataCollector } from '../../hbf';
 import { getSvcNameTail } from "../../helpers";
 import { podInf } from '../../k8s/podInformer';
 import { PodStatus } from '../../k8s/enums';
@@ -9,7 +8,6 @@ import { V1ConfigMap } from "@kubernetes/client-node";
 import { hbfServer } from "../../../specifications/hbfServer";
 import { hbfTestStend } from "../../../specifications/hbfTestStend";
 import { IScenarioInterface } from "../interface/scenario.interface";
-import { IHBFTestData, IPortForServer } from '../../hbf/interfaces';
 import { variables } from "../../../infrastructure/var_storage/variables-storage";
 
 export abstract class ScenarioTemplate implements IScenarioInterface {
@@ -82,24 +80,7 @@ export abstract class ScenarioTemplate implements IScenarioInterface {
     isFinish(): boolean {
         return this.finish
     }
-
-    setLaunchUuid() {};
-
-    protected async collectTestData(prefix: string): Promise<{hbfTestData: IHBFTestData, fqdn: string[], ports: IPortForServer}> {
-        const hbf = new HBFDataCollector(
-            "http",
-            `${prefix}-p${variables.get("PIPELINE_ID")}-hbf-server`,
-            "80"
-        )
-        await hbf.collect()
-
-        const hbfTestData = hbf.getTestData()
-        const fqdn = hbf.getFqdnList()
-        const ports = hbf.gePortsForServer()
-
-        return { hbfTestData, fqdn, ports } 
-    }
-
+    
     protected evalutePorts(ports: string[]): string[] {
         return ports.flatMap((port) => {
             if (port.includes("-")) {

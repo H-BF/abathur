@@ -1,11 +1,7 @@
-export type IHBFTestData = Record<string, IData[]>
+export type TestDataRecord = Record<string, TestDataType[]>
+export type TestDataType = ITcpUdpTestData | IIcmpTestData
 
-export interface IConfigMapTestData {
-    scenario: string,
-    testData: IData[]
-}
-
-export interface IData {
+export interface ITcpUdpTestData {
     from: string
     to: string
     fromType: DirectionType 
@@ -15,6 +11,14 @@ export interface IData {
     ports: IPorts[]
 }
 
+export interface IIcmpTestData {
+    from: string
+    to: string
+    dst: string[]
+    IPv: "IPv4" | "IPv6"
+    types: string[]
+}
+ 
 export interface IPorts {
     srcPorts: string[]
     dstPorts: string[]

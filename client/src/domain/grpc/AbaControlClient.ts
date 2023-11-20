@@ -79,6 +79,10 @@ export class AbaControlClient {
                 logger.debug("Запускаем стрим streamChangeIp")
                 call = this.client.streamChangeIp(meta)
                 break;
+            case 'icmp':
+                logger.debug("Запускаем стрим streamIcmp")
+                call = this.client.streamIcmp(meta)
+                break;
             default:
                 throw new Error(`Неизвестный сценарий: ${funcType}`)
         }

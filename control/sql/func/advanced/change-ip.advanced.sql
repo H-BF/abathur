@@ -14,7 +14,7 @@
                 INSERT INTO
                     sgroups.tbl_network(name, network, sg)
                 VALUES
-                    ('${PREFIX}-nw-0', '29.64.3.220/32', get_sg_id('${PREFIX}-sg-0'));
+                    ('${PREFIX}-nw-0', '29.64.2.220/32', get_sg_id('${PREFIX}-sg-0'));
 
                 INSERT INTO
                     sgroups.tbl_fqdn_rule (sg_from, fqdn_to, proto, ports, logs)

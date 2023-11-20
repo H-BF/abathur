@@ -1,21 +1,26 @@
 import { AbaControlClient } from "../grpc/AbaControlClient";
 import { Status } from "../../../gRPC/control/Status";
-import { TestClient } from "../testClient";
+import { TcpTestClient } from "./clients/tcpTestClient";
 import { Reporter } from "../reporter/reporter";
-import { IData } from "../interfaces";
+import { TestDataType } from "../interfaces";
+import { isTcpTestData } from "../../helper";
 
 export class SimpleFuncScenario {
 
     private control: AbaControlClient
-    private client: TestClient
+    private client: TcpTestClient
 
     constructor(ip: string, funcType: string) {
         this.control = new AbaControlClient(ip, funcType)
-        this.client  = new TestClient(ip)
+        this.client  = new TcpTestClient(ip)
     }
 
-    async start(data: IData[]) {
+    async start(data: TestDataType[]) {
         try {
+
+            if(!isTcpTestData(data))
+                throw new Error("Некорректный тип тестовых данных")
+
             this.control.sendMsg({ status: Status.ready })
             const luanchUUID = await this.control.listen()
     

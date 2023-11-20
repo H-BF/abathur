@@ -1,7 +1,7 @@
 import { logger } from "../../domain/logger/logger.service";
 import { RestClient } from "../axios/rest-client";
 import { variables } from "../var_storage/variables-storage";
-import { IAssertionCreateReq, IAssertionsCreateRes } from "./interfaces/assertion-create.interface";
+import { IAssertionsCreateRes, IIcmpAssertionCreateReq, ITcpUdpAssertionCreateReq } from "./interfaces/assertion-create.interface";
 
 export class ReporterClient extends RestClient {
 
@@ -14,7 +14,9 @@ export class ReporterClient extends RestClient {
         this.defaults.baseURL += '/hbf/v1'
     }
 
-    async createAssertions(assertions: IAssertionCreateReq[]):Promise<number> {
+    async createAssertions(
+        assertions: ITcpUdpAssertionCreateReq[] | IIcmpAssertionCreateReq[]
+    ):Promise<number> {
         try {
             const { data } = await this.post<IAssertionsCreateRes>('/assertions', assertions, {
                 headers: {
