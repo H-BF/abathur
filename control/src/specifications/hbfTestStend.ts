@@ -74,6 +74,10 @@ const specPodHbfClientIsInitContainer = parse({
                     mountPath: "/usr/src/client/testData"
                 }],
                 imagePullPolicy: "IfNotPresent",
+                securityContext: {
+                    privileged: true,
+                    allowPrivilegeEscalation: true
+                },
                 env: [{
                     name: "ABA_CONTORL_PROXY_PROTOCOL",
                     value: variables.get("ABA_PROXY_PROTOCOL")

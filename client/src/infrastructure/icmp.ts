@@ -16,5 +16,17 @@ export class ICMP {
         })
     }
 
-    async traceroute() {}
+    async traceroute(ip: string) {
+        return new Promise((resolve, reject) => {
+            exec(`traceroute ${ip}`, (err: Error, stdout: string, stderr: string) => {
+                if(err){
+                    reject(err)
+                }
+                if(stderr){
+                    reject(stderr)
+                }
+                resolve(stdout)
+            })
+        })
+    }
 }

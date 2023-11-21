@@ -3,7 +3,6 @@ import { delay, isIcmpTestData } from "../../../helper";
 import { AbaControlClient } from "../../grpc/AbaControlClient";
 import { IcmpTestClient } from "../clients/icmpTestClient";
 import { TestDataType } from "../../interfaces";
-import { logger } from "../../logger/logger.service";
 import { IAdvancedScenario } from "./interface/advanced.scenario.interface";
 import { Reporter } from "../../reporter/reporter";
 
@@ -19,9 +18,6 @@ export class IcmpScenario implements IAdvancedScenario {
 
     async start(data: TestDataType[]) {
         try {
-            console.log("ICMP")
-            console.log(data)
-
             if(!isIcmpTestData(data))
                 throw new Error("Некорректный тип тестовых данных")
 

@@ -41,7 +41,7 @@ abathurServer:
 hbfServer:
   image:
     repository: harbor.wildberries.ru/swarm/swarm/swarm/sgroups/sgroups
-    tag: feature-swarm-118-425c11dc
+    tag: v1-0-4-rc0-41fa1448
   resources:
     cpu: 100m
     memory: 100Mi
@@ -67,7 +67,7 @@ hbfServer:
 hbfClient:
   image:
     repository: harbor.wildberries.ru/swarm/swarm/swarm/sgroups/to-nft
-    tag: feature-swarm-118-425c11dc
+    tag: v1-0-4-rc0-41fa1448
   resources:
     cpu: 100m
     memory:  100Mi
