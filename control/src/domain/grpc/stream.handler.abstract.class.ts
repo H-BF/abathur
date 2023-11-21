@@ -2,7 +2,7 @@ import { IStreamHandler } from "./interfaces/stream.handler.interface";
 
 export abstract class StreamHeandler implements IStreamHandler {
 
-    stream(_call: any) {}
+    abstract stream(call: any): void
 
     /**
      * В gRPC значение enum передаются в виде значения-индекса. При этом нет встроенного механизма

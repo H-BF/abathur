@@ -5,6 +5,7 @@ import { ScenarioTemplate } from "../scenario.template";
 import { logger } from "../../../logger/logger.service";
 import { manager } from "../../../k8s/PSCFabric";
 import { waitSetSize } from "../../../helpers";
+import { S2STcpUdpDataCollector } from "../../../hbf/s2s.tcp-udp.data.collector";
 
 export class Sg2SgScenario extends ScenarioTemplate {
 
@@ -21,16 +22,26 @@ export class Sg2SgScenario extends ScenarioTemplate {
         try {
             await super.start()
 
-            const { hbfTestData, ports } = await this.collectTestData(this.prefix)
-            const keys = Object.keys(hbfTestData)
+            const collector = new S2STcpUdpDataCollector(
+                "http",
+                `${this.prefix}-p${variables.get("PIPELINE_ID")}-hbf-server`,
+                "80"
+            )
+
+            await collector.collect()
+            collector.convert()
+            const { testData, serverPorts } = collector.get()
+
+
+            const keys = Object.keys(testData)
 
             for (let i = 0; i < keys.length; i++) {
                 await manager.createHBFTestStend(
                     this.prefix,
                     i,
                     keys[i],
-                    JSON.stringify({ scenario: this.prefix, testData: hbfTestData[keys[i]] }),
-                    JSON.stringify(ports[keys[i]])
+                    JSON.stringify({ scenario: this.prefix, testData: testData[keys[i]] }),
+                    JSON.stringify(serverPorts[keys[i]])
                 )
             }
 

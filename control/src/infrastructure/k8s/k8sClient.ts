@@ -62,12 +62,12 @@ export class K8sClient {
         return spec.clusterIP
     }
 
-    async getCurrentClusterName() {
-        const corefile = await this.coreAPI.readNamespacedConfigMap('coredns', 'kube-system')
-        const match = corefile.body.data?.Corefile.match(/kubernetes\s(.+)\s\{/)
-        const dnsDomain = match ? match[1] : 'hui'
-        console.log(dnsDomain)
-    }
+    // async getCurrentClusterName() {
+    //     const corefile = await this.coreAPI.readNamespacedConfigMap('coredns', 'kube-system')
+    //     const match = corefile.body.data?.Corefile.match(/kubernetes\s(.+)\s\{/)
+    //     const dnsDomain = match ? match[1] : 'hui'
+    //     console.log(dnsDomain)
+    // }
 
 
         ///////////////////

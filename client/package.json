@@ -21,6 +21,7 @@
     "@grpc/proto-loader": "^0.7.7",
     "axios": "^1.4.0",
     "http-proxy-agent": "^7.0.0",
+    "net-ping": "^1.2.3",
     "rimraf": "^5.0.1",
     "tslog": "^4.9.2"
   }

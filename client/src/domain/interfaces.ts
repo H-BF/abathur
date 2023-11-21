@@ -1,11 +1,13 @@
-export type TestData = Record<string, IData[]>
+export type TestDataRecord = Record<string, TestDataType[]>
+export type TestDataType = ITcpUdpTestData | IIcmpTestData
+
 
 export interface IConfigMapTestData {
     scenario: string,
-    testData: IData[]
+    testData: TestDataType[]
 }
 
-export interface IData {
+export interface ITcpUdpTestData {
     from: string
     to: string
     fromType: DirectionType 
@@ -15,6 +17,13 @@ export interface IData {
     ports: IPorts[]
 }
 
+export interface IIcmpTestData {
+    from: string
+    to: string
+    dst: string[]
+    IPv: "IPv4" | "IPv6"
+    types: string[]
+}
 
 export interface IPorts {
     srcPorts: string[]
@@ -24,10 +33,21 @@ export interface IPorts {
 export interface IResults {
     duration: number
     node: string
-    results: IResult[]
+    results: TResult[]
 }
 
-export interface IResult {
+export enum DirectionType {
+    FQDN = 'fqdn',
+    CIDR = 'cidr',
+    SG = 'sg'
+}
+
+//////////////////////
+///////Results////////
+//////////////////////
+export type TResult = ITcpUdpResult | IIcmpResult
+
+export interface ITcpUdpResult {
     from: string
     to: string
     fromType: DirectionType 
@@ -41,8 +61,16 @@ export interface IResult {
     msgErr?: string
 }
 
-export enum DirectionType {
-    FQDN = 'fqdn',
-    CIDR = 'cidr',
-    SG = 'SG'
+export interface IIcmpResult {
+    from: string
+    to: string
+    fromType: DirectionType 
+    toType: DirectionType
+    srcIp: string
+    dstIp: string
+    protocol: string
+    icmpType: string[]
+    icmpCommand: string
+    status: string
+    msgErr?: string
 }

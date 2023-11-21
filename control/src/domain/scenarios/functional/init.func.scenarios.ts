@@ -49,8 +49,6 @@ export class InitFuncScenarios implements IScenarioInterface {
             await this.reporter.setStauts(LaunchStatus.IN_PORCESS)
             await waitScenarioIsFinish(this.scenarios)
 
-            console.log("Scenarios size: " + this.scenarios.length)
-
             this.scenarios.forEach(scenario => {
                 this.failCount += scenario.failCount
                 this.passCount += scenario.passCount

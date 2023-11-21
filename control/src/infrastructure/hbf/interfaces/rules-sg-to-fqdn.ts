@@ -1,14 +1,14 @@
 import { IRulePorts } from "./rules"
 
-export interface IToFqdnRulesReq {
+export interface ISgToFqdnRulesReq {
     sgFrom: string[]
 }
 
-export interface IToFqdnRules {
-    rules: IToFqdnRule[]
+export interface ISgToFqdnRules {
+    rules: ISgToFqdnRule[]
 }
 
-export interface IToFqdnRule {
+export interface ISgToFqdnRule {
     ports: IRulePorts[]
     sgFrom: string
     FQDN: string

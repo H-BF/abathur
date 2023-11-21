@@ -1,7 +1,8 @@
-import { AssertionStatus, IAssertionCreateReq, Protocol } from "../../infrastructure/reporter/interfaces/assertion-create.interface";
+import { isIcmpResult, isTcpUdpResult } from "../../helper";
+import { AssertionStatus, IIcmpAssertionCreateReq, ITcpUdpAssertionCreateReq, Protocol } from "../../infrastructure/reporter/interfaces/assertion-create.interface";
 import { ReporterClient } from "../../infrastructure/reporter/reporter";
 import { variables } from "../../infrastructure/var_storage/variables-storage";
-import { IResult } from "../interfaces";
+import { IIcmpResult, ITcpUdpResult, TResult } from "../interfaces";
 import { logger } from "../logger/logger.service";
 
 export class Reporter {
@@ -14,7 +15,7 @@ export class Reporter {
         this.client = new ReporterClient()
     }
 
-    async send(results: IResult[]) {
+    async send(results: TResult[]) {
         const assertions = this.transform(results)
 
         logger.info('assertions: ')
@@ -23,8 +24,22 @@ export class Reporter {
         await this.client.createAssertions(assertions)
     }
 
-    private transform(data: IResult[]): IAssertionCreateReq[] {
-        let result: IAssertionCreateReq[] = []
+    private transform(data: TResult[]): ITcpUdpAssertionCreateReq[] | IIcmpAssertionCreateReq[] {
+        let result: ITcpUdpAssertionCreateReq[] | IIcmpAssertionCreateReq[] = []
+        
+        if (isIcmpResult(data)) {
+            result = this.transformIcmp(data)
+        } else if (isTcpUdpResult(data)) {
+            result = this.transformTcpUdp(data)
+        } else {
+            throw new Error("Неизвестный тип данных")
+        }
+
+        return result
+    }
+
+    private transformTcpUdp(data: ITcpUdpResult[]) {
+        let result: ITcpUdpAssertionCreateReq[] = []
         data.forEach(elem => {
             result.push({
                 launchUUID: this.launchUUID,
@@ -38,6 +53,28 @@ export class Reporter {
                 fromType: elem.fromType, 
                 toType: elem.toType,
                 status: elem.status as AssertionStatus,
+                msgErr: elem.msgErr || null,
+                testName: variables.get("TEST_NAME")
+            })
+        })
+        return result
+    }
+
+    private transformIcmp(data: IIcmpResult[]) {
+        let result: IIcmpAssertionCreateReq[] = []
+        data.forEach(elem => {
+            result.push({
+                launchUUID: this.launchUUID,
+                srcIp: elem.srcIp,
+                dstIp:  elem.dstIp,
+                protocol: elem.protocol.toLocaleLowerCase() as Protocol,
+                from: elem.from,
+                to: elem.to,
+                fromType: elem.fromType, 
+                toType: elem.toType,
+                status: elem.status as AssertionStatus,
+                icmpType: elem.icmpType.join(),
+                icmpCommand: elem.icmpCommand,
                 msgErr: elem.msgErr || null,
                 testName: variables.get("TEST_NAME")
             })

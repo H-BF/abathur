@@ -1,6 +1,6 @@
 import { DirectionType } from "../../../domain/interfaces"
 
-export interface IAssertionCreateReq {
+export interface ITcpUdpAssertionCreateReq {
     launchUUID: string
     srcIp: string
     srcPort: string
@@ -16,13 +16,30 @@ export interface IAssertionCreateReq {
     testName: string
 }
 
+export interface IIcmpAssertionCreateReq {
+    launchUUID: string
+    srcIp: string
+    dstIp: string
+    protocol: Protocol
+    from: string
+    to: string
+    fromType: DirectionType 
+    toType: DirectionType
+    status: AssertionStatus
+    icmpType: string,
+    icmpCommand: string,
+    msgErr?: string | null
+    testName: string
+}
+
 export interface IAssertionsCreateRes {
     count: string
 }
 
 export enum Protocol {
     TCP = 'tcp',
-    UDP = 'udp'
+    UDP = 'udp',
+    ICMP = 'icmp'
 }
 
 export enum AssertionStatus {

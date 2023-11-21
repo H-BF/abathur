@@ -8,6 +8,8 @@ export const requiredPropVariablesList = [
     "S2F_HBF_SERVER_PORT",
     "CANGE_IP_HBF_SERVER_IP",
     "CANGE_IP_HBF_SERVER_PORT",
+    "ICMP_HBF_SERVER_IP",
+    "ICMP_HBF_SERVER_PORT",
     "A_HBF_SERVER_IP",
     "A_HBF_SERVER_PORT",
     "HBF_CLIENT_REPOSITORY",
