@@ -6,7 +6,7 @@ RUN npm run build
 
 FROM node:18
 RUN apt update
-RUN apt install -y curl net-tools nftables iptables tcpdump iproute2 iputils-ping dnsutils
+RUN apt install -y curl net-tools nftables iptables tcpdump iproute2 iputils-ping dnsutils traceroute
 
 WORKDIR /usr/src/client
 COPY --from=builder /usr/src/app/build .
