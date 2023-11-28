@@ -36,7 +36,7 @@
                     (
                         get_sg_id('${PREFIX}-sg-0'),
                         '${PREFIX}-p${PIPLINE_ID}-fqdn-0.${TAIL}',
-                        'tcp',
+                        'udp',
                         ARRAY[
                             ((int4multirange(int4range(NULL))), (int4multirange(int4range(54000, 54001))))
                         ]::sgroups.sg_rule_ports[],
@@ -54,7 +54,7 @@
                     (
                         get_sg_id('${PREFIX}-sg-2'),
                         '${PREFIX}-p${PIPLINE_ID}-fqdn-2.${TAIL}',
-                        'tcp',
+                        'udp',
                         ARRAY[
                             ((int4multirange(int4range(NULL))), (int4multirange(int4range(54004,54005),int4range(54006,54007),int4range(54008,54011))))
                         ]::sgroups.sg_rule_ports[],
@@ -74,7 +74,7 @@
                     (
                         get_sg_id('${PREFIX}-sg-4'),
                         '${PREFIX}-p${PIPLINE_ID}-fqdn-4.${TAIL}',
-                        'tcp',
+                        'udp',
                         ARRAY[
                             ((int4multirange(int4range(46000, 46003))), (int4multirange(int4range(56003, 56004)))),
                             ((int4multirange(int4range(46004, 46007))), (int4multirange(int4range(56007, 56010)))),

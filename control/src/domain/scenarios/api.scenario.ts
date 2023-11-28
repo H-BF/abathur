@@ -13,6 +13,7 @@ import { streamApiHandler } from "../grpc/stream.api.handler"
 import { LaunchStatus } from "../../infrastructure/reporter";
 import { IScenarioInterface } from "./interface/scenario.interface";
 import { logger } from "../logger/logger.service";
+import { instanceList } from "../instance.list";
 
 export class ApiScenario implements IScenarioInterface {
 
@@ -29,6 +30,7 @@ export class ApiScenario implements IScenarioInterface {
     passCount: number = 0
 
     constructor() {
+        instanceList.push(this.prefix)
         let data = JSON.parse(fs.readFileSync(path.resolve(__dirname, "../../../test_data/swarm.json"), "utf-8"))
         data.variable.forEach((vr: any) => {
             if (vr.key === "HOST") {
@@ -103,9 +105,6 @@ export class ApiScenario implements IScenarioInterface {
             await this.reporter.closeLaunchWithError(`${err}`)
         } finally {
             this.finish = true
-            if(variables.get("IS_DESTROY_AFTER") === "true") {
-                await manager.destroyAllByInstance(this.prefix)
-            }
         }
     }
 

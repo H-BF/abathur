@@ -90,9 +90,6 @@ export class ChangeIpScenario extends ScenarioTemplate {
             logger.error(`${err}`)
         } finally {
             this.finish = true
-            if(variables.get("IS_DESTROY_AFTER") === "true") {
-                await manager.destroyAllByInstance(this.prefix)
-            }
         }
     }
     

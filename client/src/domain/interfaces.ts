@@ -12,7 +12,7 @@ export interface ITcpUdpTestData {
     to: string
     fromType: DirectionType 
     toType: DirectionType
-    transport: string
+    transport: 'TCP' | 'UDP'
     dst: string[]
     ports: IPorts[]
 }
@@ -56,7 +56,7 @@ export interface ITcpUdpResult {
     srcPort: string
     dstIp: string
     dstPort: string
-    protocol: string
+    protocol: 'tcp' | 'udp'
     status: string
     msgErr?: string
 }
@@ -68,7 +68,7 @@ export interface IIcmpResult {
     toType: DirectionType
     srcIp: string
     dstIp: string
-    protocol: string
+    protocol: 'icmp'
     icmpType: string[]
     icmpCommand: string
     status: string

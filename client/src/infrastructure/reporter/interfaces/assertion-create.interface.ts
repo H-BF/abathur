@@ -37,9 +37,9 @@ export interface IAssertionsCreateRes {
 }
 
 export enum Protocol {
-    TCP = 'tcp',
-    UDP = 'udp',
-    ICMP = 'icmp'
+    TCP = 'TCP',
+    UDP = 'UDP',
+    ICMP = 'ICMP'
 }
 
 export enum AssertionStatus {

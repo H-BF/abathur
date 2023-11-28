@@ -32,7 +32,6 @@ export class Sg2SgScenario extends ScenarioTemplate {
             collector.convert()
             const { testData, serverPorts } = collector.get()
 
-
             const keys = Object.keys(testData)
 
             for (let i = 0; i < keys.length; i++) {
@@ -71,9 +70,6 @@ export class Sg2SgScenario extends ScenarioTemplate {
             logger.error(`${err}`)
         } finally {
             this.finish = true
-            if(variables.get("IS_DESTROY_AFTER") === "true") {
-                await manager.destroyAllByInstance(this.prefix)
-            }
         }
     }
 }

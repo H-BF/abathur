@@ -9,6 +9,8 @@ import { hbfServer } from "../../../specifications/hbfServer";
 import { hbfTestStend } from "../../../specifications/hbfTestStend";
 import { IScenarioInterface } from "../interface/scenario.interface";
 import { variables } from "../../../infrastructure/var_storage/variables-storage";
+import { IPortsToServer } from '../../hbf/interfaces';
+import { instanceList } from '../../instance.list';
 
 export abstract class ScenarioTemplate implements IScenarioInterface {
 
@@ -31,6 +33,8 @@ export abstract class ScenarioTemplate implements IScenarioInterface {
         this.prefix = prefix
         this.hbfServerIP = ip
         this.hbfServerPort = port
+
+        instanceList.push(this.prefix)
 
         this.sharedConfigMaps.push(hbfServer.pgConfMap({
             prefix: this.prefix,
@@ -80,8 +84,20 @@ export abstract class ScenarioTemplate implements IScenarioInterface {
     isFinish(): boolean {
         return this.finish
     }
+
+    protected evalutePorts(ports: IPortsToServer): {port: string, protocol: string}[] {
+        const tcpPorts = this.evalutePortsForProto(ports.TCP).map(item => ({
+            port: item,
+            protocol: 'TCP'
+        }))
+        const udpPorts = this.evalutePortsForProto(ports.UDP).map(item => ({
+            port: item,
+            protocol: 'UDP'
+        }))
+       return tcpPorts.concat(udpPorts).flat()
+    }
     
-    protected evalutePorts(ports: string[]): string[] {
+    private evalutePortsForProto(ports: string[]): string[] {
         return ports.flatMap((port) => {
             if (port.includes("-")) {
             const [start, end] = port.split("-");

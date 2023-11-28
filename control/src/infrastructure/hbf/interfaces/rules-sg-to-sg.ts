@@ -13,6 +13,6 @@ export interface ISgToSgRule {
     ports: IRulePorts[]
     sgFrom: string
     sgTo: string
-    transport: string
+    transport: 'TCP' | 'UDP'
     logs: boolean
 }

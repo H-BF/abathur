@@ -45,7 +45,7 @@
                     (
                         get_sg_id('${PREFIX}-sg-1'),
                         get_sg_id('${PREFIX}-sg-2'),
-                        'tcp',
+                        'udp',
                         ARRAY[
                             ((int4multirange(int4range(NULL))), (int4multirange(int4range(50001, 50004))))
                         ]::sgroups.sg_rule_ports[],
@@ -63,7 +63,7 @@
                     (
                         get_sg_id('${PREFIX}-sg-4'),
                         get_sg_id('${PREFIX}-sg-0'),
-                        'tcp',
+                        'udp',
                         ARRAY[
                             ((int4multirange(int4range(41000, 41001))), (int4multirange(int4range(51001, 51002)))),
                             ((int4multirange(int4range(41002, 41003))), (int4multirange(int4range(51003, 51006)))),

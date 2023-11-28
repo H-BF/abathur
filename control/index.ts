@@ -1,5 +1,6 @@
 import { controlServer } from "./src/domain/grpc/control";
 import { waitScenarioIsFinish } from "./src/domain/helpers";
+import { instanceList } from "./src/domain/instance.list";
 import { manager } from "./src/domain/k8s/PSCFabric";
 import { podInf } from "./src/domain/k8s/podInformer";
 import { svcInf } from "./src/domain/k8s/svcInformer";
@@ -60,6 +61,9 @@ import { variables } from "./src/infrastructure/var_storage/variables-storage";
         proxy.stop()
         if(variables.get("IS_DESTROY_AFTER") === "true") {
             await manager.destroyAbathur()
+            instanceList.forEach( async instance => {
+                await manager.destroyAllByInstance(instance)
+            })
         }
     }
 })();
