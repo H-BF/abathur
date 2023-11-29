@@ -1,11 +1,13 @@
 import { evalutePorts, getIpByDNSName } from "../../../helper"
 import { ITcpUdpTestData, TResult } from "../../interfaces"
-import { SocketClient } from "../../../infrastructure/socket/socket";
+import { TCPSocketClient } from "../../../infrastructure/socket/tcp.socket";
 import { logger } from "../../logger/logger.service";
 import net from 'net';
 import { ITestClient } from "./test.client.interface";
+import { UDPSocketClient } from "../../../infrastructure/socket/udp.socket";
+import { ISocketClient } from "../../../infrastructure/socket/socket.client.interface";
 
-export class TcpTestClient implements ITestClient {
+export class TestClient implements ITestClient {
 
     private srcIp: string
     private testResults: TResult[] = [];
@@ -27,9 +29,10 @@ export class TcpTestClient implements ITestClient {
                         for (const srcPort of srcPorts) {
 
                             let msgErr: string | undefined
-                            let status = "fail"
+                            let status = "fail"  
                             
-                            const client = new SocketClient()
+                            const client: ISocketClient = node.transport == 'TCP' ? new TCPSocketClient() : new UDPSocketClient()
+
                             try {
                                 await client.check(
                                     Number(srcPort),
@@ -64,7 +67,7 @@ export class TcpTestClient implements ITestClient {
                                 // dstIp IP, если нет торезолвим имя.
                                 dstIp: net.isIP(dstIp) ? dstIp : await getIpByDNSName(dstIp),
                                 dstPort: dstPort,
-                                protocol: node.transport,
+                                protocol: node.transport.toLocaleLowerCase() as 'tcp' | 'udp',
                                 status: status,
                                 msgErr: msgErr
                             })

@@ -1,11 +1,11 @@
 import { logger } from "../logger/logger.service";
 import { HBFDataCollector } from "./hbf-data-collector.abstract";
-import { DirectionType, ITcpUdpTestData, TestDataRecord, IPortForServer } from "./interfaces";
+import { DirectionType, ITcpUdpTestData, TestDataRecord, PortsForServers } from "./interfaces";
 
 export class S2FTcpUdpDataCollector extends HBFDataCollector {
 
     private testData: TestDataRecord = {}
-    private serverPorts: IPortForServer = {}
+    private serversPorts: PortsForServers = {}
     private fqdn: string[] = []
 
     constructor(
@@ -51,11 +51,11 @@ export class S2FTcpUdpDataCollector extends HBFDataCollector {
                 this.testData[ipFrom] = this.testData[ipFrom] ? [...this.testData[ipFrom], data] : [data]
             })
 
-            if(rule.FQDN in this.serverPorts) {
-                this.serverPorts[rule.FQDN] = this.serverPorts[rule.FQDN].concat(ports.map(item => item.dstPorts).flat())  
-            } else {
-                this.serverPorts[rule.FQDN] = ports.map(item => item.dstPorts).flat()
-            } 
+            if(!(rule.FQDN in this.serversPorts)) {
+                this.serversPorts[rule.FQDN] = { TCP: [], UDP: [] }
+            }
+
+            this.serversPorts[rule.FQDN][rule.transport].push(...ports.map(item => item.dstPorts).flat())
         })
 
         this.fqdn = this.getFqdnList()
@@ -64,7 +64,7 @@ export class S2FTcpUdpDataCollector extends HBFDataCollector {
     get() {
         return {
             testData: this.testData,
-            serverPorts: this.serverPorts,
+            serverPorts: this.serversPorts,
             fqdn: this.fqdn
         }
     }

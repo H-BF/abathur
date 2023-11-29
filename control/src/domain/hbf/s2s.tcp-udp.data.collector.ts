@@ -1,11 +1,11 @@
 import { HBFDataCollector } from "./hbf-data-collector.abstract";
 import { logger } from "../logger/logger.service";
-import { DirectionType, ITcpUdpTestData, TestDataRecord, IPortForServer } from "./interfaces";
+import { DirectionType, ITcpUdpTestData, TestDataRecord, PortsForServers } from "./interfaces";
 
 export class S2STcpUdpDataCollector extends HBFDataCollector {
 
     private testData: TestDataRecord = {}
-    private serverPorts: IPortForServer = {}
+    private serversPorts: PortsForServers = {}
 
     constructor(
         protocol: string,
@@ -51,11 +51,10 @@ export class S2STcpUdpDataCollector extends HBFDataCollector {
             })
 
             ipsTo.forEach(ip => {
-                if (ip in this.serverPorts) {
-                    this.serverPorts[ip] = this.serverPorts[ip].concat(ports.map(item => item.dstPorts).flat())
-                } else {
-                    this.serverPorts[ip] = ports.map(item => item.dstPorts).flat()
+                if(!(ip in this.serversPorts)) {
+                    this.serversPorts[ip] = { TCP: [], UDP: [] }
                 }
+                this.serversPorts[ip][rule.transport].push(...ports.map(item => item.dstPorts).flat())
             })
         })
     }
@@ -63,7 +62,7 @@ export class S2STcpUdpDataCollector extends HBFDataCollector {
     get() {
         return {
             testData: this.testData,
-            serverPorts: this.serverPorts
+            serverPorts: this.serversPorts
         }
     }
 }

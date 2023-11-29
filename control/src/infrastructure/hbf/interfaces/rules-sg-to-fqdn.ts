@@ -12,6 +12,6 @@ export interface ISgToFqdnRule {
     ports: IRulePorts[]
     sgFrom: string
     FQDN: string
-    transport: string
+    transport: 'TCP' | 'UDP'
     logs: boolean
 }

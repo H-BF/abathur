@@ -52,8 +52,9 @@ export class Sg2FqdnScenario extends ScenarioTemplate {
                     JSON.stringify(serverPorts[fqdn[i]]),
                     this.evalutePorts(serverPorts[fqdn[i]]).map((item, index) => ({
                         name: `${fqdn[i].split(".")[0]}-${index}`,
-                        port: Number(item),
-                        targetPort: Number(item)
+                        protocol: item.protocol,
+                        port: Number(item.port),
+                        targetPort: Number(item.port)
                     }))
                 )
             }
@@ -84,9 +85,6 @@ export class Sg2FqdnScenario extends ScenarioTemplate {
             logger.error(`${err}`)
         } finally {
             this.finish = true
-            if(variables.get("IS_DESTROY_AFTER") === "true") {
-                await manager.destroyAllByInstance(this.prefix)
-            }
         }        
     }
 }

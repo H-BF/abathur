@@ -1,8 +1,10 @@
 import net from 'net';
 import { logger } from '../../domain/logger/logger.service';
+import { ISocketClient } from './socket.client.interface';
 
-export class SocketClient {
+export class TCPSocketClient implements ISocketClient {
     private socket: net.Socket
+    private request: string = `GET /check HTTP/2.0\r\nHost: localhost\r\n\r\n`;
 
     constructor() {
         this.socket = new net.Socket();
@@ -13,9 +15,6 @@ export class SocketClient {
         dstIp: string,
         dstPort: number
     ): Promise<string> {
-        
-        const request = `GET /check HTTP/2.0\r\nHost: localhost\r\n\r\n`;
-
         return new Promise((resolve, reject) => {
             this.socket.connect({
                 host: dstIp,
@@ -25,7 +24,9 @@ export class SocketClient {
 
             this.socket.setTimeout(2000)
 
-            this.socket.write(request)
+            this.socket.write(this.request, () => {
+                logger.info(`[TCP] Отправлено сообщение на ${dstIp}:${dstPort}`)
+            })
             
             this.socket.on('data', (data) => {
                 this.socket.destroy()

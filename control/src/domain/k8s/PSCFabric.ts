@@ -6,7 +6,7 @@ import { variables } from "../../infrastructure/var_storage/variables-storage";
 import { apiTestPod } from "../../specifications/apiTestPod";
 import { logger } from "../logger/logger.service";
 import { fqdnTestStend } from "../../specifications/fqdnTestStend";
-import { IPortForServer } from "../hbf/interfaces";
+import { PortsForServers } from "../hbf/interfaces";
 
 export class PSCFabric {
  
