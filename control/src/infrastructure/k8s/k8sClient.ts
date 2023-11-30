@@ -204,8 +204,7 @@ export class K8sClient {
             logger.info(`Response code: ${response.statusCode}`)
             return this.getMetaName(body.metadata)
         } catch (err) {
-            console.log(err)
-            // logger.error(err)
+            logger.error(err)
             throw new Error(`${err}`)
         }
     }

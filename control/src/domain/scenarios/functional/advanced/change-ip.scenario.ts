@@ -46,15 +46,16 @@ export class ChangeIpScenario extends ScenarioTemplate {
                 JSON.stringify(serverPorts[ip]),
                 false
             )
-    
+
             await manager.createFQDNTestStend(
                 this.prefix,
                 serviceName,
                 JSON.stringify(serverPorts[fqdn[0]]),
                 this.evalutePorts(serverPorts[fqdn[0]]).map((item, index) => ({
                     name: `${fqdn[0].split(".")[0]}-${index}`,
-                    port: Number(item),
-                    targetPort: Number(item)
+                    protocol: item.protocol,
+                    port: Number(item.port),
+                    targetPort: Number(item.port)
                 }))
             )
     
@@ -70,8 +71,9 @@ export class ChangeIpScenario extends ScenarioTemplate {
                 serviceName,
                 this.evalutePorts(serverPorts[fqdn[0]]).map((item, index) => ({
                     name: `${fqdn[0].split(".")[0]}-${index}`,
-                    port: Number(item),
-                    targetPort: Number(item)
+                    protocol: item.protocol,
+                    port: Number(item.port),
+                    targetPort: Number(item.port)
                 }))
             )
     
