@@ -51,15 +51,6 @@ export class ICMPScenario extends ScenarioTemplate {
               }
             }
 
-            console.log("sTestData")
-            console.log(sTestData)
-
-            console.log("\ns2sTestData")
-            console.log(s2sTestData)
-
-            console.log("\ntestData")
-            console.log(testData)
-
             const keys = Object.keys(testData)
             for (let i = 0; i < keys.length; i++) {
             await manager.createHBFTestStend(

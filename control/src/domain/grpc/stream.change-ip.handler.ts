@@ -35,7 +35,7 @@ class StreamChangeIpHandler extends StreamHeandler {
                     try {
                         call.write({ msg: "start" })
                     } catch(err) {
-                        console.log(err)
+                        logger.info(err)
                     }
                     break;
                 case "finish":

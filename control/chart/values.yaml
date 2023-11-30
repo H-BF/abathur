@@ -20,7 +20,7 @@ abathurControl:
   destroy: true
   scenario: 1
   #simple-s2s,simple-s2f,advanced-changeip,advanced-icmp
-  funcScenario: simple-s2f
+  funcScenario: advanced-changeip
 
 abathurClient:
   image:
