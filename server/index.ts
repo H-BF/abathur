@@ -17,12 +17,12 @@ try {
     const ports: IPorts = JSON.parse(fileData);
 
     (async () => {
-        if(ports.TCP.length != 0) {
+        if(ports.TCP != undefined && ports.TCP.length != 0) {
             evalutePorts(ports.TCP).forEach(port => {
                 tcpServer.start(Number(port))
             })
         }
-        if(ports.UDP.length != 0) {
+        if(ports.UDP != undefined && ports.UDP.length != 0) {
             evalutePorts(ports.UDP).forEach( port => {
                 udpServer.start(Number(port))
             })
