@@ -1,9 +1,14 @@
-FROM node:18
-
+FROM node:18-alpine as builder
 WORKDIR /usr/src/server
-COPY . .
-RUN npm install
-RUN apt update && apt install -y net-tools
-RUN apt install -y nftables
-RUN apt install -y iptables
-CMD ["npm", "run", "start:local"]
+COPY *.json .
+RUN npm ci
+ADD . .
+RUN npm run build
+
+FROM node:18-alpine
+WORKDIR /usr/src/server
+COPY --from=builder /usr/src/server/build ./build
+ADD *.json .
+RUN npm ci --only=production
+RUN apt update && apt install -y nftables iptables net-tools
+CMD ["node", "./build/index.js"]

@@ -23,8 +23,7 @@ export class ChangeIpScenario extends ScenarioTemplate {
     async start() {
         try {
             await super.start()
-
-
+            
             const collector = new S2FTcpUdpDataCollector(
                 "http",
                 `${this.prefix}-p${variables.get("PIPELINE_ID")}-hbf-server`,
