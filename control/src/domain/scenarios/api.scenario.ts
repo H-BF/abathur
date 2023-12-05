@@ -31,7 +31,7 @@ export class ApiScenario implements IScenarioInterface {
 
     constructor() {
         instanceList.push(this.prefix)
-        let data = JSON.parse(fs.readFileSync(path.resolve(__dirname, "../../../test_data/swarm.json"), "utf-8"))
+        let data = JSON.parse(fs.readFileSync(path.resolve(__dirname, "../../../../test_data/swarm.json"), "utf-8"))
         data.variable.forEach((vr: any) => {
             if (vr.key === "HOST") {
                 vr.value = this.hbfServerIP
@@ -42,7 +42,7 @@ export class ApiScenario implements IScenarioInterface {
 
         this.sharedConfigMaps.push(hbfServer.pgConfMap({
             prefix: this.prefix,
-            data: fs.readFileSync(path.resolve(__dirname, "../../../sql/api/hbf.api.sql"), "utf-8") 
+            data: fs.readFileSync(path.resolve(__dirname, "../../../../sql/api/hbf.api.sql"), "utf-8") 
         }) as V1ConfigMap)
         this.sharedConfigMaps.push(hbfServer.hbfConfMap({
             prefix: this.prefix,
