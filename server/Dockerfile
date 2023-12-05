@@ -10,5 +10,7 @@ WORKDIR /usr/src/server
 COPY --from=builder /usr/src/server/build ./build
 ADD *.json .
 RUN npm ci --only=production
-RUN apt update && apt install -y nftables iptables net-tools
+RUN echo "http://dl-cdn.alpinelinux.org/alpine/v3.14/main" >> /etc/apk/repositories
+RUN apk update
+RUN apk add nftables iptables net-tools
 CMD ["node", "./build/index.js"]

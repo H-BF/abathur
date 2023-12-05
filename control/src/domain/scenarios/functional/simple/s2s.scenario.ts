@@ -14,7 +14,7 @@ export class Sg2SgScenario extends ScenarioTemplate {
             "simple-s2s",
             variables.get("S2S_HBF_SERVER_IP"),
             variables.get("S2S_HBF_SERVER_PORT"),
-            "../../../../sql/func/simple/s2s.simple.sql"
+            "../../../../../sql/func/simple/s2s.simple.sql"
         )
     }
 

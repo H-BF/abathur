@@ -15,7 +15,7 @@ export class ChangeIpScenario extends ScenarioTemplate {
             "advanced-changeip",
             variables.get("CANGE_IP_HBF_SERVER_IP"),
             variables.get("CANGE_IP_HBF_SERVER_PORT"),
-            "../../../../sql/func/advanced/change-ip.advanced.sql",
+            "../../../../../sql/func/advanced/change-ip.advanced.sql",
             false
         )
     }

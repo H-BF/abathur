@@ -15,7 +15,7 @@ export class ICMPScenario extends ScenarioTemplate {
             "advanced-icmp",
             variables.get("ICMP_HBF_SERVER_IP"),
             variables.get("ICMP_HBF_SERVER_PORT"),
-            "../../../../sql/func/advanced/icmp.advanced.sql",
+            "../../../../../sql/func/advanced/icmp.advanced.sql",
             true
         )
     }
