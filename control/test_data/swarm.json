@@ -3645,6 +3645,113 @@
 								}
 							},
 							"response": []
+						},
+						{
+							"name": "[RULE] Пересечение портов для массива правил для s = null в каждом правиле",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 500\", () => {\r",
+											"    pm.response.to.have.status(500);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Validate response JSON schema\", () => {\r",
+											"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
+											"});\r",
+											"\r",
+											"pm.test(\"check error code is 13\", () => {\r",
+											"    pm.expect(pm.response.json().code).to.eql(13)\r",
+											"})\r",
+											"\r",
+											"pm.test(\"check message\", () => {\r",
+											"    pm.expect(pm.response.json().message).to.eql(\"ERROR: new row for relation \\\"tbl_sg_rule\\\" violates check constraint \\\"S_ports_dont_intersect\\\" (SQLSTATE 23514)\")\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"sgRules\": {\r\n    \"rules\": [\r\n      {\r\n        \"sgTo\": \"sg-0\",\r\n        \"sgFrom\": \"sg-1\",\r\n        \"transport\": \"TCP\",\r\n        \"ports\": [\r\n          {\r\n            \"d\": \"22\"\r\n          },\r\n          {\r\n            \"d\": \"22\"\r\n          }\r\n        ]\r\n      }\r\n    ]\r\n  },\r\n    \"syncOp\": \"Upsert\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{HOST}}:{{PORT}}/v1/sync",
+									"host": [
+										"{{HOST}}"
+									],
+									"port": "{{PORT}}",
+									"path": [
+										"v1",
+										"sync"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[RULE-FQDN] Пересечение портов для массива правил для s = null в каждом правиле",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 500\", () => {\r",
+											"    pm.response.to.have.status(500);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Validate response JSON schema\", () => {\r",
+											"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
+											"});\r",
+											"\r",
+											"pm.test(\"check error code is 13\", () => {\r",
+											"    pm.expect(pm.response.json().code).to.eql(13)\r",
+											"})\r",
+											"\r",
+											"pm.test(\"check message\", () => {\r",
+											"    pm.expect(pm.response.json().message).to.eql(\"ERROR: new row for relation \\\"tbl_fqdn_rule\\\" violates check constraint \\\"S_ports_dont_intersect\\\" (SQLSTATE 23514)\")\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"fqdnRules\": {\r\n    \"rules\": [\r\n      {\r\n        \"sgFrom\": \"sg-1\",\r\n        \"FQDN\": \"google.com\",\r\n        \"ports\": [\r\n          {\r\n            \"d\": \"33\"\r\n          },\r\n          {\r\n            \"d\": \"33\"\r\n          }\r\n        ],\r\n        \"transport\": \"TCP\"\r\n      }\r\n    ]\r\n  },\r\n  \"syncOp\": \"Upsert\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{HOST}}:{{PORT}}/v1/sync",
+									"host": [
+										"{{HOST}}"
+									],
+									"port": "{{PORT}}",
+									"path": [
+										"v1",
+										"sync"
+									]
+								}
+							},
+							"response": []
 						}
 					]
 				},
