@@ -183,7 +183,8 @@ const pgConfMap = parse({
         "02-migr.sql": fs.readFileSync(path.resolve(__dirname, "../../../sql/hbf_server/migr-1.sql"), "utf-8"),
         "03-migr.sql": fs.readFileSync(path.resolve(__dirname, "../../../sql/hbf_server/migr-2.sql"), "utf-8"),
         "04-migr.sql": fs.readFileSync(path.resolve(__dirname, "../../../sql/hbf_server/migr-3.sql"), "utf-8"),
-        "05-data.sql": "{{data}}"
+        "05-migr.sql": fs.readFileSync(path.resolve(__dirname, "../../../sql/hbf_server/migr-4.sql"), "utf-8"),
+        "06-data.sql": "{{data}}"
     }
 })
 
