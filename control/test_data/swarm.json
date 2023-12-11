@@ -4692,7 +4692,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n      \"cidrSgRules\": {\r\n    \"rules\": [\r\n      {\r\n        \"CIDR\": \"10.150.0.220/28\",\r\n        \"SG\": \"sg-test-0\",\r\n        \"logs\": true,\r\n        \"ports\": [\r\n          {\r\n            \"s\": \"40025\",\r\n            \"d\": \"40026\"\r\n\r\n          }\r\n        ],\r\n        \"trace\": true,\r\n        \"traffic\": \"Ingress\",\r\n        \"transport\": \"TCP\"\r\n      }\r\n    ]\r\n  },\r\n  \t\"syncOp\": \"Upsert\"\r\n}",
+									"raw": "{\r\n      \"cidrSgRules\": {\r\n    \"rules\": [\r\n      {\r\n        \"CIDR\": \"10.150.0.208/28\",\r\n        \"SG\": \"sg-test-0\",\r\n        \"logs\": true,\r\n        \"ports\": [\r\n          {\r\n            \"s\": \"40025\",\r\n            \"d\": \"40026\"\r\n\r\n          }\r\n        ],\r\n        \"trace\": true,\r\n        \"traffic\": \"Ingress\",\r\n        \"transport\": \"TCP\"\r\n      }\r\n    ]\r\n  },\r\n  \t\"syncOp\": \"Upsert\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -5012,7 +5012,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n      \"cidrSgRules\": {\r\n    \"rules\": [\r\n      {\r\n        \"CIDR\": \"10.150.0.220/28\",\r\n        \"SG\": \"sg-test-0\",\r\n        \"logs\": true,\r\n        \"ports\": [\r\n          {\r\n            \"s\": \"40025\",\r\n            \"d\": \"40026\"\r\n\r\n          }\r\n        ],\r\n        \"trace\": true,\r\n        \"traffic\": \"Ingress\",\r\n        \"transport\": \"TCP\"\r\n      }\r\n    ]\r\n  },\r\n  \t\"syncOp\": \"FullSync\"\r\n}",
+									"raw": "{\r\n      \"cidrSgRules\": {\r\n    \"rules\": [\r\n      {\r\n        \"CIDR\": \"10.150.0.208/28\",\r\n        \"SG\": \"sg-test-0\",\r\n        \"logs\": true,\r\n        \"ports\": [\r\n          {\r\n            \"s\": \"40025\",\r\n            \"d\": \"40026\"\r\n\r\n          }\r\n        ],\r\n        \"trace\": true,\r\n        \"traffic\": \"Ingress\",\r\n        \"transport\": \"TCP\"\r\n      }\r\n    ]\r\n  },\r\n  \t\"syncOp\": \"FullSync\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -5062,7 +5062,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n      \"cidrSgRules\": {\r\n    \"rules\": [\r\n      {\r\n        \"CIDR\": \"10.150.0.220/28\",\r\n        \"SG\": \"sg-test-0\",\r\n        \"logs\": true,\r\n        \"ports\": [\r\n          {\r\n            \"s\": \"40025\",\r\n            \"d\": \"40026\"\r\n\r\n          }\r\n        ],\r\n        \"trace\": true,\r\n        \"traffic\": \"Ingress\",\r\n        \"transport\": \"TCP\"\r\n      }\r\n    ]\r\n  },\r\n  \t\"syncOp\": \"Delete\"\r\n}",
+									"raw": "{\r\n      \"cidrSgRules\": {\r\n    \"rules\": [\r\n      {\r\n        \"CIDR\": \"10.150.0.208/28\",\r\n        \"SG\": \"sg-test-0\",\r\n        \"logs\": true,\r\n        \"ports\": [\r\n          {\r\n            \"s\": \"40025\",\r\n            \"d\": \"40026\"\r\n\r\n          }\r\n        ],\r\n        \"trace\": true,\r\n        \"traffic\": \"Ingress\",\r\n        \"transport\": \"TCP\"\r\n      }\r\n    ]\r\n  },\r\n  \t\"syncOp\": \"Delete\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
