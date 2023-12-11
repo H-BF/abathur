@@ -1656,6 +1656,258 @@
 			]
 		},
 		{
+			"name": "POST /v1/cird-sg/rules",
+			"item": [
+				{
+					"name": "[RULE-CIDR] Получение всего списка",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Validate response JSON schema\", () => {\r",
+									"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"ruleCidrSgResponseJsonSchema\")));\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Networks array size is 4\", () => {\r",
+									"   pm.expect(pm.response.json().rules.length).to.eql(4)\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{HOST}}:{{PORT}}/v1/cird-sg/rules",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"v1",
+								"cird-sg",
+								"rules"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[RULE-CIDR] Получение списка для sg-0",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Validate response JSON schema\", () => {\r",
+									"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"ruleCidrSgResponseJsonSchema\")));\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Networks array size is 3\", () => {\r",
+									"   pm.expect(pm.response.json().rules.length).to.eql(3)\r",
+									"});\r",
+									"\r",
+									"pm.test(\"All rules contain value 'sg-0' in the SG field\", () => {\r",
+									"    pm.response.json().rules.forEach(rule => {\r",
+									"        pm.expect(rule.SG).be.eql(\"sg-0\")\r",
+									"    })\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"sg\": [\"sg-0\"]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}:{{PORT}}/v1/cird-sg/rules",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"v1",
+								"cird-sg",
+								"rules"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[RULE-CIDR] Получение списка для sg-2 (пустой)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Validate response JSON schema\", () => {\r",
+									"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"ruleCidrSgResponseJsonSchema\")));\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Networks array size is 0\", () => {\r",
+									"   pm.expect(pm.response.json().rules.length).to.eql(0)\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"sg\": [\"sg-2\"]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}:{{PORT}}/v1/cird-sg/rules",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"v1",
+								"cird-sg",
+								"rules"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[RULE-CIDR] Cообщение об ошибке при некорректном значении существующего параметра",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", () => {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Validate response JSON schema\", () => {\r",
+									"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
+									"});\r",
+									"\r",
+									"pm.test(\"check error code is 3\", () => {\r",
+									"    pm.expect(pm.response.json().code).to.eql(3)\r",
+									"})\r",
+									"\r",
+									"pm.test(\"check message\", () => {\r",
+									"    pm.expect(pm.response.json().message).to.eql(\"proto: syntax error (line 2:11): unexpected token \\\"sg-3\\\"\")\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"sg\": \"sg-3\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}:{{PORT}}/v1/cird-sg/rules",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"v1",
+								"cird-sg",
+								"rules"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[RULE-CIDR] Сообщение об ошибки при полностью некорректном теле",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", () => {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Validate response JSON schema\", () => {\r",
+									"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"asdasdas\" : \"asdasdas\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}:{{PORT}}/v1/cird-sg/rules",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"v1",
+								"cird-sg",
+								"rules"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
 			"name": "GET /v1/sg/{sgName}/subnets",
 			"item": [
 				{
@@ -2210,263 +2462,6 @@
 							"response": []
 						},
 						{
-							"name": "[SG] one NW to some SG",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"pm.test(\"Status code is 500\", () => {\r",
-											"    pm.response.to.have.status(500);\r",
-											"});\r",
-											"\r",
-											"pm.test(\"Validate response JSON schema\", () => {\r",
-											"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
-											"});\r",
-											"\r",
-											"pm.test(\"code is 13\", () => {\r",
-											"    pm.expect(pm.response.json().code).to.eql(13)\r",
-											"});\r",
-											"\r",
-											"pm.test(\"check message\", () => {\r",
-											"    pm.expect(pm.response.json().message).to.eql(\"Integrity-of-SG: the network 'nw-0' appears more than in one SG\")\r",
-											"});"
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n\t\"groups\": {\r\n\t\t\"groups\": [\r\n\t\t\t{\r\n\t\t\t\t\"name\": \"sg-some\",\r\n\t\t\t\t\"networks\": [\r\n\t\t\t\t\t\"nw-0\"\r\n\t\t\t\t],\r\n                \"defaultAction\": \"DROP\"\r\n\t\t\t}\r\n        ]\r\n    },\r\n    \"syncOp\": \"Upsert\"\r\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{HOST}}:{{PORT}}/v1/sync",
-									"host": [
-										"{{HOST}}"
-									],
-									"port": "{{PORT}}",
-									"path": [
-										"v1",
-										"sync"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "[RULE] Overlapped src ports regions",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"pm.test(\"Status code is 500\", () => {\r",
-											"    pm.response.to.have.status(500);\r",
-											"});\r",
-											"\r",
-											"pm.test(\"Validate response JSON schema\", () => {\r",
-											"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
-											"});\r",
-											"\r",
-											"pm.test(\"code is 13\", () => {\r",
-											"    pm.expect(pm.response.json().code).to.eql(13)\r",
-											"});\r",
-											"\r",
-											"pm.test(\"check message\", () => {\r",
-											"    pm.expect(pm.response.json().message).to.eql(\"ERROR: new row for relation \\\"tbl_sg_rule\\\" violates check constraint \\\"S_ports_dont_intersect\\\" (SQLSTATE 23514)\")\r",
-											"});"
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n\t\"sgRules\": {\r\n\t\t\"rules\": [\r\n\t\t\t{\r\n\t\t\t\t\"ports\": [\r\n\t\t\t\t\t{\r\n\t\t\t\t\t\t\"s\": \"33-55\",\r\n\t\t\t\t\t\t\"d\": \"5000\"\r\n\t\t\t\t\t},\r\n                    {\r\n\t\t\t\t\t\t\"s\": \"44-66\",\r\n\t\t\t\t\t\t\"d\": \"5010\"\r\n\t\t\t\t\t}\r\n\t\t\t\t],\r\n\t\t\t\t\"sgFrom\": \"sg-1\",\r\n\t\t\t\t\"sgTo\": \"sg-0\",\r\n\t\t\t\t\"transport\": \"TCP\"\r\n\t\t\t}\r\n        ]\r\n    },\r\n\t\"syncOp\": \"Upsert\"\r\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{HOST}}:{{PORT}}/v1/sync",
-									"host": [
-										"{{HOST}}"
-									],
-									"port": "{{PORT}}",
-									"path": [
-										"v1",
-										"sync"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "[SG] add non-existent network",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"pm.test(\"Status code is 500\", () => {\r",
-											"    pm.response.to.have.status(500);\r",
-											"});\r",
-											"\r",
-											"pm.test(\"Validate response JSON schema\", () => {\r",
-											"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
-											"});\r",
-											"\r",
-											"pm.test(\"code is 13\", () => {\r",
-											"    pm.expect(pm.response.json().code).to.eql(13)\r",
-											"});\r",
-											"\r",
-											"pm.test(\"check message\", () => {\r",
-											"    pm.expect(pm.response.json().message).to.eql(\"ERROR: unable bind Net(nw-nonexist)-->SG(sg-with-nonexist-nw) cause such Net does not exist (SQLSTATE P0001)\")\r",
-											"});"
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n\t\"groups\": {\r\n\t\t\"groups\": [\r\n\t\t\t{\r\n\t\t\t\t\"name\": \"sg-with-nonexist-nw\",\r\n\t\t\t\t\"networks\": [\r\n                    \"nw-nonexist\"\r\n\t\t\t\t],\r\n                \"defaultAction\": \"DROP\"\r\n\t\t\t}\r\n        ]\r\n    },\r\n\t\"syncOp\": \"Upsert\"\r\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{HOST}}:{{PORT}}/v1/sync",
-									"host": [
-										"{{HOST}}"
-									],
-									"port": "{{PORT}}",
-									"path": [
-										"v1",
-										"sync"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "[RULE] add non-existent SG to rule",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"pm.test(\"Status code is 500\", () => {\r",
-											"    pm.response.to.have.status(500);\r",
-											"});\r",
-											"\r",
-											"pm.test(\"Validate response JSON schema\", () => {\r",
-											"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
-											"});\r",
-											"\r",
-											"pm.test(\"code is 13\", () => {\r",
-											"    pm.expect(pm.response.json().code).to.eql(13)\r",
-											"});\r",
-											"\r",
-											"pm.test(\"check message\", () => {\r",
-											"    pm.expect(pm.response.json().message).to.eql(\"ERROR: on check SG-From it found the SG(sg-nonexist-1) not exist (SQLSTATE P0001)\")\r",
-											"});"
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n\t\"sgRules\": {\r\n\t\t\"rules\": [\r\n\t\t\t{\r\n\t\t\t\t\"ports\": [\r\n\t\t\t\t\t{\r\n\t\t\t\t\t\t\"s\": \"\",\r\n\t\t\t\t\t\t\"d\": \"5000\"\r\n\t\t\t\t\t}\r\n\t\t\t\t],\r\n\t\t\t\t\"sgFrom\": \"sg-nonexist-1\",\r\n\t\t\t\t\"sgTo\": \"sg-nonexist-0\",\r\n\t\t\t\t\"transport\": \"TCP\"\r\n\t\t\t}\r\n        ]\r\n    },\r\n\t\"syncOp\": \"Upsert\"    \r\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{HOST}}:{{PORT}}/v1/sync",
-									"host": [
-										"{{HOST}}"
-									],
-									"port": "{{PORT}}",
-									"path": [
-										"v1",
-										"sync"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "[RULE] Сообщение об ошибки при полностью некорректном теле",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"pm.test(\"Status code is 400\", () => {\r",
-											"    pm.response.to.have.status(400);\r",
-											"});\r",
-											"\r",
-											"pm.test(\"Validate response JSON schema\", () => {\r",
-											"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
-											"});"
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n    \"asdasdsa\": \"asdasdasd\"\r\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{HOST}}:{{PORT}}/v1/sync",
-									"host": [
-										"{{HOST}}"
-									],
-									"port": "{{PORT}}",
-									"path": [
-										"v1",
-										"sync"
-									]
-								}
-							},
-							"response": []
-						},
-						{
 							"name": "[NW] Cообщение об ошибке при некорректном значении существующего параметра",
 							"event": [
 								{
@@ -2491,96 +2486,6 @@
 								"body": {
 									"mode": "raw",
 									"raw": "{\r\n  \"networks\": {\r\n        \"networks\": [\r\n            {\r\n                \"name\": [\"nw-test-0\"],\r\n                \"network\": {\r\n                \"CIDR\": \"15.150.0.220/32\"\r\n                }\r\n            }\r\n        ]\r\n    }\r\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{HOST}}:{{PORT}}/v1/sync",
-									"host": [
-										"{{HOST}}"
-									],
-									"port": "{{PORT}}",
-									"path": [
-										"v1",
-										"sync"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "[SG] Cообщение об ошибке при некорректном значении существующего параметра",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"pm.test(\"Status code is 400\", () => {\r",
-											"    pm.response.to.have.status(400);\r",
-											"});\r",
-											"\r",
-											"pm.test(\"Validate response JSON schema\", () => {\r",
-											"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
-											"});"
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n    \"groups\": {\r\n        \"groups\": [\r\n            {\r\n                \"name\": \"sg-test-0\",\r\n                \"networks\": \"nw-test-0\"\r\n            }\r\n        ]\r\n    }\r\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{HOST}}:{{PORT}}/v1/sync",
-									"host": [
-										"{{HOST}}"
-									],
-									"port": "{{PORT}}",
-									"path": [
-										"v1",
-										"sync"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "[RULE] Cообщение об ошибке при некорректном значении существующего параметра",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"pm.test(\"Status code is 400\", () => {\r",
-											"    pm.response.to.have.status(400);\r",
-											"});\r",
-											"\r",
-											"pm.test(\"Validate response JSON schema\", () => {\r",
-											"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
-											"});"
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n    \"sgRules\": {\r\n        \"rules\": [\r\n            {\r\n                \"ports\": {\r\n                    \"s\": \"\",\r\n                    \"d\": \"40000-45000\"\r\n                },\r\n                \"sgFrom\": \"sg-test-0\",\r\n                \"sgTo\": \"sg-test-1\",\r\n                \"transport\": \"TCP\"\r\n            }\r\n        ]\r\n    }\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -2655,26 +2560,26 @@
 							"response": []
 						},
 						{
-							"name": "[RULE] Ошибка при некорректных границах диапазона портов",
+							"name": "[SG] one NW to some SG",
 							"event": [
 								{
 									"listen": "test",
 									"script": {
 										"exec": [
-											"pm.test(\"Status code is 400\", () => {\r",
-											"    pm.response.to.have.status(400);\r",
+											"pm.test(\"Status code is 500\", () => {\r",
+											"    pm.response.to.have.status(500);\r",
 											"});\r",
 											"\r",
 											"pm.test(\"Validate response JSON schema\", () => {\r",
 											"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
 											"});\r",
 											"\r",
-											"pm.test(\"check error code is 3\", () => {\r",
-											"    pm.expect(pm.response.json().code).to.eql(3)\r",
-											"})\r",
+											"pm.test(\"code is 13\", () => {\r",
+											"    pm.expect(pm.response.json().code).to.eql(13)\r",
+											"});\r",
 											"\r",
 											"pm.test(\"check message\", () => {\r",
-											"    pm.expect(pm.response.json().message).to.eql(\"bad 'source' port(s) '9999-1050': the left bound '9999' is greather than right one '1050': incorrect port range(s) source\")\r",
+											"    pm.expect(pm.response.json().message).to.eql(\"Integrity-of-SG: the network 'nw-0' appears more than in one SG\")\r",
 											"});"
 										],
 										"type": "text/javascript"
@@ -2686,7 +2591,105 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"sgRules\": {\r\n        \"rules\": [\r\n            {\r\n                \"ports\": [\r\n                    {\r\n                    \"s\": \"9999-1050\",\r\n                    \"d\": \"40000-45000\"\r\n                    }\r\n                ],\r\n                \"sgFrom\": \"sg-4\",\r\n                \"sgTo\": \"sg-0\",\r\n                \"transport\": \"TCP\"\r\n            }\r\n        ]\r\n    },\r\n    \"syncOp\": \"Upsert\"\r\n}",
+									"raw": "{\r\n\t\"groups\": {\r\n\t\t\"groups\": [\r\n\t\t\t{\r\n\t\t\t\t\"name\": \"sg-some\",\r\n\t\t\t\t\"networks\": [\r\n\t\t\t\t\t\"nw-0\"\r\n\t\t\t\t],\r\n                \"defaultAction\": \"DROP\"\r\n\t\t\t}\r\n        ]\r\n    },\r\n    \"syncOp\": \"Upsert\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{HOST}}:{{PORT}}/v1/sync",
+									"host": [
+										"{{HOST}}"
+									],
+									"port": "{{PORT}}",
+									"path": [
+										"v1",
+										"sync"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[SG] add non-existent network",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 500\", () => {\r",
+											"    pm.response.to.have.status(500);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Validate response JSON schema\", () => {\r",
+											"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
+											"});\r",
+											"\r",
+											"pm.test(\"code is 13\", () => {\r",
+											"    pm.expect(pm.response.json().code).to.eql(13)\r",
+											"});\r",
+											"\r",
+											"pm.test(\"check message\", () => {\r",
+											"    pm.expect(pm.response.json().message).to.eql(\"ERROR: unable bind Net(nw-nonexist)-->SG(sg-with-nonexist-nw) cause such Net does not exist (SQLSTATE P0001)\")\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n\t\"groups\": {\r\n\t\t\"groups\": [\r\n\t\t\t{\r\n\t\t\t\t\"name\": \"sg-with-nonexist-nw\",\r\n\t\t\t\t\"networks\": [\r\n                    \"nw-nonexist\"\r\n\t\t\t\t],\r\n                \"defaultAction\": \"DROP\"\r\n\t\t\t}\r\n        ]\r\n    },\r\n\t\"syncOp\": \"Upsert\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{HOST}}:{{PORT}}/v1/sync",
+									"host": [
+										"{{HOST}}"
+									],
+									"port": "{{PORT}}",
+									"path": [
+										"v1",
+										"sync"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[SG] Cообщение об ошибке при некорректном значении существующего параметра",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 400\", () => {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Validate response JSON schema\", () => {\r",
+											"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"groups\": {\r\n        \"groups\": [\r\n            {\r\n                \"name\": \"sg-test-0\",\r\n                \"networks\": \"nw-test-0\"\r\n            }\r\n        ]\r\n    }\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -2793,6 +2796,324 @@
 								"body": {
 									"mode": "raw",
 									"raw": "{\r\n\t\"groups\": {\r\n\t\t\"groups\": [\r\n\t\t\t{\r\n\t\t\t\t\"name\": \"sg-without-default-action\",\r\n\t\t\t\t\"networks\": [\r\n                    \"nw-0\"\r\n\t\t\t\t]\r\n\t\t\t}\r\n        ]\r\n    },\r\n\t\"syncOp\": \"Upsert\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{HOST}}:{{PORT}}/v1/sync",
+									"host": [
+										"{{HOST}}"
+									],
+									"port": "{{PORT}}",
+									"path": [
+										"v1",
+										"sync"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[RULE] Overlapped src ports regions",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 500\", () => {\r",
+											"    pm.response.to.have.status(500);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Validate response JSON schema\", () => {\r",
+											"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
+											"});\r",
+											"\r",
+											"pm.test(\"code is 13\", () => {\r",
+											"    pm.expect(pm.response.json().code).to.eql(13)\r",
+											"});\r",
+											"\r",
+											"pm.test(\"check message\", () => {\r",
+											"    pm.expect(pm.response.json().message).to.eql(\"ERROR: new row for relation \\\"tbl_sg_rule\\\" violates check constraint \\\"S_ports_dont_intersect\\\" (SQLSTATE 23514)\")\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n\t\"sgRules\": {\r\n\t\t\"rules\": [\r\n\t\t\t{\r\n\t\t\t\t\"ports\": [\r\n\t\t\t\t\t{\r\n\t\t\t\t\t\t\"s\": \"33-55\",\r\n\t\t\t\t\t\t\"d\": \"5000\"\r\n\t\t\t\t\t},\r\n                    {\r\n\t\t\t\t\t\t\"s\": \"44-66\",\r\n\t\t\t\t\t\t\"d\": \"5010\"\r\n\t\t\t\t\t}\r\n\t\t\t\t],\r\n\t\t\t\t\"sgFrom\": \"sg-1\",\r\n\t\t\t\t\"sgTo\": \"sg-0\",\r\n\t\t\t\t\"transport\": \"TCP\"\r\n\t\t\t}\r\n        ]\r\n    },\r\n\t\"syncOp\": \"Upsert\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{HOST}}:{{PORT}}/v1/sync",
+									"host": [
+										"{{HOST}}"
+									],
+									"port": "{{PORT}}",
+									"path": [
+										"v1",
+										"sync"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[RULE] add non-existent SG to rule",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 500\", () => {\r",
+											"    pm.response.to.have.status(500);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Validate response JSON schema\", () => {\r",
+											"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
+											"});\r",
+											"\r",
+											"pm.test(\"code is 13\", () => {\r",
+											"    pm.expect(pm.response.json().code).to.eql(13)\r",
+											"});\r",
+											"\r",
+											"pm.test(\"check message\", () => {\r",
+											"    pm.expect(pm.response.json().message).to.eql(\"ERROR: on check SG-From it found the SG(sg-nonexist-1) not exist (SQLSTATE P0001)\")\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n\t\"sgRules\": {\r\n\t\t\"rules\": [\r\n\t\t\t{\r\n\t\t\t\t\"ports\": [\r\n\t\t\t\t\t{\r\n\t\t\t\t\t\t\"s\": \"\",\r\n\t\t\t\t\t\t\"d\": \"5000\"\r\n\t\t\t\t\t}\r\n\t\t\t\t],\r\n\t\t\t\t\"sgFrom\": \"sg-nonexist-1\",\r\n\t\t\t\t\"sgTo\": \"sg-nonexist-0\",\r\n\t\t\t\t\"transport\": \"TCP\"\r\n\t\t\t}\r\n        ]\r\n    },\r\n\t\"syncOp\": \"Upsert\"    \r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{HOST}}:{{PORT}}/v1/sync",
+									"host": [
+										"{{HOST}}"
+									],
+									"port": "{{PORT}}",
+									"path": [
+										"v1",
+										"sync"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[RULE] Сообщение об ошибки при полностью некорректном теле",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 400\", () => {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Validate response JSON schema\", () => {\r",
+											"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
+											"});\r",
+											"\r",
+											"pm.test(\"code is 3\", () => {\r",
+											"    pm.expect(pm.response.json().code).to.eql(3)\r",
+											"});\r",
+											"\r",
+											"pm.test(\"check message\", () => {\r",
+											"    pm.expect(pm.response.json().message).to.eql(\"sync unsupported subject type <nil>\")\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"asdasdsa\": \"asdasdasd\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{HOST}}:{{PORT}}/v1/sync",
+									"host": [
+										"{{HOST}}"
+									],
+									"port": "{{PORT}}",
+									"path": [
+										"v1",
+										"sync"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[RULE] Cообщение об ошибке при некорректном значении существующего параметра",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 400\", () => {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Validate response JSON schema\", () => {\r",
+											"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
+											"});\r",
+											"\r",
+											"pm.test(\"code is 3\", () => {\r",
+											"    pm.expect(pm.response.json().code).to.eql(3)\r",
+											"});\r",
+											"\r",
+											"pm.test(\"check message\", () => {\r",
+											"    pm.expect(pm.response.json().message).to.eql(\"proto: syntax error (line 5:26): unexpected token {\")\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"sgRules\": {\r\n        \"rules\": [\r\n            {\r\n                \"ports\": {\r\n                    \"s\": \"\",\r\n                    \"d\": \"40000-45000\"\r\n                },\r\n                \"sgFrom\": \"sg-test-0\",\r\n                \"sgTo\": \"sg-test-1\",\r\n                \"transport\": \"TCP\"\r\n            }\r\n        ]\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{HOST}}:{{PORT}}/v1/sync",
+									"host": [
+										"{{HOST}}"
+									],
+									"port": "{{PORT}}",
+									"path": [
+										"v1",
+										"sync"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[RULE] Ошибка при некорректных границах диапазона портов",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 400\", () => {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Validate response JSON schema\", () => {\r",
+											"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
+											"});\r",
+											"\r",
+											"pm.test(\"check error code is 3\", () => {\r",
+											"    pm.expect(pm.response.json().code).to.eql(3)\r",
+											"})\r",
+											"\r",
+											"pm.test(\"check message\", () => {\r",
+											"    pm.expect(pm.response.json().message).to.eql(\"bad 'source' port(s) '9999-1050': the left bound '9999' is greather than right one '1050': incorrect port range(s) source\")\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"sgRules\": {\r\n        \"rules\": [\r\n            {\r\n                \"ports\": [\r\n                    {\r\n                    \"s\": \"9999-1050\",\r\n                    \"d\": \"40000-45000\"\r\n                    }\r\n                ],\r\n                \"sgFrom\": \"sg-4\",\r\n                \"sgTo\": \"sg-0\",\r\n                \"transport\": \"TCP\"\r\n            }\r\n        ]\r\n    },\r\n    \"syncOp\": \"Upsert\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{HOST}}:{{PORT}}/v1/sync",
+									"host": [
+										"{{HOST}}"
+									],
+									"port": "{{PORT}}",
+									"path": [
+										"v1",
+										"sync"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[RULE] Пересечение портов для массива правил для s = null в каждом правиле",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 500\", () => {\r",
+											"    pm.response.to.have.status(500);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Validate response JSON schema\", () => {\r",
+											"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
+											"});\r",
+											"\r",
+											"pm.test(\"check error code is 13\", () => {\r",
+											"    pm.expect(pm.response.json().code).to.eql(13)\r",
+											"})\r",
+											"\r",
+											"pm.test(\"check message\", () => {\r",
+											"    pm.expect(pm.response.json().message).to.eql(\"ERROR: new row for relation \\\"tbl_sg_rule\\\" violates check constraint \\\"S_ports_dont_intersect\\\" (SQLSTATE 23514)\")\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"sgRules\": {\r\n    \"rules\": [\r\n      {\r\n        \"sgTo\": \"sg-0\",\r\n        \"sgFrom\": \"sg-1\",\r\n        \"transport\": \"TCP\",\r\n        \"ports\": [\r\n          {\r\n            \"d\": \"22\"\r\n          },\r\n          {\r\n            \"d\": \"22\"\r\n          }\r\n        ]\r\n      }\r\n    ]\r\n  },\r\n    \"syncOp\": \"Upsert\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -3042,6 +3363,59 @@
 								"body": {
 									"mode": "raw",
 									"raw": "{\r\n    \"fqdnRules\": {\r\n        \"rules\": [\r\n            {\r\n                \"ports\": {\r\n                    \"s\": \"\",\r\n                    \"d\": \"40000-45000\"\r\n                },\r\n                \"sgFrom\": \"sg-test-0\",\r\n                \"FQDN\": \"google.com\",\r\n                \"transport\": \"TCP\"\r\n            }\r\n        ]\r\n    },\r\n    \"syncOp\": \"Upsert\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{HOST}}:{{PORT}}/v1/sync",
+									"host": [
+										"{{HOST}}"
+									],
+									"port": "{{PORT}}",
+									"path": [
+										"v1",
+										"sync"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[RULE-FQDN] Пересечение портов для массива правил для s = null в каждом правиле",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 500\", () => {\r",
+											"    pm.response.to.have.status(500);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Validate response JSON schema\", () => {\r",
+											"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
+											"});\r",
+											"\r",
+											"pm.test(\"check error code is 13\", () => {\r",
+											"    pm.expect(pm.response.json().code).to.eql(13)\r",
+											"})\r",
+											"\r",
+											"pm.test(\"check message\", () => {\r",
+											"    pm.expect(pm.response.json().message).to.eql(\"ERROR: new row for relation \\\"tbl_fqdn_rule\\\" violates check constraint \\\"S_ports_dont_intersect\\\" (SQLSTATE 23514)\")\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"fqdnRules\": {\r\n    \"rules\": [\r\n      {\r\n        \"sgFrom\": \"sg-1\",\r\n        \"FQDN\": \"google.com\",\r\n        \"ports\": [\r\n          {\r\n            \"d\": \"33\"\r\n          },\r\n          {\r\n            \"d\": \"33\"\r\n          }\r\n        ],\r\n        \"transport\": \"TCP\"\r\n      }\r\n    ]\r\n  },\r\n  \"syncOp\": \"Upsert\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -3647,7 +4021,7 @@
 							"response": []
 						},
 						{
-							"name": "[RULE] Пересечение портов для массива правил для s = null в каждом правиле",
+							"name": "[RULE-CIDR] Overlapped src ports regions",
 							"event": [
 								{
 									"listen": "test",
@@ -3661,14 +4035,13 @@
 											"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
 											"});\r",
 											"\r",
-											"pm.test(\"check error code is 13\", () => {\r",
+											"pm.test(\"code is 13\", () => {\r",
 											"    pm.expect(pm.response.json().code).to.eql(13)\r",
-											"})\r",
+											"});\r",
 											"\r",
 											"pm.test(\"check message\", () => {\r",
-											"    pm.expect(pm.response.json().message).to.eql(\"ERROR: new row for relation \\\"tbl_sg_rule\\\" violates check constraint \\\"S_ports_dont_intersect\\\" (SQLSTATE 23514)\")\r",
-											"});\r",
-											""
+											"    pm.expect(pm.response.json().message).to.eql(\"ERROR: new row for relation \\\"tbl_cidr_sg_rule\\\" violates check constraint \\\"S_ports_dont_intersect\\\" (SQLSTATE 23514)\")\r",
+											"});"
 										],
 										"type": "text/javascript"
 									}
@@ -3679,7 +4052,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n  \"sgRules\": {\r\n    \"rules\": [\r\n      {\r\n        \"sgTo\": \"sg-0\",\r\n        \"sgFrom\": \"sg-1\",\r\n        \"transport\": \"TCP\",\r\n        \"ports\": [\r\n          {\r\n            \"d\": \"22\"\r\n          },\r\n          {\r\n            \"d\": \"22\"\r\n          }\r\n        ]\r\n      }\r\n    ]\r\n  },\r\n    \"syncOp\": \"Upsert\"\r\n}",
+									"raw": "{\r\n  \"cidrSgRules\": {\r\n    \"rules\": [\r\n      {\r\n        \"CIDR\": \"21.21.0.240/28\",\r\n        \"SG\": \"sg-1\",\r\n        \"ports\": [\r\n\t\t\t\t\t{\r\n\t\t\t\t\t\t\"s\": \"33-55\",\r\n\t\t\t\t\t\t\"d\": \"5000\"\r\n\t\t\t\t\t},\r\n                    {\r\n\t\t\t\t\t\t\"s\": \"44-66\",\r\n\t\t\t\t\t\t\"d\": \"5010\"\r\n\t\t\t\t\t}\r\n        ],\r\n        \"trace\": true,\r\n        \"logs\": true,\r\n        \"traffic\": \"Ingress\",\r\n        \"transport\": \"TCP\"\r\n      }\r\n    ]\r\n  },\r\n  \"syncOp\": \"Upsert\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -3701,7 +4074,219 @@
 							"response": []
 						},
 						{
-							"name": "[RULE-FQDN] Пересечение портов для массива правил для s = null в каждом правиле",
+							"name": "[RULE-CIDR] add non-existent SG to rule",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 500\", () => {\r",
+											"    pm.response.to.have.status(500);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Validate response JSON schema\", () => {\r",
+											"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
+											"});\r",
+											"\r",
+											"pm.test(\"code is 13\", () => {\r",
+											"    pm.expect(pm.response.json().code).to.eql(13)\r",
+											"});\r",
+											"\r",
+											"pm.test(\"check message\", () => {\r",
+											"    pm.expect(pm.response.json().message).to.eql(\"ERROR: on check SG it found the SG(sg-nonexist-1) not exist (SQLSTATE P0001)\")\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"cidrSgRules\": {\r\n    \"rules\": [\r\n      {\r\n        \"CIDR\": \"21.21.0.240/28\",\r\n        \"SG\": \"sg-nonexist-1\",\r\n        \"ports\": [\r\n\t\t\t\t\t{\r\n\t\t\t\t\t\t\"s\": \"33-55\",\r\n\t\t\t\t\t\t\"d\": \"5000\"\r\n\t\t\t\t\t}\r\n        ],\r\n        \"trace\": true,\r\n        \"logs\": true,\r\n        \"traffic\": \"Egress\",\r\n        \"transport\": \"TCP\"\r\n      }\r\n    ]\r\n  },\r\n  \"syncOp\": \"Upsert\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{HOST}}:{{PORT}}/v1/sync",
+									"host": [
+										"{{HOST}}"
+									],
+									"port": "{{PORT}}",
+									"path": [
+										"v1",
+										"sync"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[RULE-CIDR] Сообщение об ошибки при полностью некорректном теле",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 400\", () => {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Validate response JSON schema\", () => {\r",
+											"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
+											"});\r",
+											"\r",
+											"pm.test(\"code is 3\", () => {\r",
+											"    pm.expect(pm.response.json().code).to.eql(3)\r",
+											"});\r",
+											"\r",
+											"pm.test(\"check message\", () => {\r",
+											"    pm.expect(pm.response.json().message).to.eql(\"sync unsupported subject type <nil>\")\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"asdasdsa\": \"asdasdasd\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{HOST}}:{{PORT}}/v1/sync",
+									"host": [
+										"{{HOST}}"
+									],
+									"port": "{{PORT}}",
+									"path": [
+										"v1",
+										"sync"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[RULE-CIDR] Cообщение об ошибке при некорректном значении существующего параметра",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 400\", () => {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Validate response JSON schema\", () => {\r",
+											"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
+											"});\r",
+											"\r",
+											"pm.test(\"code is 3\", () => {\r",
+											"    pm.expect(pm.response.json().code).to.eql(3)\r",
+											"});\r",
+											"\r",
+											"pm.test(\"check message\", () => {\r",
+											"    pm.expect(pm.response.json().message).to.eql(\"proto: syntax error (line 7:18): unexpected token {\")\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"cidrSgRules\": {\r\n    \"rules\": [\r\n      {\r\n        \"CIDR\": \"21.21.0.240/28\",\r\n        \"SG\": \"sg-1\",\r\n        \"ports\": {\r\n            \"s\": \"33-55\",\r\n            \"d\": \"5000\"\r\n        },\r\n        \"trace\": true,\r\n        \"logs\": true,\r\n        \"traffic\": \"Egress\",\r\n        \"transport\": \"TCP\"\r\n      }\r\n    ]\r\n  },\r\n  \"syncOp\": \"Upsert\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{HOST}}:{{PORT}}/v1/sync",
+									"host": [
+										"{{HOST}}"
+									],
+									"port": "{{PORT}}",
+									"path": [
+										"v1",
+										"sync"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[RULE-CIDR] Ошибка при некорректных границах диапазона портов",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 400\", () => {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Validate response JSON schema\", () => {\r",
+											"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
+											"});\r",
+											"\r",
+											"pm.test(\"check error code is 3\", () => {\r",
+											"    pm.expect(pm.response.json().code).to.eql(3)\r",
+											"})\r",
+											"\r",
+											"pm.test(\"check message\", () => {\r",
+											"    pm.expect(pm.response.json().message).to.eql(\"bad 'source' port(s) '9999-1050': the left bound '9999' is greather than right one '1050': incorrect port range(s) source\")\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"cidrSgRules\": {\r\n    \"rules\": [\r\n      {\r\n        \"CIDR\": \"21.21.0.240/28\",\r\n        \"SG\": \"sg-1\",\r\n        \"ports\": [\r\n\t\t\t\t\t{\r\n                        \"s\": \"9999-1050\",\r\n                        \"d\": \"40000-45000\"\r\n\t\t\t\t\t}\r\n        ],\r\n        \"trace\": true,\r\n        \"logs\": true,\r\n        \"traffic\": \"Egress\",\r\n        \"transport\": \"TCP\"\r\n      }\r\n    ]\r\n  },\r\n  \"syncOp\": \"Upsert\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{HOST}}:{{PORT}}/v1/sync",
+									"host": [
+										"{{HOST}}"
+									],
+									"port": "{{PORT}}",
+									"path": [
+										"v1",
+										"sync"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[RULE-CIDR] Пересечение портов для массива правил для s = null в каждом правиле",
 							"event": [
 								{
 									"listen": "test",
@@ -3720,8 +4305,9 @@
 											"})\r",
 											"\r",
 											"pm.test(\"check message\", () => {\r",
-											"    pm.expect(pm.response.json().message).to.eql(\"ERROR: new row for relation \\\"tbl_fqdn_rule\\\" violates check constraint \\\"S_ports_dont_intersect\\\" (SQLSTATE 23514)\")\r",
-											"});"
+											"    pm.expect(pm.response.json().message).to.eql(\"ERROR: new row for relation \\\"tbl_cidr_sg_rule\\\" violates check constraint \\\"S_ports_dont_intersect\\\" (SQLSTATE 23514)\")\r",
+											"});\r",
+											""
 										],
 										"type": "text/javascript"
 									}
@@ -3732,7 +4318,61 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n  \"fqdnRules\": {\r\n    \"rules\": [\r\n      {\r\n        \"sgFrom\": \"sg-1\",\r\n        \"FQDN\": \"google.com\",\r\n        \"ports\": [\r\n          {\r\n            \"d\": \"33\"\r\n          },\r\n          {\r\n            \"d\": \"33\"\r\n          }\r\n        ],\r\n        \"transport\": \"TCP\"\r\n      }\r\n    ]\r\n  },\r\n  \"syncOp\": \"Upsert\"\r\n}",
+									"raw": "{\r\n  \"cidrSgRules\": {\r\n    \"rules\": [\r\n      {\r\n        \"CIDR\": \"21.21.0.240/28\",\r\n        \"SG\": \"sg-1\",\r\n        \"ports\": [\r\n          {\r\n            \"d\": \"22\"\r\n          },\r\n          {\r\n            \"d\": \"22\"\r\n          }\r\n        ],\r\n        \"trace\": true,\r\n        \"logs\": true,\r\n        \"traffic\": \"Egress\",\r\n        \"transport\": \"TCP\"\r\n      }\r\n    ]\r\n  },\r\n  \"syncOp\": \"Upsert\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{HOST}}:{{PORT}}/v1/sync",
+									"host": [
+										"{{HOST}}"
+									],
+									"port": "{{PORT}}",
+									"path": [
+										"v1",
+										"sync"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[RULE-CIDR] Пересечение cidr'ов",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 500\", () => {\r",
+											"    pm.response.to.have.status(500);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Validate response JSON schema\", () => {\r",
+											"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
+											"});\r",
+											"\r",
+											"pm.test(\"check error code is 13\", () => {\r",
+											"    pm.expect(pm.response.json().code).to.eql(13)\r",
+											"})\r",
+											"\r",
+											"pm.test(\"check message\", () => {\r",
+											"    pm.expect(pm.response.json().message).to.eql(\"ERROR: conflicting key value violates exclusion constraint \\\"prevent_cidrs_intersections_over(proto,sg,traffic)\\\" (SQLSTATE 23P01)\")\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"cidrSgRules\": {\r\n    \"rules\": [\r\n      {\r\n        \"CIDR\": \"21.21.0.240/32\",\r\n        \"SG\": \"sg-0\",\r\n        \"ports\": [\r\n            {\r\n                \"s\": \"33-70\",\r\n                \"d\": \"5001\"\r\n            }\r\n        ],\r\n        \"trace\": true,\r\n        \"logs\": true,\r\n        \"traffic\": \"Ingress\",\r\n        \"transport\": \"UDP\"\r\n      }\r\n    ]\r\n  },\r\n  \"syncOp\": \"Upsert\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -4027,6 +4667,51 @@
 								}
 							},
 							"response": []
+						},
+						{
+							"name": "[RULE-CIDR] Rules Upsert (cidr cross network)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", () => {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Body is empty\", () => {\r",
+											"    pm.expect(pm.response.json()).to.be.empty\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n      \"cidrSgRules\": {\r\n    \"rules\": [\r\n      {\r\n        \"CIDR\": \"10.150.0.220/28\",\r\n        \"SG\": \"sg-test-0\",\r\n        \"logs\": true,\r\n        \"ports\": [\r\n          {\r\n            \"s\": \"40025\",\r\n            \"d\": \"40026\"\r\n\r\n          }\r\n        ],\r\n        \"trace\": true,\r\n        \"traffic\": \"Ingress\",\r\n        \"transport\": \"TCP\"\r\n      }\r\n    ]\r\n  },\r\n  \t\"syncOp\": \"Upsert\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{HOST}}:{{PORT}}/v1/sync",
+									"host": [
+										"{{HOST}}"
+									],
+									"port": "{{PORT}}",
+									"path": [
+										"v1",
+										"sync"
+									]
+								}
+							},
+							"response": []
 						}
 					]
 				},
@@ -4302,12 +4987,102 @@
 								}
 							},
 							"response": []
+						},
+						{
+							"name": "[RULE-CIDR] Rules FullSync (cidr cross network)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", () => {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Body is empty\", () => {\r",
+											"    pm.expect(pm.response.json()).to.be.empty\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n      \"cidrSgRules\": {\r\n    \"rules\": [\r\n      {\r\n        \"CIDR\": \"10.150.0.220/28\",\r\n        \"SG\": \"sg-test-0\",\r\n        \"logs\": true,\r\n        \"ports\": [\r\n          {\r\n            \"s\": \"40025\",\r\n            \"d\": \"40026\"\r\n\r\n          }\r\n        ],\r\n        \"trace\": true,\r\n        \"traffic\": \"Ingress\",\r\n        \"transport\": \"TCP\"\r\n      }\r\n    ]\r\n  },\r\n  \t\"syncOp\": \"FullSync\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{HOST}}:{{PORT}}/v1/sync",
+									"host": [
+										"{{HOST}}"
+									],
+									"port": "{{PORT}}",
+									"path": [
+										"v1",
+										"sync"
+									]
+								}
+							},
+							"response": []
 						}
 					]
 				},
 				{
 					"name": "Delete",
 					"item": [
+						{
+							"name": "[RULE-CIDR] Rules Delete (cidr cross network)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", () => {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Body is empty\", () => {\r",
+											"    pm.expect(pm.response.json()).to.be.empty\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n      \"cidrSgRules\": {\r\n    \"rules\": [\r\n      {\r\n        \"CIDR\": \"10.150.0.220/28\",\r\n        \"SG\": \"sg-test-0\",\r\n        \"logs\": true,\r\n        \"ports\": [\r\n          {\r\n            \"s\": \"40025\",\r\n            \"d\": \"40026\"\r\n\r\n          }\r\n        ],\r\n        \"trace\": true,\r\n        \"traffic\": \"Ingress\",\r\n        \"transport\": \"TCP\"\r\n      }\r\n    ]\r\n  },\r\n  \t\"syncOp\": \"Delete\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{HOST}}:{{PORT}}/v1/sync",
+									"host": [
+										"{{HOST}}"
+									],
+									"port": "{{PORT}}",
+									"path": [
+										"v1",
+										"sync"
+									]
+								}
+							},
+							"response": []
+						},
 						{
 							"name": "[RULE-ICMP-SS] Rules Delete",
 							"event": [
@@ -4695,6 +5470,11 @@
 		{
 			"key": "rulesIcmpSgSgResponseJsonSchema",
 			"value": "{\n\t\"type\": \"object\",\n\t\"properties\": {\n\t\t\"rules\": {\n\t\t\t\"type\": \"array\",\n\t\t\t\"items\": {\n\t\t\t\t\"type\": \"object\",\n\t\t\t\t\"properties\": {\n\t\t\t\t\t\"ICMP\": {\n\t\t\t\t\t\t\"type\": \"object\",\n\t\t\t\t\t\t\"properties\": {\n\t\t\t\t\t\t\t\"IPv\": {\n\t\t\t\t\t\t\t\t\"type\": \"string\",\n\t\t\t\t\t\t\t\t\"enum\": [\"IPv4\", \"IPv6\"]\n\t\t\t\t\t\t\t},\n\t\t\t\t\t\t\t\"Types\": {\n\t\t\t\t\t\t\t\t\"type\": \"array\",\n\t\t\t\t\t\t\t\t\"items\": { \"type\": \"number\" }\n\t\t\t\t\t\t\t}\n\t\t\t\t\t\t},\n\t\t\t\t\t\t\"additionalProperties\": false\n\t\t\t\t\t},\n\t\t\t\t\t\"SgFrom\": { \"type\": \"string\" },\n\t\t\t\t\t\"SgTo\": { \"type\": \"string\" },\n\t\t\t\t\t\"logs\": { \"type\": \"boolean\" },\n\t\t\t\t\t\"trace\": { \"type\": \"boolean\" }\n\t\t\t\t},\n\t\t\t\t\"additionalProperties\": false\n\t\t\t}\n\t\t}\n\t},\n\t\"required\": [\"rules\"],\n    \"additionalProperties\": false\n}",
+			"type": "string"
+		},
+		{
+			"key": "ruleCidrSgResponseJsonSchema",
+			"value": "{\n    \"type\": \"object\",\n    \"properties\": {\n        \"rules\": {\n            \"type\": \"array\",\n            \"items\": {\n                \"type\": \"object\",\n                \"properties\": {\n                    \"transport\": { \n                        \"type\": \"string\",\n                        \"enum\": [\"TCP\", \"UDP\"]\n                    },\n                    \"CIDR\": { \"type\": \"string\" },\n                    \"SG\": { \"type\": \"string\" },\n                    \"traffic\": {\n                        \"type\": \"string\",\n                        \"enum\": [\"Ingress\", \"Egress\"]\n                    },\n                    \"logs\": { \"type\": \"boolean\" },\n                    \"trace\": { \"type\": \"boolean\" },\n                    \"ports\": {\n                        \"type\": \"array\",\n                        \"items\": {\n                            \"type\": \"object\",\n                            \"properties\": {\n                                \"s\": { \"type\": \"string\" },\n                                \"d\": { \"type\": \"string\" }\n                            },\n                            \"additionalProperties\": false\n                        }\n                    }\n                },\n                \"additionalProperties\": false\n            }\n        }\n    },\n    \"required\": [\"rules\"],\n    \"additionalProperties\": false\n}",
 			"type": "string"
 		}
 	]
