@@ -128,5 +128,56 @@
                     true,
                     true
                 );
+
+            INSERT INTO
+                sgroups.tbl_cidr_sg_rule (proto, cidr, sg, traffic, ports, logs, trace)
+            VALUES
+                (
+                    'tcp',
+                    '10.10.0.8/30',
+                    (SELECT id FROM sgroups.tbl_sg WHERE name = 'sg-0'),
+                    'ingress',
+                    ARRAY[
+                        ((int4multirange(int4range(NULL))), (int4multirange(int4range(5000, 5001))))
+                    ]::sgroups.sg_rule_ports[],
+                    true,
+                    true
+                ),
+                (
+                    'tcp',
+                    '240.0.0.0/24',
+                    (SELECT id FROM sgroups.tbl_sg WHERE name = 'sg-0'),
+                    'egress',
+                    ARRAY[
+                        ((int4multirange(int4range(4444, 4445))), (int4multirange(int4range(7000, 7001)))),
+                        ((int4multirange(int4range(4445, 4446))), (int4multirange(int4range(7300, 7501)))),
+                        ((int4multirange(int4range(4446, 4447))), (int4multirange(int4range(7600, 7701), int4range(7800, 7801))))
+                    ]::sgroups.sg_rule_ports[],
+                    true,
+                    false
+                ),
+                (
+                    'udp',
+                    '21.21.0.240/28',
+                    (SELECT id FROM sgroups.tbl_sg WHERE name = 'sg-0'),
+                    'ingress',
+                    ARRAY[
+                        ((int4multirange(int4range(9999, 10051))), (int4multirange(int4range(23000, 23501))))
+                    ]::sgroups.sg_rule_ports[],
+                    false,
+                    true
+                ),
+                (
+                    'udp',
+                    '65.65.0.0/16',
+                    (SELECT id FROM sgroups.tbl_sg WHERE name = 'sg-1'),
+                    'egress',
+                    ARRAY[
+                        ((int4multirange(int4range(8888, 8889), int4range(1000, 2001))), (int4multirange(int4range(55000, 55001), int4range(56000, 57001)))),
+                        ((int4multirange(int4range(7777, 7778), int4range(45000, 46001))), (int4multirange(int4range(60000, 60001))))
+                    ]::sgroups.sg_rule_ports[],
+                    false,
+                    false
+                );    
             COMMIT;
         END $$;

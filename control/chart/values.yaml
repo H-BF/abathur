@@ -17,8 +17,8 @@ abathurControl:
   # securityContext:
   #   privileged: true
   restartPolicy: Never 
-  destroy: true
-  scenario: 1
+  destroy: false
+  scenario: 2
   #simple-s2s,simple-s2f,advanced-changeip,advanced-icmp
   funcScenario: advanced-changeip
 
