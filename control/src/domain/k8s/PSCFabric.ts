@@ -1,12 +1,11 @@
 import { V1ConfigMap, V1Pod, V1Service } from "@kubernetes/client-node";
 import { K8sClient } from "../../infrastructure/k8s/k8sClient";
 import { hbfTestStend } from "../../specifications/hbfTestStend";
-import { hbfServer } from "../../specifications/hbfServer";
+import { newHbfServer } from "../../specifications/hbfServer";
 import { variables } from "../../infrastructure/var_storage/variables-storage";
 import { apiTestPod } from "../../specifications/apiTestPod";
 import { logger } from "../logger/logger.service";
 import { fqdnTestStend } from "../../specifications/fqdnTestStend";
-import { PortsForServers } from "../hbf/interfaces";
 
 export class PSCFabric {
  
@@ -30,18 +29,33 @@ export class PSCFabric {
     }
 
     /**
+     * Создаем под c HBF-DB сервера и сервис над ним.
+     * Важно! Сначало надо вызвать метод createSharedConfigMaps()
+     */
+    async createHBFServerDB(prefix: string) {
+        logger.info(`[${prefix}] Создаем pod hbf-server-db`)
+        await this.k8sClient.createPod(newHbfServer.databasePod({
+            prefix: prefix
+        }) as V1Pod)
+        logger.info(`[${prefix}] Создаем service hbf-server-db`)
+        await this.k8sClient.createService(newHbfServer.databaseSvc({
+            prefix: prefix
+        }) as V1Service)        
+    }
+
+    /**
      * Создаем под HBF сервера и сервис над ним.
      * Важно! Сначало надо вызвать метод createSharedConfigMaps()
      */
     async createHBFServer(prefix: string, ip: string, port: string) {
         logger.info(`[${prefix}] Создаем pod hbf-server: {ip: ${ip}, port: ${port}}`)
-        await this.k8sClient.createPod(hbfServer.specPod({
+        await this.k8sClient.createPod(newHbfServer.serverPod({
             prefix: prefix,
             ip: ip,
             port: parseInt(port)
         }) as V1Pod)
         logger.info(`[${prefix}] Создаем service hbf-server`)
-        await this.k8sClient.createService(hbfServer.specSrv({prefix: prefix}) as V1Service)
+        await this.k8sClient.createService(newHbfServer.serverSvc({prefix: prefix}) as V1Service)
     }
 
 

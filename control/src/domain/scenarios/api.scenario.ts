@@ -7,13 +7,13 @@ import { PodStatus } from "../k8s/enums"
 import { manager } from "../k8s/PSCFabric"
 import { podInf } from "../k8s/podInformer"
 import { waitSetSize } from "../helpers"
-import { hbfServer } from "../../specifications/hbfServer"
 import { apiTestPod } from "../../specifications/apiTestPod"
 import { streamApiHandler } from "../grpc/stream.api.handler"
 import { LaunchStatus } from "../../infrastructure/reporter";
 import { IScenarioInterface } from "./interface/scenario.interface";
 import { logger } from "../logger/logger.service";
 import { instanceList } from "../instance.list";
+import { newHbfServer } from "../../specifications/hbfServer";
 
 export class ApiScenario implements IScenarioInterface {
 
@@ -40,20 +40,20 @@ export class ApiScenario implements IScenarioInterface {
             }
         })
 
-        this.sharedConfigMaps.push(hbfServer.pgConfMap({
+        this.sharedConfigMaps.push(newHbfServer.testDataConfMap({
             prefix: this.prefix,
             data: fs.readFileSync(path.resolve(__dirname, "../../../../sql/api/hbf.api.sql"), "utf-8") 
         }) as V1ConfigMap)
-        this.sharedConfigMaps.push(hbfServer.hbfConfMap({
+        this.sharedConfigMaps.push(newHbfServer.hbfConfMap({
             prefix: this.prefix,
             port: this.hbfServerPort
         }) as V1ConfigMap)
+        this.sharedConfigMaps.push(newHbfServer.gooseConfMap({
+            prefix: this.prefix,
+         }) as V1ConfigMap)
         this.sharedConfigMaps.push(apiTestPod.specConfMapNewmanTestData({
             prefix: this.prefix,
             data: JSON.stringify(data)
-        }) as V1ConfigMap)
-        this.sharedConfigMaps.push(hbfServer.specConfMapWaitDb({
-            prefix: this.prefix            
         }) as V1ConfigMap)
 
         this.reporter = new APIReporter()
@@ -76,6 +76,17 @@ export class ApiScenario implements IScenarioInterface {
             streamApiHandler.setLaunchUuid(this.reporter.launchUUID)
     
             await manager.createSharedConfigMaps(this.sharedConfigMaps, this.prefix)
+            await manager.createHBFServerDB(this.prefix)
+            await podInf.waitStatus(
+                `${this.prefix}-p${variables.get("PIPELINE_ID")}-hbf-server-db`,
+                 PodStatus.RUNNING,
+                 this.prefix
+            )
+            
+            await podInf.waitContainerIsReady(
+                `${this.prefix}-p${variables.get("PIPELINE_ID")}-hbf-server-db`,
+                this.prefix
+            )
             await manager.createHBFServer(this.prefix, this.hbfServerIP, this.hbfServerPort)
     
             await podInf.waitStatus(

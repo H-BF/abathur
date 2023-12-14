@@ -20,7 +20,7 @@ abathurControl:
   destroy: false
   scenario: 2
   #simple-s2s,simple-s2f,advanced-changeip,advanced-icmp
-  funcScenario: advanced-changeip
+  funcScenario: advanced-icmp
 
 abathurClient:
   image:
@@ -42,6 +42,11 @@ hbfServer:
   image:
     repository: harbor.wildberries.ru/swarm/swarm/swarm/sgroups/sgroups
     tag: feature-swarm-239-53f2b0d6
+  database:
+    name: postgres
+    login: nkiver
+    pwd: nkiver
+    port: 5431
   resources:
     cpu: 100m
     memory: 100Mi
@@ -75,6 +80,14 @@ hbfClient:
     ip: 10.96.0.10
     port: 53
     protocol: udp
+
+hbfMigration:
+  image:
+    repository: harbor.wildberries.ru/swarm/swarm/swarm/sgroups/sgroups-migration
+    tag: feature-swarm-239-53f2b0d6
+  resources:
+    cpu: 100m
+    memory: 100Mi
 
 apiTests:
   image:

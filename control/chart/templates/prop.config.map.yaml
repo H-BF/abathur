@@ -9,8 +9,14 @@ metadata:
 data:
   config.properties: |
     IMAGE_PULL_SECRETS={{ .Values.abathurControl.image.imagePullSecrets }}
+    HBF_MIGRATION_REPOSITORY={{ .Values.hbfMigration.image.repository }}
+    HBF_MIGRATION_TAG={{ .Values.hbfMigration.image.tag }}
     HBF_SERVER_REPOSITORY={{ .Values.hbfServer.image.repository }}
     HBF_SERVER_TAG={{ .Values.hbfServer.image.tag }}
+    HBF_SERVER_DB_LOGIN={{ .Values.hbfServer.database.login }}
+    HBF_SERVER_DB_PWD={{ .Values.hbfServer.database.pwd }}
+    HBF_SERVER_DB_PORT={{ .Values.hbfServer.database.port }}
+    HBF_SERVER_DB_NAME={{ .Values.hbfServer.database.name }}
     S2S_HBF_SERVER_IP={{ .Values.hbfServer.scenario.func.s2s.ip }}
     S2S_HBF_SERVER_PORT={{ .Values.hbfServer.scenario.func.s2s.port  | toString }}
     S2F_HBF_SERVER_IP={{ .Values.hbfServer.scenario.func.s2f.ip }}
@@ -58,6 +64,8 @@ data:
     HBF_SERVER_MEM={{ .Values.hbfServer.resources.memory }}
     HBF_CLIENT_CPU={{ .Values.hbfClient.resources.cpu }}
     HBF_CLIENT_MEM={{ .Values.hbfClient.resources.memory }}
+    HBF_MIGRATION_CPU={{ .Values.hbfMigration.resources.cpu }}
+    HBF_MIGRATION_MEM={{ .Values.hbfMigration.resources.memory }}
     API_TEST_CPU={{ .Values.apiTests.resources.cpu }}
     API_TEST_MEM={{ .Values.apiTests.resources.memory }}
     DNS_IP={{ .Values.hbfClient.dns.ip }}

@@ -1,9 +1,71 @@
 import { variables } from "../infrastructure/var_storage/variables-storage";
 import parse from "json-templates";
-import path from 'path';
-import fs from "fs";
 
-const specPod = parse({
+const databasePod = parse({
+    metadata: {
+        name: `{{prefix}}-p${variables.get("PIPELINE_ID")}-hbf-server-db`,
+        labels: {
+            component: "hbf-server-db",
+            instance: `{{prefix}}-p${variables.get("PIPELINE_ID")}`
+        }
+    },
+    spec: {
+        containers: [{
+            name: "hbf-server-db",
+            image: "postgres:14.8",
+            ports: [{
+                name: "pgsql",
+                containerPort: 5432
+            }],
+            env: [{
+                name: "POSTGRES_USER",
+                value: `${variables.get("HBF_SERVER_DB_LOGIN")}`
+            },
+            {
+                name: "POSTGRES_PASSWORD",
+                value: `${variables.get("HBF_SERVER_DB_PWD")}`
+            },
+            {
+                name: "POSTGRES_DB",
+                value: `${variables.get("HBF_SERVER_DB_NAME")}`
+            }],
+            resources: {
+                limits: {
+                    cpu: "100m",
+                    memory: "100Mi"
+                },
+                requests: {
+                    cpu: "100m",
+                    memory: "100Mi"
+                }
+            }
+        }]
+    }
+})
+
+const databaseSvc = parse({
+    metadata: {
+        name: `{{prefix}}-p${variables.get("PIPELINE_ID")}-hbf-server-db`,
+        labels: {
+            name: "hbf-server-db",
+            instance: `{{prefix}}-p${variables.get("PIPELINE_ID")}`
+        }
+    },
+    spec: {
+        selector: {
+            component: "hbf-server-db",
+            instance: `{{prefix}}-p${variables.get("PIPELINE_ID")}`            
+        },
+        ports:[{
+            name: "pg",
+            port: Number(variables.get("HBF_SERVER_DB_PORT")),
+            targetPort: 5432
+        }],
+        type: "LoadBalancer"
+    }
+})
+
+const serverPod = parse({
     metadata: {
         name: `{{prefix}}-p${variables.get("PIPELINE_ID")}-hbf-server`,
         labels: {
@@ -15,6 +77,50 @@ const specPod = parse({
         }
     },
     spec: {
+        initContainers:[
+            {
+                name: "init-goose",
+                image: `${variables.get("HBF_MIGRATION_REPOSITORY")}:${variables.get("HBF_MIGRATION_TAG")}`,
+                resources: {
+                    limits: {
+                        cpu: variables.get("HBF_MIGRATION_CPU"),
+                        memory: variables.get("HBF_MIGRATION_MEM")
+                    },
+                    requests: {
+                        cpu: variables.get("HBF_MIGRATION_CPU"),
+                        memory: variables.get("HBF_MIGRATION_MEM")
+                    }
+                },
+                volumeMounts:[{
+                    name: `{{prefix}}-init-goose`,
+                    mountPath: "/app/start",
+                }],
+                command: ["/bin/sh", "/app/start/migration.sh"],
+            },
+            {
+                name: "test-data",
+                image: "postgres:14.8",
+                resources: {
+                    limits: {
+                        cpu: "50m",
+                        memory: "50Mi"
+                    },
+                    requests: {
+                        cpu: "50m",
+                        memory: "50Mi"
+                    }
+                },
+                volumeMounts: [{
+                    name: `{{prefix}}-test-data`,
+                    mountPath: `/tmp/test_data`
+                }],
+                command: [
+                    "/bin/sh",
+                    "-c",
+                    `psql postgres://${variables.get("HBF_SERVER_DB_LOGIN")}:${variables.get("HBF_SERVER_DB_PWD")}@{{prefix}}-p${variables.get("PIPELINE_ID")}-hbf-server-db.${variables.get("NAMESPACE")}.svc.cluster.local:${variables.get("HBF_SERVER_DB_PORT")}/${variables.get("HBF_SERVER_DB_NAME")}?sslmode=disable -f /tmp/test_data/data.sql`
+                ]
+            }
+        ],
         containers: [
             {
                 name: "hbf-server",
@@ -30,7 +136,7 @@ const specPod = parse({
                 }],
                 env: [{
                     name: "SG_STORAGE_POSTGRES_URL",
-                    value: "postgres://nkiver:nkiver@localhost:5432/postgres?sslmode=disable"
+                    value: `postgres://${variables.get("HBF_SERVER_DB_LOGIN")}:${variables.get("HBF_SERVER_DB_PWD")}@{{prefix}}-p${variables.get("PIPELINE_ID")}-hbf-server-db.${variables.get("NAMESPACE")}.svc.cluster.local:${variables.get("HBF_SERVER_DB_PORT")}/${variables.get("HBF_SERVER_DB_NAME")}?sslmode=disable`
                 },
                 {
                     name: "SG_STORAGE_TYPE",
@@ -46,77 +152,33 @@ const specPod = parse({
                         memory: variables.get("HBF_SERVER_MEM")
                     }
                 }
-            },
-            {
-                name: "pgsql",
-                image: "postgres:14.8",
-                volumeMounts: [{
-                    name: "{{prefix}}-pg-init",
-                    mountPath: "/docker-entrypoint-initdb.d"
-                }, {
-                    name: `{{prefix}}-p${variables.get("PIPELINE_ID")}-wait-db`,
-                    mountPath: "/tmp"
-                }],
-                ports: [{
-                    name: "pgsql",
-                    containerPort: 5432
-                }],
-                env: [{
-                    name: "POSTGRES_USER",
-                    value: "nkiver"
-                },
-                {
-                    name: "POSTGRES_PASSWORD",
-                    value: "nkiver"
-                },
-                {
-                    name: "POSTGRES_DB",
-                    value: "postgres"
-                }],
-                resources: {
-                    limits: {
-                        cpu: "100m",
-                        memory: "100Mi"
-                    },
-                    requests: {
-                        cpu: "100m",
-                        memory: "100Mi"
-                    }
-                },
-                startupProbe: {
-                    exec: {
-                        command: ["sh", "/tmp/wait-db.sh"]
-                    },
-                    initialDelaySeconds: 10,
-                    timeoutSeconds: 5,
-                    successThreshold: 1,
-                    failureThreshold: 5
-                },
             }
         ],
         imagePullSecrets: variables.get("IMAGE_PULL_SECRETS").split(",").map(name => ({ name })),
-        volumes: [{
-            name: "{{prefix}}-hbf-server",
-            configMap: {
-                name: `{{prefix}}-p${variables.get("PIPELINE_ID")}-hbf-server`
+        volumes: [
+            {
+                name: `{{prefix}}-init-goose`,
+                configMap: {
+                     name: `{{prefix}}-p${variables.get("PIPELINE_ID")}-goose`
+                }  
+            },
+            {
+                name: `{{prefix}}-hbf-server`,
+                configMap: {
+                     name: `{{prefix}}-p${variables.get("PIPELINE_ID")}-hbf-server`
+                }  
+            },
+            {
+                name: `{{prefix}}-test-data`,
+                configMap: {
+                    name: `{{prefix}}-p${variables.get("PIPELINE_ID")}-test-data`
+                }
             }
-        },
-        {
-            name: `{{prefix}}-pg-init`,
-            configMap: {
-                name: `{{prefix}}-p${variables.get("PIPELINE_ID")}-pg-init`
-            }
-        },
-        {
-            name: `{{prefix}}-p${variables.get("PIPELINE_ID")}-wait-db`,
-            configMap: {
-                name: `{{prefix}}-p${variables.get("PIPELINE_ID")}-wait-db`
-            }
-        }]
+        ]
     }
 })
 
-const specSrv = parse({
+const serverSvc = parse({
     metadata: {
         name: `{{prefix}}-p${variables.get("PIPELINE_ID")}-hbf-server`,
         labels: {
@@ -133,15 +195,46 @@ const specSrv = parse({
             name: "hbf",
             port: 80,
             targetPort: "hbf-server"
-        },
-        {
-            name: "pg",
-            port: 5430,
-            targetPort: "pgsql"
         }],
-        type: "LoadBalancer"
+        type: "ClusterIP"
     }
 })
+
+const gooseConfMap = parse({
+    metadata: {
+        name: `{{prefix}}-p${variables.get("PIPELINE_ID")}-goose`,
+        labels: {
+            name: "goose-config-map",
+            instance: `{{prefix}}-p${variables.get("PIPELINE_ID")}`
+        }
+    },
+    data: {
+        "migration.sh": `
+        #!/bin/bash
+        
+        SG_STORAGE_POSTGRES_URL="postgres://${variables.get("HBF_SERVER_DB_LOGIN")}:${variables.get("HBF_SERVER_DB_PWD")}@{{prefix}}-p${variables.get("PIPELINE_ID")}-hbf-server-db.${variables.get("NAMESPACE")}.svc.cluster.local:${variables.get("HBF_SERVER_DB_PORT")}/${variables.get("HBF_SERVER_DB_NAME")}?sslmode=disable"
+
+        export SG_STORAGE_POSTGRES_URL=$SG_STORAGE_POSTGRES_URL
+
+        exec /app/bin/goose -table=sgroups_db_ver postgres $SG_STORAGE_POSTGRES_URL up
+        `
+    }
+})
+
+const testDataConfMap = parse({
+    metadata: {
+        name: `{{prefix}}-p${variables.get("PIPELINE_ID")}-test-data`,
+        labels: {
+            name: "pqsql",
+            instance: `{{prefix}}-p${variables.get("PIPELINE_ID")}`
+        }
+    },
+    data: {
+        "data.sql": "{{data}}"
+    }
+})
+
+
 
 const hbfConfMap = parse({
     metadata: {
@@ -170,49 +263,4 @@ const hbfConfMap = parse({
     }
 })
 
-const pgConfMap = parse({
-    metadata: {
-        name: `{{prefix}}-p${variables.get("PIPELINE_ID")}-pg-init`,
-        labels: {
-            name: "pqsql",
-            instance: `{{prefix}}-p${variables.get("PIPELINE_ID")}`
-        }
-    },
-    data: {
-        "01-init.sql": fs.readFileSync(path.resolve(__dirname, "../../../sql/hbf_server/init.sql"), "utf-8"),
-        "02-migr.sql": fs.readFileSync(path.resolve(__dirname, "../../../sql/hbf_server/migr-1.sql"), "utf-8"),
-        "03-migr.sql": fs.readFileSync(path.resolve(__dirname, "../../../sql/hbf_server/migr-2.sql"), "utf-8"),
-        "04-migr.sql": fs.readFileSync(path.resolve(__dirname, "../../../sql/hbf_server/migr-3.sql"), "utf-8"),
-        "05-migr.sql": fs.readFileSync(path.resolve(__dirname, "../../../sql/hbf_server/migr-4.sql"), "utf-8"),
-        "06-data.sql": "{{data}}"
-    }
-})
-
-
-const specConfMapWaitDb = parse({
-    metadata: {
-        name: `{{prefix}}-p${variables.get("PIPELINE_ID")}-wait-db`,
-        labels: {
-            component: "wait-db",
-            instance: `{{prefix}}-p${variables.get("PIPELINE_ID")}`            
-        }
-    },
-    data: {
-        "wait-db.sh": `
-        #!/bin/sh        
-        echo "Проверяем что в таблице 'sgroups.tbl_sg_rule' есть хоть одна строка"
-        count=$(psql postgres://nkiver:nkiver@localhost:5432/postgres?sslmode=disable -c "SELECT SUM(n_live_tup) FROM pg_stat_user_tables WHERE relname LIKE '%rule%' AND schemaname = 'sgroups';" -t -A)
-        echo "Количество строк в таблице 'sgroups.tbl_sg_rule': $count"
-        
-        if [ "$count" -gt 0 ]; then
-            echo "more"
-            exit 0
-        else
-            echo "less"
-            exit 1
-        fi
-        `
-    }
-})
-
-export const hbfServer = { specPod, specSrv, hbfConfMap, pgConfMap, specConfMapWaitDb }
+export const newHbfServer = { databasePod, databaseSvc, serverPod, serverSvc, gooseConfMap, testDataConfMap, hbfConfMap }
