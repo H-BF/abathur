@@ -5,12 +5,12 @@ import { podInf } from '../../k8s/podInformer';
 import { PodStatus } from '../../k8s/enums';
 import { manager } from '../../k8s/PSCFabric';
 import { V1ConfigMap } from "@kubernetes/client-node";
-import { hbfServer } from "../../../specifications/hbfServer";
 import { hbfTestStend } from "../../../specifications/hbfTestStend";
 import { IScenarioInterface } from "../interface/scenario.interface";
 import { variables } from "../../../infrastructure/var_storage/variables-storage";
 import { IPortsToServer } from '../../hbf/interfaces';
 import { instanceList } from '../../instance.list';
+import { newHbfServer } from '../../../specifications/hbfServer';
 
 export abstract class ScenarioTemplate implements IScenarioInterface {
 
@@ -36,25 +36,25 @@ export abstract class ScenarioTemplate implements IScenarioInterface {
 
         instanceList.push(this.prefix)
 
-        this.sharedConfigMaps.push(hbfServer.pgConfMap({
+        this.sharedConfigMaps.push(newHbfServer.testDataConfMap({
             prefix: this.prefix,
             data: fs.readFileSync(path.resolve(__dirname, sqlFilePath), "utf-8")
             .replaceAll("${PREFIX}", this.prefix)
             .replaceAll("${PIPLINE_ID}", variables.get("PIPELINE_ID"))
             .replaceAll("${TAIL}", getSvcNameTail())
          }) as V1ConfigMap)
-         this.sharedConfigMaps.push(hbfServer.hbfConfMap({
+         this.sharedConfigMaps.push(newHbfServer.hbfConfMap({
              prefix: this.prefix,
              port: this.hbfServerPort
+         }) as V1ConfigMap)
+         this.sharedConfigMaps.push(newHbfServer.gooseConfMap({
+            prefix: this.prefix,
          }) as V1ConfigMap)
          this.sharedConfigMaps.push(hbfTestStend.specConfMapHbfClient({
              prefix: this.prefix,
              ip: this.hbfServerIP,
              port: this.hbfServerPort,
              exitOnSuccess: exitOnSuccess         
-         }) as V1ConfigMap)
-         this.sharedConfigMaps.push(hbfServer.specConfMapWaitDb({
-             prefix: this.prefix            
          }) as V1ConfigMap)
     }
 
@@ -63,6 +63,20 @@ export abstract class ScenarioTemplate implements IScenarioInterface {
             this.sharedConfigMaps,
             this.prefix
         )
+
+        await manager.createHBFServerDB(this.prefix)
+
+        await podInf.waitStatus(
+            `${this.prefix}-p${variables.get("PIPELINE_ID")}-hbf-server-db`,
+             PodStatus.RUNNING,
+             this.prefix
+        )
+        
+        await podInf.waitContainerIsReady(
+            `${this.prefix}-p${variables.get("PIPELINE_ID")}-hbf-server-db`,
+            this.prefix
+        )
+
         await manager.createHBFServer(
             this.prefix,
             this.hbfServerIP,
