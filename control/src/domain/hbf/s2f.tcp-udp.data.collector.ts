@@ -43,6 +43,7 @@ export class S2FTcpUdpDataCollector extends HBFDataCollector {
                 fromType: DirectionType.SG,
                 toType: DirectionType.FQDN,
                 transport: rule.transport,
+                traffic: null,
                 dst: [rule.FQDN],
                 ports: ports
             }

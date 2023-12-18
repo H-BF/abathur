@@ -7,6 +7,7 @@ import { ISgToFqdnRules, ISgToFqdnRulesReq } from "./interfaces/rules-sg-to-fqdn
 import { retry } from "../../domain/decorator/retry.decorator";
 import { ISgIcmpRules, ISgIcmpRulesReq } from "./interfaces/rules-sg-icmp";
 import { ISgToSgIcmpRules, ISgToSgIcmpRulesReq } from "./interfaces/rules-sg-to-sg-icmp";
+import { ISgToCidrIERules, ISgToCidrIERulesReq } from "./interfaces/rules-sg-cidr-ie";
 
 export class HBFClient extends RestClient {
 
@@ -53,6 +54,12 @@ export class HBFClient extends RestClient {
     @retry()
     async getSgToSgIcmpRules(route: ISgToSgIcmpRulesReq): Promise<ISgToSgIcmpRules> {
         const { data } = await this.post<ISgToSgIcmpRules>('/sg-sg-icmp/rules', route)
+        return data
+    }
+
+    @retry()
+    async getSgToCidrIERules(route: ISgToCidrIERulesReq): Promise<ISgToCidrIERules> {
+        const { data } = await this.post<ISgToCidrIERules>('/cird-sg/rules', route)
         return data
     }
 }

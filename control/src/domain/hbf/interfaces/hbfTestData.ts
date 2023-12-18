@@ -7,6 +7,7 @@ export interface ITcpUdpTestData {
     fromType: DirectionType 
     toType: DirectionType
     transport: 'TCP' | 'UDP'
+    traffic: "Ingress" | "Egress" | null
     dst: string[]
     ports: IPorts[]
 }

@@ -18,9 +18,9 @@ abathurControl:
   #   privileged: true
   restartPolicy: Never 
   destroy: false
-  scenario: 2
-  #simple-s2s,simple-s2f,advanced-changeip,advanced-icmp
-  funcScenario: advanced-icmp
+  scenario: 1
+  #simple-s2s,simple-s2f,simple-s2c-ie,advanced-changeip,advanced-icmp
+  funcScenario: simple-s2s
 
 abathurClient:
   image:
@@ -57,6 +57,9 @@ hbfServer:
         port: 9006
       s2f:
         ip: 29.64.1.232
+        port: 9006
+      s2c:
+        ip: 29.64.4.232
         port: 9006
       changeIP:
         ip: 29.64.2.232
