@@ -42,7 +42,7 @@ export class S2STcpUdpDataCollector extends HBFDataCollector {
                 fromType: DirectionType.SG,
                 toType: DirectionType.SG,
                 transport: rule.transport,
-                traffic: null,
+                traffic: 'unknown',
                 dst: ipsTo,
                 ports: ports
             }

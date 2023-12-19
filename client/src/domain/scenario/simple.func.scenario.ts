@@ -8,11 +8,11 @@ import { isTcpTestData } from "../../helper";
 export class SimpleFuncScenario {
 
     private control: AbaControlClient
-    private tcpClient: TestClient
+    private testClient: TestClient
 
     constructor(ip: string, funcType: string) {
         this.control = new AbaControlClient(ip, funcType)
-        this.tcpClient  = new TestClient(ip)
+        this.testClient  = new TestClient(ip)
     }
 
     async start(data: TestDataType[]) {
@@ -24,18 +24,18 @@ export class SimpleFuncScenario {
             this.control.sendMsg({ status: Status.ready })
             const luanchUUID = await this.control.listen()
     
-            await this.tcpClient.runTests(data)
+            await this.testClient.runTests(data)
     
             this.control.sendMsg({
                 status: Status.finish, 
                 data: JSON.stringify({ 
-                    fail: this.tcpClient.failCount,
-                    pass: this.tcpClient.passCount 
+                    fail: this.testClient.failCount,
+                    pass: this.testClient.passCount 
                 })
             })
     
             const reporter = new Reporter(luanchUUID)
-            await reporter.send(this.tcpClient.getResults())
+            await reporter.send(this.testClient.getResults())
         } catch(err) {
             this.control.sendMsg({
                 status: Status.error,

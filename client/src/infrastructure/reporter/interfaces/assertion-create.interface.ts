@@ -14,6 +14,7 @@ export interface ITcpUdpAssertionCreateReq {
     status: AssertionStatus
     msgErr?: string | null
     testName: string
+    traffic: string
 }
 
 export interface IIcmpAssertionCreateReq {
@@ -30,6 +31,7 @@ export interface IIcmpAssertionCreateReq {
     icmpCommand: string,
     msgErr?: string | null
     testName: string
+    traffic: string
 }
 
 export interface IAssertionsCreateRes {

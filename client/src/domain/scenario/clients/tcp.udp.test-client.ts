@@ -69,7 +69,8 @@ export class TestClient implements ITestClient {
                                 dstPort: dstPort,
                                 protocol: node.transport.toLocaleLowerCase() as 'tcp' | 'udp',
                                 status: status,
-                                msgErr: msgErr
+                                msgErr: msgErr,
+                                traffic: node.traffic.toLowerCase() as 'ingress' | 'egress' | 'unknown'
                             })
                         }
                     }

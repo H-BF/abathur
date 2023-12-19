@@ -260,6 +260,109 @@ const specPodHbfClientIsContainer = parse({
     }
 })
 
+const specPodWithoutHBFAgent = parse({
+    metadata: {
+        name: `{{prefix}}-p${variables.get("PIPELINE_ID")}-{{podName}}`,
+        labels: {
+            component: "{{component}}",
+            instance: `{{prefix}}-p${variables.get("PIPELINE_ID")}`
+        },
+        annotations: {
+            "cni.projectcalico.org/ipAddrs": "[\"{{ip}}\"]"
+        }
+    },
+    spec: {
+        containers: [
+            {
+                name: "server",
+                image: `${variables.get("ABA_SERVER_REPOSITORY")}:${variables.get("ABA_SERVER_TAG")}`,
+                volumeMounts: [{
+                    name: "{{prefix}}-test-ports",
+                    mountPath: "/usr/src/server/ports"
+                }],
+                imagePullPolicy: "IfNotPresent",
+                resources: {
+                    limits: {
+                        cpu: variables.get("ABA_SERVER_CPU"),
+                        memory: variables.get("ABA_SERVER_MEM")
+                    },
+                    requests: {
+                        cpu: variables.get("ABA_SERVER_CPU"),
+                        memory: variables.get("ABA_SERVER_MEM")
+                    }
+                },
+                env: [{
+                    name: "LOG_TYPE",
+                    value: variables.get("LOG_TYPE")
+                }, {
+                    name: "LOG_LVL",
+                    value: variables.get("LOG_LVL")
+                }]
+            },
+            {
+                name: "client",
+                image: `${variables.get("ABA_CLIENT_REPOSITORY")}:${variables.get("ABA_CLIENT_TAG")}`,
+                volumeMounts: [{
+                    name: "{{prefix}}-test-data",
+                    mountPath: "/usr/src/client/testData"
+                }],
+                imagePullPolicy: "IfNotPresent",
+                env: [{
+                    name: "ABA_CONTORL_PROXY_PROTOCOL",
+                    value: variables.get("ABA_PROXY_PROTOCOL")
+                },{
+                    name: "ABA_CONTORL_PROXY_PORT",
+                    value: variables.get("ABA_PROXY_PORT")
+                },{
+                    name: "ABA_CONTROL_IP",
+                    value: variables.get("ABA_CONTROL_IP")
+                }, {
+                    name: "ABA_CONTROL_PORT",
+                    value: variables.get("ABA_CONTROL_PORT")
+                }, {
+                    name: "LOG_TYPE",
+                    value: variables.get("LOG_TYPE")
+                }, {
+                    name: "LOG_LVL",
+                    value: variables.get("LOG_LVL")
+                }],
+                resources: {
+                    limits: {
+                        cpu: variables.get("ABA_CLIENT_CPU"),
+                        memory: variables.get("ABA_CLIENT_MEM")
+                    },
+                    requests: {
+                        cpu: variables.get("ABA_CLIENT_CPU"),
+                        memory: variables.get("ABA_CLIENT_MEM")
+                    }
+                }
+            }
+        ],
+        imagePullSecrets: variables.get("IMAGE_PULL_SECRETS").split(",").map(name => ({ name })),
+        restartPolicy: "Never",
+        volumes: [
+            {
+                name: "{{prefix}}-hbf-client",
+                configMap: {
+                    name: `{{prefix}}-p${variables.get("PIPELINE_ID")}-hbf-client`
+                }
+            },
+            {
+                name: "{{prefix}}-test-data",
+                configMap: {
+                    name: `{{prefix}}-p${variables.get("PIPELINE_ID")}-{{testData}}`
+                }
+            },
+            {
+                name: "{{prefix}}-test-ports",
+                configMap: {
+                    name: `{{prefix}}-p${variables.get("PIPELINE_ID")}-{{ports}}`
+                }
+            }
+        ]
+    }
+})
+
 const specConfMapHbfClient = parse({
     metadata: {
         name: `{{prefix}}-p${variables.get("PIPELINE_ID")}-hbf-client`,
@@ -329,6 +432,7 @@ const ports = parse({
 export const hbfTestStend = { 
     specPodHbfClientIsInitContainer,
     specPodHbfClientIsContainer,
+    specPodWithoutHBFAgent,
     specConfMapHbfClient,
     testData,
     ports 

@@ -13,6 +13,7 @@ export interface ITcpUdpTestData {
     fromType: DirectionType 
     toType: DirectionType
     transport: 'TCP' | 'UDP'
+    traffic: "Ingress" | 'Egress' | 'unknown'
     dst: string[]
     ports: IPorts[]
 }
@@ -22,6 +23,7 @@ export interface IIcmpTestData {
     to: string
     dst: string[]
     IPv: "IPv4" | "IPv6"
+    traffic: "Ingress" | 'Egress' | 'unknown'
     types: string[]
 }
 
@@ -57,6 +59,7 @@ export interface ITcpUdpResult {
     dstIp: string
     dstPort: string
     protocol: 'tcp' | 'udp'
+    traffic: 'ingress' | 'egress' | 'unknown'
     status: string
     msgErr?: string
 }
@@ -69,6 +72,7 @@ export interface IIcmpResult {
     srcIp: string
     dstIp: string
     protocol: 'icmp'
+    traffic: 'ingress' | 'egress' | 'unknown'
     icmpType: string[]
     icmpCommand: string
     status: string

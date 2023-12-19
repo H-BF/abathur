@@ -46,6 +46,7 @@ export class SgIcmpDataCollector extends HBFDataCollector {
                 to: baseSg.Sg,
                 dst: baseSgIP,
                 IPv: rule.ICMP.IPv,
+                traffic: 'unknown',
                 types: types
             }
 
@@ -54,6 +55,7 @@ export class SgIcmpDataCollector extends HBFDataCollector {
                 to: rule.Sg,
                 dst: this.getIPs(rule.Sg),
                 IPv: rule.ICMP.IPv,
+                traffic: 'unknown',
                 types: types
             }
 

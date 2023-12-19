@@ -67,6 +67,7 @@ export class IcmpTestClient implements ITestClient {
         srcIp: this.srcIp,
         dstIp: dstIp,
         protocol: "icmp",
+        traffic: node.traffic.toLowerCase() as "ingress" | 'egress' | 'unknown',
         status: status,
         icmpCommand: command,
         icmpType: node.types,

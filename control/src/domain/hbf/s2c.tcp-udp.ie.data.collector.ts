@@ -1,11 +1,13 @@
 import { logger } from "../logger/logger.service"
 import { HBFDataCollector } from "./hbf-data-collector.abstract"
 import { DirectionType, ITcpUdpTestData, PortsForServers, TestDataRecord } from "./interfaces"
+import { IIpWithHBFAgent } from "./interfaces/ipWithHBFAgent"
 
 export class S2CTcpUdpIEDataCollector extends HBFDataCollector {
 
     private testData: TestDataRecord = {}
     private serversPorts: PortsForServers = {}
+    private ips: IIpWithHBFAgent[] = []
 
     constructor(
         protocol: string,
@@ -64,13 +66,28 @@ export class S2CTcpUdpIEDataCollector extends HBFDataCollector {
                 }
                 this.serversPorts[ip][rule.transport].push(...ports.map(item => item.dstPorts).flat())
             })
+
+            sgIps.forEach( ip => {
+                this.ips.push({
+                    ip: ip,
+                    haveAgent: true
+                })
+            })
+
+            cidrIp.forEach( ip => {
+                this.ips.push({
+                    ip: ip,
+                    haveAgent: false
+                })
+            })
         })
     }
 
     get() {
         return {
             testData: this.testData,
-            serverPorts: this.serversPorts
+            serverPorts: this.serversPorts,
+            ips: this.ips
         }
     }
 }

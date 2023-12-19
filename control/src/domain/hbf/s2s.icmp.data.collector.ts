@@ -36,6 +36,7 @@ export class S2SIcmpDataCollector extends HBFDataCollector {
                 to: rule.SgTo,
                 dst: this.getIPs(rule.SgTo),
                 IPv: rule.ICMP.IPv,
+                traffic: "unknown",
                 types: types
             }
 

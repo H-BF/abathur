@@ -169,6 +169,43 @@ export class PSCFabric {
     }
 
     /**
+     * СОздаем тестовый стенд без HBF Agent
+     */
+    async createTestStend(
+        prefix: string,
+        podNumber: number,
+        ip: string, 
+        testData: string,
+        ports: string,
+    ) {
+        logger.info(`[${prefix}] Готовимся к созданию тестового пода ${podNumber}: ${ip}`)
+        //Создаем configMap с тестовыми данными
+        await this.k8sClient.createConfigMap(hbfTestStend.testData({
+            prefix: prefix,
+            name: `test-data-${podNumber}`,
+            component: `test-data-${podNumber}`,
+            testData: testData
+        }) as V1ConfigMap)
+
+        //Создаем configMap с портами на открытие
+        await this.k8sClient.createConfigMap(hbfTestStend.ports({
+            prefix: prefix,
+            name: `test-ports-${podNumber}`,
+            component: `test-ports-${podNumber}`,
+            ports: ports
+        }) as V1ConfigMap)
+
+        await this.k8sClient.createPod(hbfTestStend.specPodWithoutHBFAgent({
+            prefix: prefix,
+            podName: `test-pod-${podNumber}`,
+            Comment: `test-pod-${podNumber}`,
+            ip: ip,
+            testData: `test-data-${podNumber}`,
+            ports: `test-ports-${podNumber}`
+        }) as V1Pod)
+    }
+
+    /**
      * Удаляем все Поды, Сервисы, Деплойменты, Сервис аккаунты, роли и Конфиг мапы по лейблу instance
      * Данный лейбл заполняется номером запустившего тесты пайплайны из env
      */
