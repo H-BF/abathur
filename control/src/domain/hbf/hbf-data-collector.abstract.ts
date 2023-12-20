@@ -1,6 +1,7 @@
 import { HBFClient, ISecurityGroup } from "../../infrastructure";
 import { INetwork } from "../../infrastructure/hbf/interfaces/networks";
 import { IRulePorts } from "../../infrastructure/hbf/interfaces/rules";
+import { ISgToCidrIERule } from "../../infrastructure/hbf/interfaces/rules-sg-cidr-ie";
 import { ISgIcmpRule } from "../../infrastructure/hbf/interfaces/rules-sg-icmp";
 import { ISgToFqdnRule } from "../../infrastructure/hbf/interfaces/rules-sg-to-fqdn";
 import { ISgToSgRule } from "../../infrastructure/hbf/interfaces/rules-sg-to-sg";
@@ -21,6 +22,7 @@ export abstract class HBFDataCollector implements IHBFDataCollector {
     protected sgToFqdnRules: ISgToFqdnRule[] | undefined
     protected sgIcmpRules: ISgIcmpRule[] | undefined
     protected sgToSgIcmpRules: ISgToSgIcmpRule[] | undefined
+    protected sgToCidrIERules: ISgToCidrIERule[] | undefined
     
     constructor(
         protocol: string,
@@ -94,6 +96,17 @@ export abstract class HBFDataCollector implements IHBFDataCollector {
         })).rules
     }
 
+    protected async collectS2CTcpUdpIERules() {
+        logger.info(`Правила sg-cidr I/E`)
+
+        if(!this.sg)
+            throw new Error("SG is undefined")
+
+        this.sgToCidrIERules = (await this.HBFClient.getSgToCidrIERules({
+            sg: this.sg.map(group  => group.name)
+        })).rules
+    }
+
     ////////////////////
     
     protected isNeedTo(to: string[]): boolean {
@@ -106,6 +119,15 @@ export abstract class HBFDataCollector implements IHBFDataCollector {
             ips.push(...new Networks(cidr).getAddressesList())
         })
         return ips
+    }
+
+    protected transformIECidrToIp(cidr: string): string[] {
+    const [ip, mask] = cidr.split('/')
+
+    if(mask != "32")
+        throw new Error(`Некорректная маска! Найдено - ${mask}. Должно быть - 32`)
+
+    return [ip]
     }
 
     protected transformPorts(ports: IRulePorts[]): IPorts[] {

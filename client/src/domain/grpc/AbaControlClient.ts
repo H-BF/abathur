@@ -72,6 +72,7 @@ export class AbaControlClient {
         switch(funcType) {
             case 's2s':
             case 's2f':
+            case 's2c':
                 logger.debug("Запускаем стрим streamSimpleFunc")
                 call = this.client.streamSimpleFunc(meta)
                 break;

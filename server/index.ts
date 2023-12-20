@@ -10,7 +10,7 @@ const path = './ports/ports.json'
 try {
     if(!fs.existsSync(path)) {
         logger.info("Нет портов для поднятия сервера")
-        throw new Error("FuckThePolice")
+        process.exit(0)
     }
 
     const fileData = fs.readFileSync(path, 'utf-8')

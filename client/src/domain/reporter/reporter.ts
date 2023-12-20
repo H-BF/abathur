@@ -54,7 +54,8 @@ export class Reporter {
                 toType: elem.toType,
                 status: elem.status as AssertionStatus,
                 msgErr: elem.msgErr || null,
-                testName: variables.get("TEST_NAME")
+                testName: variables.get("TEST_NAME"),
+                traffic: elem.traffic
             })
         })
         return result
@@ -76,7 +77,8 @@ export class Reporter {
                 icmpType: elem.icmpType.join(),
                 icmpCommand: elem.icmpCommand,
                 msgErr: elem.msgErr || null,
-                testName: variables.get("TEST_NAME")
+                testName: variables.get("TEST_NAME"),
+                traffic: elem.traffic
             })
         })
         return result

@@ -8,6 +8,12 @@ import { variables } from './src/infrastructure/var_storage/variables-storage';
 
 (async () => {
     const myIp = getMyIp()
+    const path = './testData/testData.json'
+
+    if(!fs.existsSync(path)) {
+        logger.info("Нет файла тестовых данных для этой машины")
+        process.exit(0)
+    }
 
     const testData: IConfigMapTestData = JSON.parse(
         fs.readFileSync(
@@ -19,8 +25,12 @@ import { variables } from './src/infrastructure/var_storage/variables-storage';
     const testName: string = testData.scenario
     const data: TestDataType[] = testData.testData
 
-    const type = testName.split("-")[0]
-    const scenario = testName.split("-")[1]
+    if(data === undefined) {
+        logger.info("Нет тестовых данных для этой машины")
+        process.exit(0)
+    }
+
+    const [type, scenario, subscenario] = testName.split("-")
 
     variables.set("TEST_NAME", testName)
 
