@@ -33,8 +33,6 @@ export class Sg2CidrIEScenario extends ScenarioTemplate {
 
             const { testData, serverPorts, ips } = collector.get()
 
-            console.log(testData)
-
             for (let i = 0; i < ips.length; i++) {
                 if(ips[i].haveAgent) {
                     await manager.createHBFTestStend(
