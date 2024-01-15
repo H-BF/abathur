@@ -85,7 +85,12 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"neteworkNames\": [\r\n        \"nw-1\",\r\n        \"nw-2\"\r\n    ]\r\n}"
+							"raw": "{\r\n    \"neteworkNames\": [\r\n        \"nw-1\",\r\n        \"nw-2\"\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
 						},
 						"url": {
 							"raw": "{{HOST}}:{{PORT}}/v1/list/networks",
@@ -1497,7 +1502,7 @@
 					"response": []
 				},
 				{
-					"name": "[RUELE-ICMP-SS] Получение правил для нескольких SG",
+					"name": "[RULE-ICMP-SS] Получение правил для нескольких SG",
 					"event": [
 						{
 							"listen": "test",
@@ -1825,7 +1830,7 @@
 									"})\r",
 									"\r",
 									"pm.test(\"check message\", () => {\r",
-									"    pm.expect(pm.response.json().message).to.eql(\"proto: syntax error (line 2:11): unexpected token \\\"sg-3\\\"\")\r",
+									"    pm.expect(pm.response.json().message).to.eql(\"proto: syntax error (line 2:11): unexpected token \\\"sg-3\\\"\")\r",
 									"});"
 								],
 								"type": "text/javascript"
@@ -2730,7 +2735,7 @@
 											"});\r",
 											"\r",
 											"pm.test(\"check message\", () => {\r",
-											"    pm.expect(pm.response.json().message).to.include(\"proto: (line 9:34): invalid value for enum type: \\\"QWERTY\\\"\")\r",
+											"    pm.expect(pm.response.json().message).to.include(\"proto: (line 9:34): invalid value for enum type: \\\"QWERTY\\\"\")\r",
 											"});"
 										],
 										"type": "text/javascript"
@@ -2995,7 +3000,7 @@
 											"});\r",
 											"\r",
 											"pm.test(\"check message\", () => {\r",
-											"    pm.expect(pm.response.json().message).to.eql(\"proto: syntax error (line 5:26): unexpected token {\")\r",
+											"    pm.expect(pm.response.json().message).to.eql(\"proto: syntax error (line 5:26): unexpected token {\")\r",
 											"});"
 										],
 										"type": "text/javascript"
@@ -3509,7 +3514,7 @@
 											"});\r",
 											"\r",
 											"pm.test(\"check message\", () => {\r",
-											"    pm.expect(pm.response.json().message).to.eql(\"proto: (line 6:27): invalid value for enum type: \\\"IPv10\\\"\")\r",
+											"    pm.expect(pm.response.json().message).to.eql(\"proto: (line 6:27): invalid value for enum type: \\\"IPv10\\\"\")\r",
 											"});"
 										],
 										"type": "text/javascript"
@@ -3562,7 +3567,7 @@
 											"});\r",
 											"\r",
 											"pm.test(\"check message\", () => {\r",
-											"    pm.expect(pm.response.json().message).to.eql(\"proto: (line 7:30): invalid value for uint32 type: \\\"sdfsd\\\"\")\r",
+											"    pm.expect(pm.response.json().message).to.eql(\"proto: (line 7:30): invalid value for uint32 type: \\\"sdfsd\\\"\")\r",
 											"});"
 										],
 										"type": "text/javascript"
@@ -3635,15 +3640,14 @@
 									}
 								},
 								"url": {
-									"raw": "{{HOST}}:{{PORT}}/v1/sync/status",
+									"raw": "{{HOST}}:{{PORT}}/v1/sync",
 									"host": [
 										"{{HOST}}"
 									],
 									"port": "{{PORT}}",
 									"path": [
 										"v1",
-										"sync",
-										"status"
+										"sync"
 									]
 								}
 							},
@@ -3828,7 +3832,7 @@
 											"});\r",
 											"\r",
 											"pm.test(\"check message\", () => {\r",
-											"    pm.expect(pm.response.json().message).to.eql(\"proto: (line 6:27): invalid value for enum type: \\\"IPv10\\\"\")\r",
+											"    pm.expect(pm.response.json().message).to.eql(\"proto: (line 6:27): invalid value for enum type: \\\"IPv10\\\"\")\r",
 											"});"
 										],
 										"type": "text/javascript"
@@ -3881,7 +3885,7 @@
 											"});\r",
 											"\r",
 											"pm.test(\"check message\", () => {\r",
-											"    pm.expect(pm.response.json().message).to.eql(\"proto: (line 7:36): invalid value for uint32 type: \\\"asdasd\\\"\")\r",
+											"    pm.expect(pm.response.json().message).to.eql(\"proto: (line 7:36): invalid value for uint32 type: \\\"asdasd\\\"\")\r",
 											"});"
 										],
 										"type": "text/javascript"
@@ -4199,7 +4203,7 @@
 											"});\r",
 											"\r",
 											"pm.test(\"check message\", () => {\r",
-											"    pm.expect(pm.response.json().message).to.eql(\"proto: syntax error (line 7:18): unexpected token {\")\r",
+											"    pm.expect(pm.response.json().message).to.eql(\"proto: syntax error (line 7:18): unexpected token {\")\r",
 											"});"
 										],
 										"type": "text/javascript"
