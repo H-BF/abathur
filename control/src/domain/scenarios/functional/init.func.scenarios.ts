@@ -30,9 +30,9 @@ export class InitFuncScenarios implements IScenarioInterface {
                 variables.get("PIPELINE_ID"),
                 variables.get("JOB_ID"),
                 variables.get("CI_SOURCE_BRANCH_NAME"),
-                variables.get("CI_TARGET_BRANCH_NAME"),
                 variables.get("COMMIT"),
                 variables.get("HBF_TAG"),
+                "hbf.server", //т.к. мы тестируем API только HBF-server
                 "func"
             )
 

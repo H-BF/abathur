@@ -38,7 +38,6 @@ data:
     PIPELINE_ID={{ .Values.gitlab.pipeline | toString }}
     JOB_ID={{ .Values.gitlab.job | default (include "control.random" .) | toString }}
     CI_SOURCE_BRANCH_NAME={{ $.Values.gitlab.src_branch }}
-    CI_TARGET_BRANCH_NAME={{ $.Values.gitlab.dst_branch }}
     COMMIT={{ $.Values.gitlab.commit }}
     HBF_TAG={{ $.Values.hbfServer.image.tag }}
     HBF_REPORTER_PROTOCOL={{ .Values.hbfReporter.protocol }}
