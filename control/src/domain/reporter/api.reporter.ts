@@ -20,17 +20,17 @@ export class APIReporter {
         pipeline: string,
         job: string,
         srcBranch: string,
-        dstBranch: string,
         commit: string,
-        hbfTag: string
+        tag: string,
+        serviceName: string
     ): Promise<void> {
         const launch: ICreateLaunchReq = { 
             pipeline: parseInt(pipeline),
             job: parseInt(job),
             srcBranch: srcBranch,
-            dstBranch: dstBranch,
             commit: commit,
-            hbfTag: hbfTag
+            tag: tag,
+            serviceName: serviceName
         }
         this._launchUUID = await this.client.createLaunch(launch)
         logger.info(`Лаунч создан! ${this._launchUUID}`)
