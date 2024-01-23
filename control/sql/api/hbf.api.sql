@@ -1,5 +1,5 @@
         DO $$
-            BEGIN 
+            BEGIN
             INSERT INTO sgroups.tbl_sg(name) VALUES ('sg-0'),('sg-1'),('sg-2'),('sg-3'),('sg-4');
             INSERT INTO
                 sgroups.tbl_network(name, network, sg)
@@ -57,7 +57,7 @@
                     ]::sgroups.sg_rule_ports[]
                 );
             INSERT INTO
-                sgroups.tbl_fqdn_rule(sg_from, fqdn_to, proto, ports, logs)
+                sgroups.tbl_fqdn_rule(sg_from, fqdn_to, proto, ports, logs, ndpi_protocols)
             VALUES
                 (
                     (SELECT id FROM sgroups.tbl_sg WHERE name = 'sg-0'),
@@ -66,7 +66,8 @@
                     ARRAY[
                         ((int4multirange(int4range(4446, 4447))), (int4multirange(int4range(7600, 7701), int4range(7800, 7801))))
                     ]::sgroups.sg_rule_ports[],
-                    true
+                    true,
+                    ARRAY['http', 'ssh']::citext[]
                 ),
                 (
                     (SELECT id FROM sgroups.tbl_sg WHERE name = 'sg-1'),
@@ -76,7 +77,8 @@
                         ((int4multirange(int4range(8888, 8889), int4range(1000, 2001))), (int4multirange(int4range(55000, 55001), int4range(56000, 57001)))),
                         ((int4multirange(int4range(7777, 7778), int4range(45000, 46001))), (int4multirange(int4range(60000, 60001))))
                     ]::sgroups.sg_rule_ports[],
-                    false
+                    false,
+                    '{}'::citext[]
                 );
             INSERT INTO
                 sgroups.tbl_sg_icmp_rule (ip_v, types, sg, logs, trace)
@@ -178,6 +180,6 @@
                     ]::sgroups.sg_rule_ports[],
                     false,
                     false
-                );    
+                );
             COMMIT;
         END $$;
