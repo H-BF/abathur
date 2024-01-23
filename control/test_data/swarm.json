@@ -274,7 +274,12 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"sgNames\" : [\r\n        \"sg-0\",\r\n        \"sg-4\"\r\n    ]\r\n}"
+							"raw": "{\r\n    \"sgNames\" : [\r\n        \"sg-0\",\r\n        \"sg-4\"\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
 						},
 						"url": {
 							"raw": "{{HOST}}:{{PORT}}/v1/list/security-groups",
@@ -785,6 +790,21 @@
 									"    let data = pm.response.json().rules[0]\r",
 									"    pm.expect(data.ports[0].d).be.eql(\"7600-7700,7800\")\r",
 									"})\r",
+									"\r",
+									"pm.test(\"protocols is ['http', 'ssh']\", () => {\r",
+									"    const protocols = [\"http\", \"ssh\"]\r",
+									"    let data = pm.response.json().rules[0]\r",
+									"    pm.expect(data.protocols).to.deep.eq(protocols)\r",
+									"})\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
 									""
 								],
 								"type": "text/javascript"
@@ -839,6 +859,15 @@
 								],
 								"type": "text/javascript"
 							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
 						}
 					],
 					"request": {
@@ -889,8 +918,8 @@
 									"\r",
 									"pm.test(\"Check rules\", () => {\r",
 									"    const testData = {\r",
-									"        \"TCP\": [\"sg-0\", \"google.com\", [[\"4446\", \"7600-7700,7800\"]], true],\r",
-									"        \"UDP\": [\"sg-1\", \"yandex.ru\", [[\"1000-2000,8888\", \"55000,56000-57000\"], [\"7777,45000-46000\", \"60000\"]], false]\r",
+									"        \"TCP\": [\"sg-0\", \"google.com\", [[\"4446\", \"7600-7700,7800\"]], true, [\"http\", \"ssh\"]],\r",
+									"        \"UDP\": [\"sg-1\", \"yandex.ru\", [[\"1000-2000,8888\", \"55000,56000-57000\"], [\"7777,45000-46000\", \"60000\"]], false, []]\r",
 									"    }\r",
 									"\r",
 									"    pm.response.json().rules.forEach(rule => {\r",
@@ -899,12 +928,11 @@
 									"        pm.expect(rule.ports.length).to.eql(testData[rule.transport][2].length)\r",
 									"\r",
 									"        for (var i = 0; i < rule.ports.length; i++) {\r",
-									"            console.log(testData[rule.transport][2][i][0])\r",
-									"            console.log(testData[rule.transport][2][i][1])\r",
 									"            pm.expect(rule.ports[i].s).to.eql(testData[rule.transport][2][i][0])\r",
 									"            pm.expect(rule.ports[i].d).to.eql(testData[rule.transport][2][i][1])\r",
 									"        }\r",
 									"        pm.expect(rule.logs).to.eql(testData[rule.transport][3])\r",
+									"        pm.expect(rule.protocols).to.deep.eql(testData[rule.transport][4])\r",
 									"    })\r",
 									"})"
 								],
@@ -1245,7 +1273,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"Sg\": [\"sg-not-exist\"]\r\n}",
+							"raw": "{\r\n  \"sg\": [\"sg-not-exist\"]\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -3442,6 +3470,227 @@
 							"response": []
 						},
 						{
+							"name": "[RULE-FQDN] Пустое элемент в массиве protocols",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 500\", () => {\r",
+											"    pm.response.to.have.status(500);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Validate response JSON schema\", () => {\r",
+											"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
+											"});\r",
+											"\r",
+											"pm.test(\"check error code is 13\", () => {\r",
+											"    pm.expect(pm.response.json().code).to.eql(13)\r",
+											"})\r",
+											"\r",
+											"pm.test(\"check message\", () => {\r",
+											"    pm.expect(pm.response.json().message).to.eql(\"ERROR: bad protocol name `` (SQLSTATE P0001)\")\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"fqdnRules\": {\r\n        \"rules\": [\r\n            {\r\n                \"ports\": [\r\n                    {\r\n                    \"s\": \"\",\r\n                    \"d\": \"40000-45000\"\r\n                    }\r\n                ],\r\n                \"sgFrom\": \"sg-4\",\r\n                \"FQDN\": \"google.com\",\r\n                \"transport\": \"TCP\",\r\n                \"logs\": true,\r\n                \"protocols\": [\"\"]\r\n            }\r\n        ]\r\n    },\r\n    \"syncOp\": \"Upsert\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{HOST}}:{{PORT}}/v1/sync",
+									"host": [
+										"{{HOST}}"
+									],
+									"port": "{{PORT}}",
+									"path": [
+										"v1",
+										"sync"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[RULE-FQDN] Числовой элемент в массиве protocols",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 400\", () => {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Validate response JSON schema\", () => {\r",
+											"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
+											"});\r",
+											"\r",
+											"pm.test(\"check error code is 3\", () => {\r",
+											"    pm.expect(pm.response.json().code).to.eql(3)\r",
+											"})\r",
+											"\r",
+											"pm.test(\"check message\", () => {\r",
+											"    pm.expect(pm.response.json().message).to.eql(\"proto: (line 15:31): invalid value for string type: 1\")\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"fqdnRules\": {\r\n        \"rules\": [\r\n            {\r\n                \"ports\": [\r\n                    {\r\n                    \"s\": \"\",\r\n                    \"d\": \"40000-45000\"\r\n                    }\r\n                ],\r\n                \"sgFrom\": \"sg-4\",\r\n                \"FQDN\": \"google.com\",\r\n                \"transport\": \"TCP\",\r\n                \"logs\": true,\r\n                \"protocols\": [1]\r\n            }\r\n        ]\r\n    },\r\n    \"syncOp\": \"Upsert\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{HOST}}:{{PORT}}/v1/sync",
+									"host": [
+										"{{HOST}}"
+									],
+									"port": "{{PORT}}",
+									"path": [
+										"v1",
+										"sync"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[RULE-FQDN] Пробелы в начале и конце значение protocols",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 500\", () => {\r",
+											"    pm.response.to.have.status(500);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Validate response JSON schema\", () => {\r",
+											"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
+											"});\r",
+											"\r",
+											"pm.test(\"check error code is 13\", () => {\r",
+											"    pm.expect(pm.response.json().code).to.eql(13)\r",
+											"})\r",
+											"\r",
+											"pm.test(\"check message\", () => {\r",
+											"    pm.expect(pm.response.json().message).to.eql(\"ERROR: bad protocol name ` sd ` (SQLSTATE P0001)\")\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"fqdnRules\": {\r\n        \"rules\": [\r\n            {\r\n                \"ports\": [\r\n                    {\r\n                    \"s\": \"\",\r\n                    \"d\": \"40000-45000\"\r\n                    }\r\n                ],\r\n                \"sgFrom\": \"sg-4\",\r\n                \"FQDN\": \"google.com\",\r\n                \"transport\": \"TCP\",\r\n                \"logs\": true,\r\n                \"protocols\": [\" sd \"]\r\n            }\r\n        ]\r\n    },\r\n    \"syncOp\": \"Upsert\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{HOST}}:{{PORT}}/v1/sync",
+									"host": [
+										"{{HOST}}"
+									],
+									"port": "{{PORT}}",
+									"path": [
+										"v1",
+										"sync"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[RULE-FQDN] Параметр protocols имеет размер более 255 элементов",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.variables.set(\"protocols\", JSON.stringify(customFunc.generateRandomStringArray(256, 10)))"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 500\", () => {\r",
+											"    pm.response.to.have.status(500);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Validate response JSON schema\", () => {\r",
+											"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
+											"});\r",
+											"\r",
+											"pm.test(\"check error code is 13\", () => {\r",
+											"    pm.expect(pm.response.json().code).to.eql(13)\r",
+											"})\r",
+											"\r",
+											"pm.test(\"check message\", () => {\r",
+											"    pm.expect(pm.response.json().message).to.eql(\"ERROR: protocol count is (256) but it must be <= 255 (SQLSTATE P0001)\")\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"fqdnRules\": {\r\n        \"rules\": [\r\n            {\r\n                \"ports\": [\r\n                    {\r\n                    \"s\": \"\",\r\n                    \"d\": \"40000-45000\"\r\n                    }\r\n                ],\r\n                \"sgFrom\": \"sg-4\",\r\n                \"FQDN\": \"google.com\",\r\n                \"transport\": \"TCP\",\r\n                \"logs\": true,\r\n                \"protocols\": {{protocols}}\r\n            }\r\n        ]\r\n    },\r\n    \"syncOp\": \"Upsert\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{HOST}}:{{PORT}}/v1/sync",
+									"host": [
+										"{{HOST}}"
+									],
+									"port": "{{PORT}}",
+									"path": [
+										"v1",
+										"sync"
+									]
+								}
+							},
+							"response": []
+						},
+						{
 							"name": "[RULE-ICMP-S] SG not exist",
 							"event": [
 								{
@@ -4561,7 +4810,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"fqdnRules\": {\r\n        \"rules\": [\r\n            {\r\n                \"ports\": [\r\n                    {\r\n                    \"s\": \"\",\r\n                    \"d\": \"40000-45000\"\r\n                    }\r\n                ],\r\n                \"sgFrom\": \"sg-test-0\",\r\n                \"FQDN\": \"google.com\",\r\n                \"transport\": \"TCP\",\r\n                \"logs\": true\r\n            },\r\n            {\r\n                \"ports\": [\r\n                    {\r\n                    \"s\": \"50000\",\r\n                    \"d\": \"35000\"\r\n                    }\r\n                ],\r\n                \"sgFrom\": \"sg-test-1\",\r\n                \"FQDN\": \"google.com\",\r\n                \"transport\": \"TCP\",\r\n                \"logs\": false\r\n            },\r\n            {\r\n                \"ports\": [\r\n                    {\r\n                    \"s\": \"30000-31000\",\r\n                    \"d\": \"55000-56000\"\r\n                    }\r\n                ],\r\n                \"sgFrom\": \"sg-test-2\",\r\n                \"FQDN\": \"google.com\",\r\n                \"transport\": \"TCP\"\r\n            },\r\n            {\r\n                \"ports\": [\r\n                    {\r\n                    \"s\": \"5000, 6000-7000\",\r\n                    \"d\": \"55000-56000\"\r\n                    }\r\n                ],\r\n                \"sgFrom\": \"sg-test-3\",\r\n                \"FQDN\": \"google.com\",\r\n                \"transport\": \"TCP\"\r\n            },\r\n                        {\r\n                \"ports\": [\r\n                    {\r\n                    \"s\": \"\",\r\n                    \"d\": \"4444\"\r\n                    }\r\n                ],\r\n                \"sgFrom\": \"sg-test-1\",\r\n                \"FQDN\": \"google.com\",\r\n                \"transport\": \"UDP\"\r\n            }\r\n        ]\r\n    },\r\n    \"syncOp\": \"Upsert\"\r\n}",
+									"raw": "{\r\n    \"fqdnRules\": {\r\n        \"rules\": [\r\n            {\r\n                \"ports\": [\r\n                    {\r\n                    \"s\": \"\",\r\n                    \"d\": \"40000-45000\"\r\n                    }\r\n                ],\r\n                \"sgFrom\": \"sg-test-0\",\r\n                \"FQDN\": \"google.com\",\r\n                \"transport\": \"TCP\",\r\n                \"logs\": true,\r\n                \"protocols\": []\r\n            },\r\n            {\r\n                \"ports\": [\r\n                    {\r\n                    \"s\": \"50000\",\r\n                    \"d\": \"35000\"\r\n                    }\r\n                ],\r\n                \"sgFrom\": \"sg-test-1\",\r\n                \"FQDN\": \"google.com\",\r\n                \"transport\": \"TCP\",\r\n                \"logs\": false,\r\n                \"protocols\": [\"asd\"]\r\n            },\r\n            {\r\n                \"ports\": [\r\n                    {\r\n                    \"s\": \"30000-31000\",\r\n                    \"d\": \"55000-56000\"\r\n                    }\r\n                ],\r\n                \"sgFrom\": \"sg-test-2\",\r\n                \"FQDN\": \"google.com\",\r\n                \"transport\": \"TCP\",\r\n                \"protocols\": [\"asdasd\", \"asdasd_q1\"]\r\n            },\r\n            {\r\n                \"ports\": [\r\n                    {\r\n                    \"s\": \"5000, 6000-7000\",\r\n                    \"d\": \"55000-56000\"\r\n                    }\r\n                ],\r\n                \"sgFrom\": \"sg-test-3\",\r\n                \"FQDN\": \"google.com\",\r\n                \"transport\": \"TCP\"\r\n            },\r\n                        {\r\n                \"ports\": [\r\n                    {\r\n                    \"s\": \"\",\r\n                    \"d\": \"4444\"\r\n                    }\r\n                ],\r\n                \"sgFrom\": \"sg-test-1\",\r\n                \"FQDN\": \"google.com\",\r\n                \"transport\": \"UDP\"\r\n            }\r\n        ]\r\n    },\r\n    \"syncOp\": \"Upsert\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -4881,7 +5130,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"fqdnRules\": {\r\n        \"rules\": [\r\n            {\r\n                \"ports\": [\r\n                    {\r\n                    \"s\": \"\",\r\n                    \"d\": \"40000-45000\"\r\n                    }\r\n                ],\r\n                \"sgFrom\": \"sg-test-0\",\r\n                \"FQDN\": \"google.com\",\r\n                \"transport\": \"TCP\",\r\n                \"logs\": true\r\n            },\r\n            {\r\n                \"ports\": [\r\n                    {\r\n                    \"s\": \"50000\",\r\n                    \"d\": \"35000\"\r\n                    }\r\n                ],\r\n                \"sgFrom\": \"sg-test-1\",\r\n                \"FQDN\": \"google.com\",\r\n                \"transport\": \"TCP\",\r\n                \"logs\": false\r\n            },\r\n            {\r\n                \"ports\": [\r\n                    {\r\n                    \"s\": \"30000-31000\",\r\n                    \"d\": \"55000-56000\"\r\n                    }\r\n                ],\r\n                \"sgFrom\": \"sg-test-2\",\r\n                \"FQDN\": \"google.com\",\r\n                \"transport\": \"TCP\"\r\n            },\r\n            {\r\n                \"ports\": [\r\n                    {\r\n                    \"s\": \"5000, 6000-7000\",\r\n                    \"d\": \"55000-56000\"\r\n                    }\r\n                ],\r\n                \"sgFrom\": \"sg-test-3\",\r\n                \"FQDN\": \"google.com\",\r\n                \"transport\": \"TCP\"\r\n            },\r\n                        {\r\n                \"ports\": [\r\n                    {\r\n                    \"s\": \"\",\r\n                    \"d\": \"4444\"\r\n                    }\r\n                ],\r\n                \"sgFrom\": \"sg-test-1\",\r\n                \"FQDN\": \"google.com\",\r\n                \"transport\": \"UDP\"\r\n            }\r\n        ]\r\n    },\r\n    \"syncOp\": \"FullSync\"\r\n}",
+									"raw": "{\r\n    \"fqdnRules\": {\r\n        \"rules\": [\r\n            {\r\n                \"ports\": [\r\n                    {\r\n                    \"s\": \"\",\r\n                    \"d\": \"40000-45000\"\r\n                    }\r\n                ],\r\n                \"sgFrom\": \"sg-test-0\",\r\n                \"FQDN\": \"google.com\",\r\n                \"transport\": \"TCP\",\r\n                \"logs\": true,\r\n                \"protocols\": []\r\n            },\r\n            {\r\n                \"ports\": [\r\n                    {\r\n                    \"s\": \"50000\",\r\n                    \"d\": \"35000\"\r\n                    }\r\n                ],\r\n                \"sgFrom\": \"sg-test-1\",\r\n                \"FQDN\": \"google.com\",\r\n                \"transport\": \"TCP\",\r\n                \"logs\": false,\r\n                \"protocols\": [\"asd\"]\r\n            },\r\n            {\r\n                \"ports\": [\r\n                    {\r\n                    \"s\": \"30000-31000\",\r\n                    \"d\": \"55000-56000\"\r\n                    }\r\n                ],\r\n                \"sgFrom\": \"sg-test-2\",\r\n                \"FQDN\": \"google.com\",\r\n                \"transport\": \"TCP\",\r\n                \"protocols\": [\"asdasd\", \"asdasd_q1\"]\r\n            },\r\n            {\r\n                \"ports\": [\r\n                    {\r\n                    \"s\": \"5000, 6000-7000\",\r\n                    \"d\": \"55000-56000\"\r\n                    }\r\n                ],\r\n                \"sgFrom\": \"sg-test-3\",\r\n                \"FQDN\": \"google.com\",\r\n                \"transport\": \"TCP\"\r\n            },\r\n                        {\r\n                \"ports\": [\r\n                    {\r\n                    \"s\": \"\",\r\n                    \"d\": \"4444\"\r\n                    }\r\n                ],\r\n                \"sgFrom\": \"sg-test-1\",\r\n                \"FQDN\": \"google.com\",\r\n                \"transport\": \"UDP\"\r\n            }\r\n        ]\r\n    },\r\n    \"syncOp\": \"FullSync\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -5201,7 +5450,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"fqdnRules\": {\r\n        \"rules\": [\r\n            {\r\n                \"ports\": [\r\n                    {\r\n                    \"s\": \"\",\r\n                    \"d\": \"40000-45000\"\r\n                    }\r\n                ],\r\n                \"sgFrom\": \"sg-test-0\",\r\n                \"FQDN\": \"google.com\",\r\n                \"transport\": \"TCP\",\r\n                \"logs\": true\r\n            },\r\n            {\r\n                \"ports\": [\r\n                    {\r\n                    \"s\": \"50000\",\r\n                    \"d\": \"35000\"\r\n                    }\r\n                ],\r\n                \"sgFrom\": \"sg-test-1\",\r\n                \"FQDN\": \"google.com\",\r\n                \"transport\": \"TCP\",\r\n                \"logs\": false\r\n            },\r\n            {\r\n                \"ports\": [\r\n                    {\r\n                    \"s\": \"30000-31000\",\r\n                    \"d\": \"55000-56000\"\r\n                    }\r\n                ],\r\n                \"sgFrom\": \"sg-test-2\",\r\n                \"FQDN\": \"google.com\",\r\n                \"transport\": \"TCP\"\r\n            },\r\n            {\r\n                \"ports\": [\r\n                    {\r\n                    \"s\": \"5000, 6000-7000\",\r\n                    \"d\": \"55000-56000\"\r\n                    }\r\n                ],\r\n                \"sgFrom\": \"sg-test-3\",\r\n                \"FQDN\": \"google.com\",\r\n                \"transport\": \"TCP\"\r\n            },\r\n                        {\r\n                \"ports\": [\r\n                    {\r\n                    \"s\": \"\",\r\n                    \"d\": \"4444\"\r\n                    }\r\n                ],\r\n                \"sgFrom\": \"sg-test-1\",\r\n                \"FQDN\": \"google.com\",\r\n                \"transport\": \"UDP\"\r\n            }\r\n        ]\r\n    },\r\n    \"syncOp\": \"Delete\"\r\n}",
+									"raw": "{\r\n    \"fqdnRules\": {\r\n        \"rules\": [\r\n            {\r\n                \"ports\": [\r\n                    {\r\n                    \"s\": \"\",\r\n                    \"d\": \"40000-45000\"\r\n                    }\r\n                ],\r\n                \"sgFrom\": \"sg-test-0\",\r\n                \"FQDN\": \"google.com\",\r\n                \"transport\": \"TCP\",\r\n                \"logs\": true,\r\n                \"protocols\": []                \r\n            },\r\n            {\r\n                \"ports\": [\r\n                    {\r\n                    \"s\": \"50000\",\r\n                    \"d\": \"35000\"\r\n                    }\r\n                ],\r\n                \"sgFrom\": \"sg-test-1\",\r\n                \"FQDN\": \"google.com\",\r\n                \"transport\": \"TCP\",\r\n                \"logs\": false,\r\n                \"protocols\": [\"asd\"]                \r\n\r\n            },\r\n            {\r\n                \"ports\": [\r\n                    {\r\n                    \"s\": \"30000-31000\",\r\n                    \"d\": \"55000-56000\"\r\n                    }\r\n                ],\r\n                \"sgFrom\": \"sg-test-2\",\r\n                \"FQDN\": \"google.com\",\r\n                \"transport\": \"TCP\",\r\n                \"protocols\": [\"asdasd\", \"asdasd_q1\"]                \r\n            },\r\n            {\r\n                \"ports\": [\r\n                    {\r\n                    \"s\": \"5000, 6000-7000\",\r\n                    \"d\": \"55000-56000\"\r\n                    }\r\n                ],\r\n                \"sgFrom\": \"sg-test-3\",\r\n                \"FQDN\": \"google.com\",\r\n                \"transport\": \"TCP\"\r\n            },\r\n                        {\r\n                \"ports\": [\r\n                    {\r\n                    \"s\": \"\",\r\n                    \"d\": \"4444\"\r\n                    }\r\n                ],\r\n                \"sgFrom\": \"sg-test-1\",\r\n                \"FQDN\": \"google.com\",\r\n                \"transport\": \"UDP\"\r\n            }\r\n        ]\r\n    },\r\n    \"syncOp\": \"Delete\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -5406,7 +5655,27 @@
 			"script": {
 				"type": "text/javascript",
 				"exec": [
-					""
+					"customFunc = {",
+					"    generateRandomString: (stringLength) => {",
+					"        const characters = 'abcdefghijklmnopqrstuvwxyz0123456789_';",
+					"        let result = '';",
+					"        for (var i = 0; i < stringLength; i++) {",
+					"            result += characters.charAt(Math.floor(Math.random() * characters.length));",
+					"        }",
+					"        return result;",
+					"    },",
+					"",
+					"    generateRandomStringArray: (arrayLength, itemLength) => {",
+					"        let massive = []",
+					"        while(massive.length < arrayLength) {",
+					"            const customString = customFunc.generateRandomString(itemLength)",
+					"            if (!massive.includes(customString)) {",
+					"                massive.push(customString)",
+					"            }",
+					"        }",
+					"        return massive",
+					"    }",
+					"}"
 				]
 			}
 		},
@@ -5429,6 +5698,11 @@
 		{
 			"key": "PORT",
 			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "serviceName",
+			"value": "hbf.server",
 			"type": "string"
 		},
 		{
@@ -5463,7 +5737,7 @@
 		},
 		{
 			"key": "rulesFqdnResponseJsonSchema",
-			"value": "{\n    \"type\" : \"object\",\n    \"properties\" : {\n        \"rules\" : {\n            \"type\" : \"array\",\n            \"items\" : {\n                \"type\" : \"object\",\n                \"properties\" : {\n                    \"sgFrom\" : { \"type\" : \"string\" },\n                    \"FQDN\" : { \"type\" : \"string\" },\n                    \"transport\": { \"type\" : \"string\" },\n                    \"ports\" : {\n                        \"type\" : \"array\",\n                        \"items\": {\n                            \"type\" : \"object\",\n                            \"properties\" : {\n                                \"s\" : { \"type\" : \"string\" },\n                                \"d\" : { \"type\" : \"string\" }\n                            },\n                            \"additionalProperties\": false\n                        }\n                    },\n\t\t\t\t\t\"logs\" : {\"type\" : \"boolean\"}\n                },\n                \"additionalProperties\": false\n            }\n        }\n    },\n    \"required\": [\"rules\"],\n    \"additionalProperties\": false\n}",
+			"value": "{\n    \"type\" : \"object\",\n    \"properties\" : {\n        \"rules\" : {\n            \"type\" : \"array\",\n            \"items\" : {\n                \"type\" : \"object\",\n                \"properties\" : {\n                    \"sgFrom\" : { \"type\" : \"string\" },\n                    \"FQDN\" : { \"type\" : \"string\" },\n                    \"transport\": { \"type\" : \"string\" },\n                    \"ports\" : {\n                        \"type\" : \"array\",\n                        \"items\": {\n                            \"type\" : \"object\",\n                            \"properties\" : {\n                                \"s\" : { \"type\" : \"string\" },\n                                \"d\" : { \"type\" : \"string\" }\n                            },\n                            \"additionalProperties\": false\n                        }\n                    },\n\t\t\t\t\t\"logs\" : {\"type\" : \"boolean\"},\n\t\t\t\t\t\"protocols\": {\n\t\t\t\t\t\t\"type\": \"array\",\n\t\t\t\t\t\t\"items\": {\n\t\t\t\t\t\t\t\"type\": \"string\"\n\t\t\t\t\t\t}\n\t\t\t\t\t}\n                },\n                \"additionalProperties\": false\n            }\n        }\n    },\n    \"required\": [\"rules\"],\n    \"additionalProperties\": false\n}",
 			"type": "string"
 		},
 		{

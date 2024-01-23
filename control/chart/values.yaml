@@ -18,7 +18,7 @@ abathurControl:
   #   privileged: true
   restartPolicy: Never 
   destroy: true
-  scenario: 1
+  scenario: 2
   #simple-s2s,simple-s2f,simple-s2c-ie,advanced-changeip,advanced-icmp
   funcScenario: simple-s2s
 
@@ -41,7 +41,7 @@ abathurServer:
 hbfServer:
   image:
     repository: harbor.wildberries.ru/swarm/swarm/swarm/sgroups/sgroups
-    tag: release-v1-0-6-rc2-1e91e8cf
+    tag: dev-b87bc40a
   database:
     name: postgres
     login: nkiver
@@ -75,7 +75,7 @@ hbfServer:
 hbfClient:
   image:
     repository: harbor.wildberries.ru/swarm/swarm/swarm/sgroups/to-nft
-    tag: release-v1-0-6-rc2-1e91e8cf
+    tag: dev-b87bc40a
   resources:
     cpu: 100m
     memory:  100Mi
@@ -87,7 +87,7 @@ hbfClient:
 hbfMigration:
   image:
     repository: harbor.wildberries.ru/swarm/swarm/swarm/sgroups/sgroups-migration
-    tag: release-v1-0-6-rc2-1e91e8cf
+    tag: dev-b87bc40a
   resources:
     cpu: 100m
     memory: 100Mi
