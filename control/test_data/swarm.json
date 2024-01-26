@@ -161,6 +161,10 @@
 									"\r",
 									"pm.test(\"Validate response JSON schema\", () => {\r",
 									"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
+									"});\r",
+									"\r",
+									"pm.test(\"check message\", () => {\r",
+									"    pm.expect(pm.response.json().message).to.eql(\"proto: (line 2:5): unknown field \\\"asdasdas\\\"\")\r",
 									"});"
 								],
 								"type": "text/javascript"
@@ -355,6 +359,10 @@
 									"\r",
 									"pm.test(\"Validate response JSON schema\", () => {\r",
 									"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
+									"});\r",
+									"\r",
+									"pm.test(\"check message\", () => {\r",
+									"    pm.expect(pm.response.json().message).to.eql(\"proto: (line 2:5): unknown field \\\"asdasdas\\\"\")\r",
 									"});"
 								],
 								"type": "text/javascript"
@@ -712,6 +720,10 @@
 									"\r",
 									"pm.test(\"Validate response JSON schema\", () => {\r",
 									"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
+									"});\r",
+									"\r",
+									"pm.test(\"check message\", () => {\r",
+									"    pm.expect(pm.response.json().message).to.eql(\"proto: (line 2:5): unknown field \\\"asdasdas\\\"\")\r",
 									"});"
 								],
 								"type": "text/javascript"
@@ -1026,6 +1038,10 @@
 									"\r",
 									"pm.test(\"Validate response JSON schema\", () => {\r",
 									"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
+									"});\r",
+									"\r",
+									"pm.test(\"check message\", () => {\r",
+									"    pm.expect(pm.response.json().message).to.eql(\"proto: (line 2:5): unknown field \\\"asdasdas\\\"\")\r",
 									"});"
 								],
 								"type": "text/javascript"
@@ -1354,6 +1370,10 @@
 									"\r",
 									"pm.test(\"Validate response JSON schema\", () => {\r",
 									"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
+									"});\r",
+									"\r",
+									"pm.test(\"check message\", () => {\r",
+									"    pm.expect(pm.response.json().message).to.eql(\"proto: (line 2:5): unknown field \\\"asdasdas\\\"\")\r",
 									"});"
 								],
 								"type": "text/javascript"
@@ -1653,6 +1673,10 @@
 									"\r",
 									"pm.test(\"Validate response JSON schema\", () => {\r",
 									"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
+									"});\r",
+									"\r",
+									"pm.test(\"check message\", () => {\r",
+									"    pm.expect(pm.response.json().message).to.eql(\"proto: (line 2:5): unknown field \\\"asdasdas\\\"\")\r",
 									"});"
 								],
 								"type": "text/javascript"
@@ -1905,6 +1929,10 @@
 									"\r",
 									"pm.test(\"Validate response JSON schema\", () => {\r",
 									"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
+									"});\r",
+									"\r",
+									"pm.test(\"check message\", () => {\r",
+									"    pm.expect(pm.response.json().message).to.eql(\"proto: (line 2:5): unknown field \\\"asdasdas\\\"\")\r",
 									"});"
 								],
 								"type": "text/javascript"
@@ -2337,14 +2365,14 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{HOST}}:{{PORT}}/v1/10.150.0.220%2F32/sg",
+							"raw": "{{HOST}}:{{PORT}}/v1/10.150.0.220%252F32/sg",
 							"host": [
 								"{{HOST}}"
 							],
 							"port": "{{PORT}}",
 							"path": [
 								"v1",
-								"10.150.0.220%2F32",
+								"10.150.0.220%252F32",
 								"sg"
 							]
 						}
@@ -2441,6 +2469,59 @@
 				{
 					"name": "Error",
 					"item": [
+						{
+							"name": "No sync op field",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 400\", () => {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Validate response JSON schema\", () => {\r",
+											"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
+											"});\r",
+											"\r",
+											"pm.test(\"code is 3\", () => {\r",
+											"    pm.expect(pm.response.json().code).to.eql(3)\r",
+											"});\r",
+											"\r",
+											"pm.test(\"check message\", () => {\r",
+											"    pm.expect(pm.response.json().message).to.eql(\"unsupported sync-op (NoOp)\")\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"networks\": {\r\n        \"networks\": [\r\n            {\r\n                \"name\": \"nw-no-sync-op\",\r\n                \"network\": {\r\n                    \"CIDR\": \"10.150.0.0/32\"\r\n                }\r\n            }\r\n        ]\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{HOST}}:{{PORT}}/v1/sync",
+									"host": [
+										"{{HOST}}"
+									],
+									"port": "{{PORT}}",
+									"path": [
+										"v1",
+										"sync"
+									]
+								}
+							},
+							"response": []
+						},
 						{
 							"name": "[NW] Duplicate network",
 							"event": [
@@ -2775,7 +2856,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n\t\"groups\": {\r\n\t\t\"groups\": [\r\n\t\t\t{\r\n\t\t\t\t\"name\": \"sg-0\",\r\n\t\t\t\t\"networks\": [\r\n\t\t\t\t\t\"nw-0\"\r\n\t\t\t\t],\r\n                \"defaultAction\": \"QWERTY\",\r\n                \"logs\": true,\r\n                \"trace\": false\r\n\t\t\t}\r\n\t\t]\r\n\t},\r\n\t\"syncOp\": \"FullSync\"\r\n}",
+									"raw": "{\r\n\t\"groups\": {\r\n\t\t\"groups\": [\r\n\t\t\t{\r\n\t\t\t\t\"name\": \"sg-0\",\r\n\t\t\t\t\"networks\": [\r\n\t\t\t\t\t\"nw-0\"\r\n\t\t\t\t],\r\n                \"defaultAction\": \"QWERTY\",\r\n                \"logs\": true,\r\n                \"trace\": false\r\n\t\t\t}\r\n\t\t]\r\n\t},\r\n\t\"syncOp\": \"Upsert\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -2975,7 +3056,7 @@
 											"});\r",
 											"\r",
 											"pm.test(\"check message\", () => {\r",
-											"    pm.expect(pm.response.json().message).to.eql(\"sync unsupported subject type <nil>\")\r",
+											"    pm.expect(pm.response.json().message).to.eql(\"proto: (line 2:5): unknown field \\\"asdasdsa\\\"\")\r",
 											"});"
 										],
 										"type": "text/javascript"
@@ -4399,7 +4480,7 @@
 											"});\r",
 											"\r",
 											"pm.test(\"check message\", () => {\r",
-											"    pm.expect(pm.response.json().message).to.eql(\"sync unsupported subject type <nil>\")\r",
+											"    pm.expect(pm.response.json().message).to.eql(\"proto: (line 2:5): unknown field \\\"asdasdsa\\\"\")\r",
 											"});"
 										],
 										"type": "text/javascript"
