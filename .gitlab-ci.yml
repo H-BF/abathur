@@ -1,36 +1,4 @@
-# https://gitlab.wildberries.ru/devops/ci/templates/-/blob/master/README.md
-.template_repo: &repo
-  project: &ci_tmpl 'devops/ci/templates'
-  ref: &ci_tmpl_vers 'v3.6.1'
-
-variables:
-  # Mandatory vars. Do not change this
-  CI_TMPL_PROJECT: *ci_tmpl
-  CI_TMPL_PROJECT_VERSION: *ci_tmpl_vers
-
-
-  CI_TMPL_HELM_CHARTS: "common-deploy@v4.2.0"
-  CI_TMPL_HELM_RELEASE_NAMESPACE: swarm
-
-  # Harbor project name
-  REGISTRY_PROJECT: "swarm"
-
-  # Change deploy jobs appearance in pipeline
-  CI_TMPL_DEPLOY_GROUPING: per-service
-
-
 include:
-  - <<: *repo
-    file: /global.yml
-
-  - <<: *repo
-    file: /docker/build.yml
-
-stages:
-  - generate dynamic pipeline
-  - build
-
-generate build:
-  variables:
-    CI_TMPL_HELM_RELEASE_NAMES: "aba-client,aba-control,aba-server"
-
+    - project: swarm/swarmops/devops/ci/ci-templates
+      ref: v1.3.0
+      file: projects-ci/abathur.yml
