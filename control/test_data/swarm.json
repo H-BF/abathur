@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "b72f4315-5b41-4e64-a98a-ff1154050fec",
-		"name": "Swarm",
+		"_postman_id": "5d62eaf6-43e7-4e1c-97ba-29a16beb9a5f",
+		"name": "Swarm исследование",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "10298564"
+		"_exporter_id": "16473884"
 	},
 	"item": [
 		{
@@ -51,7 +51,7 @@
 					"response": []
 				},
 				{
-					"name": "[NW] Получение данных по двум network'ам",
+					"name": "[NW] Получение данных по двум существующим network'ам",
 					"event": [
 						{
 							"listen": "test",
@@ -108,18 +108,78 @@
 					"response": []
 				},
 				{
+					"name": "[NW] Получение данных по двум несуществующим network'ам",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Validate response JSON schema\", () => {\r",
+									"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"networksResponseJsonSchema\")));\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Networks array is empty\", () => {\r",
+									"   pm.expect(pm.response.json().networks).to.be.empty\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"neteworkNames\": [\r\n        \"nw-not-exist-1\",\r\n        \"nw-not-exist-2\"\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}:{{PORT}}/v1/list/networks",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"v1",
+								"list",
+								"networks"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "[NW] Cообщение об ошибке при некорректном значении существующего параметра",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
 								"exec": [
+									"\r",
 									"pm.test(\"Status code is 400\", () => {\r",
 									"    pm.response.to.have.status(400);\r",
 									"});\r",
 									"\r",
 									"pm.test(\"Validate response JSON schema\", () => {\r",
 									"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Code is 3\", () => {\r",
+									"    pm.expect(pm.response.json().code).to.eql(3);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check message\", () => {\r",
+									"    pm.expect(pm.response.json().message).to.eql(\"proto: syntax error (line 2:22): unexpected token \\\"nw-err\\\"\")\r",
 									"});"
 								],
 								"type": "text/javascript"
@@ -149,7 +209,7 @@
 					"response": []
 				},
 				{
-					"name": "[NW] Сообщение об ошибки при полностью некорректном теле",
+					"name": "[NW] Сообщение об ошибке при полностью некорректном теле",
 					"event": [
 						{
 							"listen": "test",
@@ -163,8 +223,12 @@
 									"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
 									"});\r",
 									"\r",
-									"pm.test(\"check message\", () => {\r",
+									"pm.test(\"Сheck message\", () => {\r",
 									"    pm.expect(pm.response.json().message).to.eql(\"proto: (line 2:5): unknown field \\\"asdasdas\\\"\")\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Code is 3\", () => {\r",
+									"    pm.expect(pm.response.json().code).to.eql(3);\r",
 									"});"
 								],
 								"type": "text/javascript"
@@ -188,6 +252,186 @@
 								"v1",
 								"list",
 								"networks"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[NW] Сообщение об ошибке при пробеле в названии",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 500\", () => {\r",
+									"    pm.response.to.have.status(500);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Сheck message\", () => {\r",
+									"    pm.expect(pm.response.json().message).to.eql(\"ERROR: value for domain sgroups.cname violates check constraint \\\"cname_validity\\\" (SQLSTATE 23514)\")\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Code is 13\", () => {\r",
+									"    pm.expect(pm.response.json().code).to.eql(13);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Validate response JSON schema\", () => {\r",
+									"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"neteworkNames\": [\r\n        \" nw-1\",\r\n        \"nw-2 \"\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}:{{PORT}}/v1/list/networks",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"v1",
+								"list",
+								"networks"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[NW] Сообщение об ошибке при > 255 символов в названии NW",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 500\", () => {\r",
+									"    pm.response.to.have.status(500);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Сheck message\", () => {\r",
+									"    pm.expect(pm.response.json().message).to.eql(\"ERROR: value for domain sgroups.cname violates check constraint \\\"cname_length\\\" (SQLSTATE 23514)\")\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Code is 13\", () => {\r",
+									"    pm.expect(pm.response.json().code).to.eql(13);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Validate response JSON schema\", () => {\r",
+									"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.variables.set(\"network\", JSON.stringify(customFunc.generateRandomString (256, 10)))"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"neteworkNames\": [\r\n        {{network}}\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}:{{PORT}}/v1/list/networks",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"v1",
+								"list",
+								"networks"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[NW] Некорректный запрос (опечатка)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", () => {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Сheck message\", () => {\r",
+									"    pm.expect(pm.response.json().message).to.eql(\"Not Found\")\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Code is 5\", () => {\r",
+									"    pm.expect(pm.response.json().code).to.eql(5);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Validate response JSON schema\", () => {\r",
+									"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.variables.set(\"network\", JSON.stringify(customFunc.generateRandomString (256, 10)))"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}:{{PORT}}/v1/list/network",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"v1",
+								"list",
+								"network"
 							]
 						}
 					},
@@ -240,7 +484,7 @@
 					"response": []
 				},
 				{
-					"name": "[SG] Получение данных по двум SG",
+					"name": "[SG] Получение данных по двум существующим SG",
 					"event": [
 						{
 							"listen": "test",
@@ -260,10 +504,10 @@
 									"\r",
 									"pm.test(\"Checking the data from the response\", () => {\r",
 									"    const testData = {\"sg-0\": [\"nw-0\", \"nw-1\"], \"sg-4\": [\"nw-5\"]}\r",
+									"    pm.expect(pm.response.json().groups).to.be.not.empty\r",
 									"    pm.response.json().groups.forEach(group => {\r",
 									"        pm.expect(group.networks.length).to.eql(testData[group.name].length)\r",
 									"        group.networks.forEach(network => {\r",
-									"            console.log(network)\r",
 									"            pm.expect(network).to.be.oneOf(testData[group.name])\r",
 									"        })\r",
 									"    }) \r",
@@ -301,6 +545,56 @@
 					"response": []
 				},
 				{
+					"name": "[SG] Получение данных по двум несуществующим SG",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Validate response JSON schema\", () => {\r",
+									"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"sgResponseJsonSchema\")));\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Networks array size is empty\", () => {\r",
+									"   pm.expect(pm.response.json().groups).to.be.empty\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"sgNames\" : [\r\n        \"sg-not-exist-0\",\r\n        \"sg-not-exist-4\"\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}:{{PORT}}/v1/list/security-groups",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"v1",
+								"list",
+								"security-groups"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "[SG] Cообщение об ошибке при некорректном значении существующего параметра",
 					"event": [
 						{
@@ -313,6 +607,14 @@
 									"\r",
 									"pm.test(\"Validate response JSON schema\", () => {\r",
 									"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Сheck message\", () => {\r",
+									"    pm.expect(pm.response.json().message).to.eql(\"proto: syntax error (line 2:17): unexpected token \\\"sg-1\\\"\")\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Code is 3\", () => {\r",
+									"    pm.expect(pm.response.json().code).to.eql(3);\r",
 									"});"
 								],
 								"type": "text/javascript"
@@ -347,7 +649,7 @@
 					"response": []
 				},
 				{
-					"name": "[SG] Сообщение об ошибки при полностью некорректном теле",
+					"name": "[SG] Сообщение об ошибке при полностью некорректном теле",
 					"event": [
 						{
 							"listen": "test",
@@ -363,6 +665,10 @@
 									"\r",
 									"pm.test(\"check message\", () => {\r",
 									"    pm.expect(pm.response.json().message).to.eql(\"proto: (line 2:5): unknown field \\\"asdasdas\\\"\")\r",
+									"});\r",
+									"\r",
+									"pm.test(\"code is 3\", () => {\r",
+									"    pm.expect(pm.response.json().code).to.eql(3)\r",
 									"});"
 								],
 								"type": "text/javascript"
@@ -395,6 +701,177 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "[SG] Сообщение об ошибке при пробеле в названии SG",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 500\", () => {\r",
+									"    pm.response.to.have.status(500);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Сheck message\", () => {\r",
+									"    pm.expect(pm.response.json().message).to.eql(\"ERROR: value for domain sgroups.cname violates check constraint \\\"cname_validity\\\" (SQLSTATE 23514)\")\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Code is 13\", () => {\r",
+									"    pm.expect(pm.response.json().code).to.eql(13);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Validate response JSON schema\", () => {\r",
+									"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"sgNames\" : [\r\n        \" sg-0\",\r\n        \"sg-4 \"\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}:{{PORT}}/v1/list/security-groups",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"v1",
+								"list",
+								"security-groups"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[SG] Сообщение об ошибке при > 255 символов в названии SG",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 500\", () => {\r",
+									"    pm.response.to.have.status(500);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Сheck message\", () => {\r",
+									"    pm.expect(pm.response.json().message).to.eql(\"ERROR: value for domain sgroups.cname violates check constraint \\\"cname_length\\\" (SQLSTATE 23514)\")\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Code is 13\", () => {\r",
+									"    pm.expect(pm.response.json().code).to.eql(13);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Validate response JSON schema\", () => {\r",
+									"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.variables.set(\"securityGroups\", JSON.stringify(customFunc.generateRandomString (256, 10)))"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"sgNames\" : [\r\n        {{securityGroups}}\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}:{{PORT}}/v1/list/security-groups",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"v1",
+								"list",
+								"security-groups"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[SG] Некорректный запрос (опечатка)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", () => {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Сheck message\", () => {\r",
+									"    pm.expect(pm.response.json().message).to.eql(\"Not Found\")\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Code is 5\", () => {\r",
+									"    pm.expect(pm.response.json().code).to.eql(5);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Validate response JSON schema\", () => {\r",
+									"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}:{{PORT}}/v1/list/security-group",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"v1",
+								"list",
+								"security-group"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -421,6 +898,7 @@
 									"});\r",
 									"\r",
 									"pm.test(\"All rules contain value 'sg-1' in the sgFrom field\", () => {\r",
+									"    pm.expect(pm.response.json().rules).to.be.not.empty\r",
 									"    pm.response.json().rules.forEach(rule => {\r",
 									"        pm.expect(rule.sgFrom).be.eql(\"sg-1\")\r",
 									"    })\r",
@@ -431,7 +909,7 @@
 									"        \"UDP\": [\"sg-3\", \"\", \"5600-5900\"], \r",
 									"        \"TCP\": [\"sg-0\", \"\", \"5000\"]\r",
 									"    }\r",
-									"\r",
+									"    pm.expect(pm.response.json().rules).to.be.not.empty\r",
 									"    pm.response.json().rules.forEach(rule => {\r",
 									"        pm.expect(rule.sgTo).to.eql(testData[rule.transport][0])\r",
 									"        pm.expect(rule.ports.length).to.eql(1)\r",
@@ -480,6 +958,88 @@
 					"response": []
 				},
 				{
+					"name": "[RULE] From any To any",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Validate response JSON schema\", () => {\r",
+									"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"rulesResponseJsonSchema\")));\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Rules array size is 2\", () => {\r",
+									"    pm.expect(pm.response.json().rules.length).to.eql(5)\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Correct sgFrom\", function () {\r",
+									"    pm.expect(pm.response.json().rules).to.be.not.empty\r",
+									"  for (i = 0; jsonData.rules.length > i; i++){\r",
+									"    if(jsonData.rules[i].sgFrom == \"sg-1\"){\r",
+									"        pm.expect(jsonData.rules[i].sgFrom).to.eql(\"sg-1\")\r",
+									"    }else if(jsonData.rules[i].sgFrom == \"sg-0\"){\r",
+									"        pm.expect(jsonData.rules[i].sgFrom).to.eql(\"sg-0\") \r",
+									"    }else{\r",
+									"        pm.expect(jsonData.rules[i].sgFrom).to.eql(\"sg-3\")\r",
+									"    } \r",
+									"  }\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Ports array is not empty\", () => {\r",
+									"    pm.expect(pm.response.json().rules).to.be.not.empty\r",
+									"    pm.response.json().rules.forEach(rule => {\r",
+									"        pm.expect(rule.ports).to.be.not.empty;\r",
+									"    })\r",
+									"});\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"sgFrom\": [],\r\n    \"sgTo\": []\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}:{{PORT}}/v1/rules",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"v1",
+								"rules"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "[RULE] From any To sg-2",
 					"event": [
 						{
@@ -499,6 +1059,7 @@
 									"});\r",
 									"\r",
 									"pm.test(\"All rules contain value 'sg-2' in the sgTo field\", () => {\r",
+									"    pm.expect(pm.response.json().rules).to.be.not.empty\r",
 									"    pm.response.json().rules.forEach(rule => {\r",
 									"        pm.expect(rule.sgTo).be.eql(\"sg-2\")\r",
 									"    })\r",
@@ -509,7 +1070,7 @@
 									"        \"UDP\": [\"sg-3\", [[\"9999-10050\", \"23000-23500\"]]],\r",
 									"        \"TCP\": [\"sg-0\", [[\"4444\", \"7000\"], [\"4445\", \"7300-7500\"], [\"4446\", \"7600-7700,7800\"]]]\r",
 									"    }\r",
-									"\r",
+									"    pm.expect(pm.response.json().rules).to.be.not.empty\r",
 									"    pm.response.json().rules.forEach(rule => {\r",
 									"        pm.expect(rule.sgFrom).to.eql(testData[rule.transport][0])\r",
 									"        pm.expect(rule.ports.length).to.eql(testData[rule.transport][1].length)\r",
@@ -546,7 +1107,7 @@
 					"response": []
 				},
 				{
-					"name": "[RULE] From sg-3 To sg-4",
+					"name": "[RULE] From sg-3 To sg-4 (существующие)",
 					"event": [
 						{
 							"listen": "test",
@@ -565,12 +1126,14 @@
 									"});\r",
 									"\r",
 									"pm.test(\"All rules contain value 'sg-3' in the sgFrom field\", () => {\r",
+									"    pm.expect(pm.response.json().rules).to.be.not.empty\r",
 									"    pm.response.json().rules.forEach(rule => {\r",
 									"        pm.expect(rule.sgFrom).be.eql(\"sg-3\")\r",
 									"    })\r",
 									"});\r",
 									"\r",
 									"pm.test(\"All rules contain value 'sg-4' in the sgTo field\", () => {\r",
+									"    pm.expect(pm.response.json().rules).to.be.not.empty\r",
 									"    pm.response.json().rules.forEach(rule => {\r",
 									"        pm.expect(rule.sgTo).be.eql(\"sg-4\")\r",
 									"    })\r",
@@ -581,9 +1144,8 @@
 									"        [\"1000-2000,8888\", \"55000,56000-57000\"],\r",
 									"        [\"7777,45000-46000\", \"60000\"]\r",
 									"    ]\r",
-									"\r",
+									"    pm.expect(pm.response.json().rules).to.be.not.empty\r",
 									"    const data = pm.response.json().rules[0]\r",
-									"    console.log(data)\r",
 									"    pm.expect(data.transport).to.eql(\"TCP\")\r",
 									"    pm.expect(data.ports.length).to.eql(2)\r",
 									"    for (let i = 0; i < data.ports.length; i++) {\r",
@@ -603,6 +1165,58 @@
 						"body": {
 							"mode": "raw",
 							"raw": "{\r\n    \"sgFrom\": [\"sg-3\"],\r\n    \"sgTo\": [\"sg-4\"]\r\n}"
+						},
+						"url": {
+							"raw": "{{HOST}}:{{PORT}}/v1/rules",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"v1",
+								"rules"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[RULE] From sg-10 To sg-20 (несуществующие)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Validate response JSON schema\", () => {\r",
+									"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"rulesResponseJsonSchema\")));\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Rules array is empty\", () => {\r",
+									"    pm.expect(pm.response.json().rules).to.be.empty\r",
+									"});\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"sgFrom\": [\"sg-10\"],\r\n    \"sgTo\": [\"sg-20\"]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
 						},
 						"url": {
 							"raw": "{{HOST}}:{{PORT}}/v1/rules",
@@ -680,6 +1294,14 @@
 									"\r",
 									"pm.test(\"Validate response JSON schema\", () => {\r",
 									"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Сheck message\", () => {\r",
+									"    pm.expect(pm.response.json().message).to.eql(\"proto: syntax error (line 2:15): unexpected token \\\"sg-3\\\"\")\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Code is 3\", () => {\r",
+									"    pm.expect(pm.response.json().code).to.eql(3);\r",
 									"});"
 								],
 								"type": "text/javascript"
@@ -724,6 +1346,10 @@
 									"\r",
 									"pm.test(\"check message\", () => {\r",
 									"    pm.expect(pm.response.json().message).to.eql(\"proto: (line 2:5): unknown field \\\"asdasdas\\\"\")\r",
+									"});\r",
+									"\r",
+									"pm.test(\"code is 3\", () => {\r",
+									"    pm.expect(pm.response.json().code).to.eql(3)\r",
 									"});"
 								],
 								"type": "text/javascript"
@@ -746,6 +1372,175 @@
 							"path": [
 								"v1",
 								"rules"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[RULE] Сообщение об ошибке при пробеле в названии SG",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 500\", () => {\r",
+									"    pm.response.to.have.status(500);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Сheck message\", () => {\r",
+									"    pm.expect(pm.response.json().message).to.eql(\"reason: ERROR: value for domain sgroups.cname violates check constraint \\\"cname_validity\\\" (SQLSTATE 23514)\")\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Code is 13\", () => {\r",
+									"    pm.expect(pm.response.json().code).to.eql(13);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Validate response JSON schema\", () => {\r",
+									"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"sgFrom\": [\" sg-3\"],\r\n    \"sgTo\": [\"sg-4 \"]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}:{{PORT}}/v1/rules",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"v1",
+								"rules"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[RULE] Сообщение об ошибке при > 255 символах в названии SG",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 500\", () => {\r",
+									"    pm.response.to.have.status(500);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Сheck message\", () => {\r",
+									"    pm.expect(pm.response.json().message).to.eql(\"reason: ERROR: value for domain sgroups.cname violates check constraint \\\"cname_length\\\" (SQLSTATE 23514)\")\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Code is 13\", () => {\r",
+									"    pm.expect(pm.response.json().code).to.eql(13);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Validate response JSON schema\", () => {\r",
+									"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.variables.set(\"sglength\", JSON.stringify(customFunc.generateRandomString (256, 10)))"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"sgFrom\": [{{sglength}}],\r\n    \"sgTo\": [\"sg-4 \"]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}:{{PORT}}/v1/rules",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"v1",
+								"rules"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[RULE] Некорректный запрос (опечатка)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", () => {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Сheck message\", () => {\r",
+									"    pm.expect(pm.response.json().message).to.eql(\"Not Found\")\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Code is 5\", () => {\r",
+									"    pm.expect(pm.response.json().code).to.eql(5);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Validate response JSON schema\", () => {\r",
+									"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}:{{PORT}}/v1/rule",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"v1",
+								"rule"
 							]
 						}
 					},
@@ -776,34 +1571,40 @@
 									"});\r",
 									"\r",
 									"pm.test(\"All rules contain value 'sg-0' in the sgFrom field\", () => {\r",
+									"    pm.expect(pm.response.json().rules).to.be.not.empty\r",
 									"    pm.response.json().rules.forEach(rule => {\r",
 									"        pm.expect(rule.sgFrom).be.eql(\"sg-0\")\r",
 									"    })\r",
 									"});\r",
 									"\r",
 									"pm.test(\"fqdn is 'google.com'\", () => {\r",
+									"    pm.expect(pm.response.json().rules).to.be.not.empty\r",
 									"    pm.response.json().rules.forEach(rule => {\r",
 									"        pm.expect(rule.FQDN).be.eql(\"google.com\")\r",
 									"    })\r",
 									"})\r",
 									"\r",
 									"pm.test(\"proto is 'TCP'\", () => {\r",
+									"    pm.expect(pm.response.json().rules).to.be.not.empty\r",
 									"    pm.response.json().rules.forEach(rule => {\r",
 									"        pm.expect(rule.transport).be.eql(\"TCP\")\r",
 									"    })\r",
 									"})\r",
 									"\r",
 									"pm.test(\"port src is '4446'\", () => {\r",
+									"    pm.expect(pm.response.json().rules).to.be.not.empty\r",
 									"    let data = pm.response.json().rules[0]\r",
 									"    pm.expect(data.ports[0].s).be.eql(\"4446\")\r",
 									"})\r",
 									"\r",
 									"pm.test(\"port dst is '7600-7700,7800'\", () => {\r",
+									"    pm.expect(pm.response.json().rules).to.be.not.empty\r",
 									"    let data = pm.response.json().rules[0]\r",
 									"    pm.expect(data.ports[0].d).be.eql(\"7600-7700,7800\")\r",
 									"})\r",
 									"\r",
 									"pm.test(\"protocols is ['http', 'ssh']\", () => {\r",
+									"    pm.expect(pm.response.json().rules).to.be.not.empty\r",
 									"    const protocols = [\"http\", \"ssh\"]\r",
 									"    let data = pm.response.json().rules[0]\r",
 									"    pm.expect(data.protocols).to.deep.eq(protocols)\r",
@@ -829,6 +1630,84 @@
 						"body": {
 							"mode": "raw",
 							"raw": "{\r\n  \"sgFrom\": [\"sg-0\"]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}:{{PORT}}/v1/fqdn/rules",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"v1",
+								"fqdn",
+								"rules"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[RULE-FQDN] для двух SG",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Validate response JSON schema\", () => {\r",
+									"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"rulesFqdnResponseJsonSchema\")));\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Rules array size is 2\", () => {\r",
+									"    pm.expect(pm.response.json().rules.length).to.eql(2)\r",
+									"});\r",
+									"\r",
+									"pm.test(\"All rules contain value 'sg-0' or 'sg-1' in the sgFrom field\", () => {\r",
+									"    pm.expect(pm.response.json().rules).to.be.not.empty\r",
+									"  for (i = 0; jsonData.rules.length > i; i++){\r",
+									"    if(jsonData.rules[i].sgFrom == \"sg-0\"){\r",
+									"        pm.expect(jsonData.rules[i].sgFrom).to.eql(\"sg-0\")\r",
+									"    }else{\r",
+									"        pm.expect(jsonData.rules[i].sgFrom).to.eql(\"sg-1\")\r",
+									"    } \r",
+									"  }\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Ports is not empty\", () => {\r",
+									"    pm.response.json().rules.forEach(rule => {\r",
+									"        pm.expect(rule.ports).to.be.not.empty\r",
+									"    })\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"sgFrom\": [\"sg-0\", \"sg-1\"]\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -929,6 +1808,7 @@
 									"});\r",
 									"\r",
 									"pm.test(\"Check rules\", () => {\r",
+									"    pm.expect(pm.response.json().rules).to.be.not.empty\r",
 									"    const testData = {\r",
 									"        \"TCP\": [\"sg-0\", \"google.com\", [[\"4446\", \"7600-7700,7800\"]], true, [\"http\", \"ssh\"]],\r",
 									"        \"UDP\": [\"sg-1\", \"yandex.ru\", [[\"1000-2000,8888\", \"55000,56000-57000\"], [\"7777,45000-46000\", \"60000\"]], false, []]\r",
@@ -992,6 +1872,14 @@
 									"\r",
 									"pm.test(\"Validate response JSON schema\", () => {\r",
 									"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Сheck message\", () => {\r",
+									"    pm.expect(pm.response.json().message).to.eql(\"proto: syntax error (line 2:13): unexpected token \\\"sg-0\\\"\")\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Code is 3\", () => {\r",
+									"    pm.expect(pm.response.json().code).to.eql(3);\r",
 									"});"
 								],
 								"type": "text/javascript"
@@ -1042,6 +1930,10 @@
 									"\r",
 									"pm.test(\"check message\", () => {\r",
 									"    pm.expect(pm.response.json().message).to.eql(\"proto: (line 2:5): unknown field \\\"asdasdas\\\"\")\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Code is 3\", () => {\r",
+									"    pm.expect(pm.response.json().code).to.eql(3);\r",
 									"});"
 								],
 								"type": "text/javascript"
@@ -1070,6 +1962,187 @@
 								"v1",
 								"fqdn",
 								"rules"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[RULE-FQDN] Сообщение об ошибке при > 255 символов в названии SG",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 500\", () => {\r",
+									"    pm.response.to.have.status(500);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Сheck message\", () => {\r",
+									"    pm.expect(pm.response.json().message).to.eql(\"reason: ERROR: value for domain sgroups.cname violates check constraint \\\"cname_length\\\" (SQLSTATE 23514)\")\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Code is 13\", () => {\r",
+									"    pm.expect(pm.response.json().code).to.eql(13);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Validate response JSON schema\", () => {\r",
+									"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.variables.set(\"sgFqdn\", JSON.stringify(customFunc.generateRandomString (256, 10)))"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"sgFrom\": [{{sgFqdn}}]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}:{{PORT}}/v1/fqdn/rules",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"v1",
+								"fqdn",
+								"rules"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[RULE-FQDN] Сообщение об ошибке при пробеле в названии SG",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 500\", () => {\r",
+									"    pm.response.to.have.status(500);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Сheck message\", () => {\r",
+									"    pm.expect(pm.response.json().message).to.eql(\"reason: ERROR: value for domain sgroups.cname violates check constraint \\\"cname_validity\\\" (SQLSTATE 23514)\")\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Code is 13\", () => {\r",
+									"    pm.expect(pm.response.json().code).to.eql(13);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Validate response JSON schema\", () => {\r",
+									"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"sgFrom\": [\"sg-0 \"]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}:{{PORT}}/v1/fqdn/rules",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"v1",
+								"fqdn",
+								"rules"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[RULE-FQDN] Некорректный запрос (опечатка)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", () => {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Сheck message\", () => {\r",
+									"    pm.expect(pm.response.json().message).to.eql(\"Not Found\")\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Code is 5\", () => {\r",
+									"    pm.expect(pm.response.json().code).to.eql(5);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Validate response JSON schema\", () => {\r",
+									"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"sgFrom\": []\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}:{{PORT}}/v1/fqdn/rule",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"v1",
+								"fqdn",
+								"rule"
 							]
 						}
 					},
@@ -1141,6 +2214,7 @@
 									"});\r",
 									"\r",
 									"pm.test(\"check rules\", () => {\r",
+									"    pm.expect(pm.response.json().rules).to.be.not.empty\r",
 									"    const testData = {\r",
 									"        \"IPv4\": [\"sg-0\", [0], true, true],\r",
 									"        \"IPv6\": [\"sg-0\", [0,8,100], false, true]\r",
@@ -1217,6 +2291,7 @@
 									"});\r",
 									"\r",
 									"pm.test(\"check rules\", () => {\r",
+									"    pm.expect(pm.response.json().rules).to.be.not.empty\r",
 									"    const testData = {\r",
 									"        \"sg-1\": [\"IPv4\", [10,255], true, false],\r",
 									"        \"sg-2\": [\"IPv6\", [15], false, false]\r",
@@ -1324,6 +2399,14 @@
 									"\r",
 									"pm.test(\"Validate response JSON schema\", () => {\r",
 									"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
+									"});\r",
+									"\r",
+									"pm.test(\"check message\", () => {\r",
+									"    pm.expect(pm.response.json().message).to.eql(\"proto: (line 2:3): unknown field \\\"Sg\\\"\")\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Code is 3\", () => {\r",
+									"    pm.expect(pm.response.json().code).to.eql(3);\r",
 									"});"
 								],
 								"type": "text/javascript"
@@ -1358,7 +2441,7 @@
 					"response": []
 				},
 				{
-					"name": "[RULE-ICMP-S] Сообщение об ошибки при полностью некорректном теле",
+					"name": "[RULE-ICMP-S] Сообщение об ошибке при полностью некорректном теле",
 					"event": [
 						{
 							"listen": "test",
@@ -1374,6 +2457,10 @@
 									"\r",
 									"pm.test(\"check message\", () => {\r",
 									"    pm.expect(pm.response.json().message).to.eql(\"proto: (line 2:5): unknown field \\\"asdasdas\\\"\")\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Code is 3\", () => {\r",
+									"    pm.expect(pm.response.json().code).to.eql(3);\r",
 									"});"
 								],
 								"type": "text/javascript"
@@ -1406,6 +2493,201 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "[RULE-ICMP-S] Сообщение об ошибке при пробеле в названии SG",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 500\", () => {\r",
+									"    pm.response.to.have.status(500);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Сheck message\", () => {\r",
+									"    pm.expect(pm.response.json().message).to.eql(\"reason: ERROR: value for domain sgroups.cname violates check constraint \\\"cname_validity\\\" (SQLSTATE 23514)\")\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Code is 13\", () => {\r",
+									"    pm.expect(pm.response.json().code).to.eql(13);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Validate response JSON schema\", () => {\r",
+									"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
+									"});\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"sg\": [\r\n    \" sg-0\"\r\n  ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}:{{PORT}}/v1/sg-icmp/rules",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"v1",
+								"sg-icmp",
+								"rules"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[RULE-ICMP-S] Сообщение об ошибке при > 255 символов в названии SG",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 500\", () => {\r",
+									"    pm.response.to.have.status(500);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Сheck message\", () => {\r",
+									"    pm.expect(pm.response.json().message).to.eql(\"reason: ERROR: value for domain sgroups.cname violates check constraint \\\"cname_length\\\" (SQLSTATE 23514)\")\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Code is 13\", () => {\r",
+									"    pm.expect(pm.response.json().code).to.eql(13);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Validate response JSON schema\", () => {\r",
+									"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.variables.set(\"sgIcmp\", JSON.stringify(customFunc.generateRandomString (256, 10)))"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"sg\": [\r\n    {{sgIcmp}}\r\n  ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}:{{PORT}}/v1/sg-icmp/rules",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"v1",
+								"sg-icmp",
+								"rules"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[RULE-ICMP-S] Некорректный запрос (опечатка)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", () => {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Сheck message\", () => {\r",
+									"    pm.expect(pm.response.json().message).to.eql(\"Not Found\")\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Code is 5\", () => {\r",
+									"    pm.expect(pm.response.json().code).to.eql(5);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Validate response JSON schema\", () => {\r",
+									"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
+									"});\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"sg\": [\r\n    \"sg-0\"\r\n  ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}:{{PORT}}/v1/sg-icmp/rule",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"v1",
+								"sg-icmp",
+								"rule"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -1432,6 +2714,7 @@
 									"});\r",
 									"\r",
 									"pm.test(\"check rules\", () => {\r",
+									"    pm.expect(pm.response.json().rules).to.be.not.empty\r",
 									"    const testData = {\r",
 									"        \"IPv4\": [\"sg-0\", \"sg-1\", [0], true, true],\r",
 									"        \"IPv6\": [\"sg-0\", \"sg-1\", [8,10], true, false]\r",
@@ -1550,6 +2833,66 @@
 					"response": []
 				},
 				{
+					"name": "[RULE-ICMP-SS] Получение правил для несуществующих SG",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Validate response JSON schema\", () => {\r",
+									"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"rulesIcmpSgSgResponseJsonSchema\")));\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Networks array size is 1\", () => {\r",
+									"   pm.expect(pm.response.json().rules).to.be.empty\r",
+									"});\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"sgFrom\": [\"sg-1-not-exist\"],\r\n  \"sgTo\": [\"sg-2-not-exist\"]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}:{{PORT}}/v1/sg-sg-icmp/rules",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"v1",
+								"sg-sg-icmp",
+								"rules"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "[RULE-ICMP-SS] Получение правил для нескольких SG",
 					"event": [
 						{
@@ -1569,6 +2912,7 @@
 									"});\r",
 									"\r",
 									"pm.test(\"check rules\", () => {\r",
+									"    pm.expect(pm.response.json().rules).to.be.not.empty\r",
 									"    const testData = {\r",
 									"        \"IPv4\": [\"sg-2\", \"sg-0\", [100,101,102], true, true],\r",
 									"        \"IPv6\": [\"sg-2\", \"sg-3\", [8], false, false]\r",
@@ -1581,7 +2925,14 @@
 									"        pm.expect(rule.logs).to.eql(testData[rule.ICMP.IPv][3])\r",
 									"        pm.expect(rule.trace).to.eql(testData[rule.ICMP.IPv][4])\r",
 									"    })\r",
-									"})"
+									"});\r",
+									"\r",
+									"pm.test(\"sg-1 is not exist\", () => {\r",
+									"    pm.expect(pm.response.json().rules).to.be.not.empty\r",
+									"    pm.response.json().rules.forEach(rule => {\r",
+									"        pm.expect(rule.SgFrom).to.not.eql(\"sg-1\")\r",
+									"    })\r",
+									"});"
 								],
 								"type": "text/javascript"
 							}
@@ -1592,7 +2943,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"sgFrom\": [\"sg-2\", \"sg-1\"],\r\n    \"sgTo\": [\"sg-3\", \"sg-0\"]\r\n}",
+							"raw": "{\r\n    \"sgFrom\": [\"sg-2\"],\r\n    \"sgTo\": [\"sg-3\", \"sg-0\"]\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1627,6 +2978,14 @@
 									"\r",
 									"pm.test(\"Validate response JSON schema\", () => {\r",
 									"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
+									"});\r",
+									"\r",
+									"pm.test(\"check message\", () => {\r",
+									"    pm.expect(pm.response.json().message).to.eql(\"proto: syntax error (line 2:13): unexpected token \\\"sg-0\\\"\")\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Code is 3\", () => {\r",
+									"    pm.expect(pm.response.json().code).to.eql(3);\r",
 									"});"
 								],
 								"type": "text/javascript"
@@ -1677,6 +3036,10 @@
 									"\r",
 									"pm.test(\"check message\", () => {\r",
 									"    pm.expect(pm.response.json().message).to.eql(\"proto: (line 2:5): unknown field \\\"asdasdas\\\"\")\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Code is 3\", () => {\r",
+									"    pm.expect(pm.response.json().code).to.eql(3);\r",
 									"});"
 								],
 								"type": "text/javascript"
@@ -1705,6 +3068,177 @@
 								"v1",
 								"sg-sg-icmp",
 								"rules"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[RULE-ICMP-SS] Сообщение об ошибке при пробеле в названии SG",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 500\", () => {\r",
+									"    pm.response.to.have.status(500);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Сheck message\", () => {\r",
+									"    pm.expect(pm.response.json().message).to.eql(\"reason: ERROR: value for domain sgroups.cname violates check constraint \\\"cname_validity\\\" (SQLSTATE 23514)\")\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Code is 13\", () => {\r",
+									"    pm.expect(pm.response.json().code).to.eql(13);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Validate response JSON schema\", () => {\r",
+									"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"sgFrom\": [\" sg-0\"],\r\n  \"sgTo\": []\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}:{{PORT}}/v1/sg-sg-icmp/rules",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"v1",
+								"sg-sg-icmp",
+								"rules"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[RULE-ICMP-SS] Сообщение об ошибке при > 255 символов в названии SG",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 500\", () => {\r",
+									"    pm.response.to.have.status(500);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Сheck message\", () => {\r",
+									"    pm.expect(pm.response.json().message).to.eql(\"reason: ERROR: value for domain sgroups.cname violates check constraint \\\"cname_length\\\" (SQLSTATE 23514)\")\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Code is 13\", () => {\r",
+									"    pm.expect(pm.response.json().code).to.eql(13);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Validate response JSON schema\", () => {\r",
+									"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.variables.set(\"icmpSs\", JSON.stringify(customFunc.generateRandomString (256, 10)))"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"sgFrom\": [{{icmpSs}}],\r\n  \"sgTo\": []\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}:{{PORT}}/v1/sg-sg-icmp/rules",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"v1",
+								"sg-sg-icmp",
+								"rules"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[RULE-ICMP-SS] Некорректный запрос (опечатка)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", () => {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Сheck message\", () => {\r",
+									"    pm.expect(pm.response.json().message).to.eql(\"Not Found\")\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Code is 5\", () => {\r",
+									"    pm.expect(pm.response.json().code).to.eql(5);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Validate response JSON schema\", () => {\r",
+									"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}:{{PORT}}/v1/sg-sg-icmp/rule",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"v1",
+								"sg-sg-icmp",
+								"rule"
 							]
 						}
 					},
@@ -1776,6 +3310,7 @@
 									"});\r",
 									"\r",
 									"pm.test(\"All rules contain value 'sg-0' in the SG field\", () => {\r",
+									"    pm.expect(pm.response.json().rules).to.be.not.empty\r",
 									"    pm.response.json().rules.forEach(rule => {\r",
 									"        pm.expect(rule.SG).be.eql(\"sg-0\")\r",
 									"    })\r",
@@ -1917,7 +3452,7 @@
 					"response": []
 				},
 				{
-					"name": "[RULE-CIDR] Сообщение об ошибки при полностью некорректном теле",
+					"name": "[RULE-CIDR] Сообщение об ошибке при полностью некорректном теле",
 					"event": [
 						{
 							"listen": "test",
@@ -1933,6 +3468,10 @@
 									"\r",
 									"pm.test(\"check message\", () => {\r",
 									"    pm.expect(pm.response.json().message).to.eql(\"proto: (line 2:5): unknown field \\\"asdasdas\\\"\")\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Error code is 3\", () => {\r",
+									"    pm.expect(pm.response.json().code).to.eql(3);\r",
 									"});"
 								],
 								"type": "text/javascript"
@@ -1961,6 +3500,178 @@
 								"v1",
 								"cird-sg",
 								"rules"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[RULE-CIDR] Сообщение об ошибке при > 255 символов в названии SG",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 500\", () => {\r",
+									"    pm.response.to.have.status(500);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Сheck message\", () => {\r",
+									"    pm.expect(pm.response.json().message).to.eql(\"ERROR: value for domain sgroups.cname violates check constraint \\\"cname_length\\\" (SQLSTATE 23514)\")\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Code is 13\", () => {\r",
+									"    pm.expect(pm.response.json().code).to.eql(13);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Validate response JSON schema\", () => {\r",
+									"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.variables.set(\"sgCidr\", JSON.stringify(customFunc.generateRandomString (256, 10)))"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"sg\": [{{sgCidr}}]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}:{{PORT}}/v1/cird-sg/rules",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"v1",
+								"cird-sg",
+								"rules"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[RULE-CIDR] Сообщение об ошибке при пробеле в названии SG",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 500\", () => {\r",
+									"    pm.response.to.have.status(500);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Сheck message\", () => {\r",
+									"    pm.expect(pm.response.json().message).to.eql(\"ERROR: value for domain sgroups.cname violates check constraint \\\"cname_validity\\\" (SQLSTATE 23514)\")\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Code is 13\", () => {\r",
+									"    pm.expect(pm.response.json().code).to.eql(13);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Validate response JSON schema\", () => {\r",
+									"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"sg\": [\"sg-0 \"]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}:{{PORT}}/v1/cird-sg/rules",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"v1",
+								"cird-sg",
+								"rules"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[RULE-CIDR] Некорректный запрос (опечатка)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", () => {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Сheck message\", () => {\r",
+									"    pm.expect(pm.response.json().message).to.eql(\"Not Found\")\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Code is 5\", () => {\r",
+									"    pm.expect(pm.response.json().code).to.eql(5);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Validate response JSON schema\", () => {\r",
+									"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}:{{PORT}}/v1/cird-sg/rule",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"v1",
+								"cird-sg",
+								"rule"
 							]
 						}
 					},
@@ -2119,7 +3830,7 @@
 			"name": "GET /v1​/sg-from​/{sgFrom}​/to​/{sgTo}​/rules",
 			"item": [
 				{
-					"name": "[RULE] Получаем правила от sg-1 к sg-2",
+					"name": "[RULE] Получаем правила от sg-3 к sg-4",
 					"event": [
 						{
 							"listen": "test",
@@ -2203,6 +3914,14 @@
 									"\r",
 									"pm.test(\"Validate response JSON schema\", () => {\r",
 									"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Сheck message\", () => {\r",
+									"    pm.expect(pm.response.json().message).to.eql(\"not found rules for from SG 'sg-1' to SG 'sg-22342'\")\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Code is 5\", () => {\r",
+									"    pm.expect(pm.response.json().code).to.eql(5);\r",
 									"});"
 								],
 								"type": "text/javascript"
@@ -2386,13 +4105,23 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test(\"Status code is 400\", () => {\r",
+									" pm.test(\"Status code is 400\", () => {\r",
 									"    pm.response.to.have.status(400);\r",
 									"});\r",
 									"\r",
 									"pm.test(\"Validate response JSON schema\", () => {\r",
 									"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
-									"});"
+									"});\r",
+									"\r",
+									"pm.test(\"Check error code\", () => {\r",
+									"    pm.expect(pm.response.json().code).to.eql(3);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check error message\", () => {\r",
+									"    pm.expect(pm.response.json().message).to.eql(\"invalid request: no address is provided\");\r",
+									"});\r",
+									"\r",
+									""
 								],
 								"type": "text/javascript"
 							}
@@ -2470,7 +4199,7 @@
 					"name": "Error",
 					"item": [
 						{
-							"name": "No sync op field",
+							"name": "[SYNC-OP] No sync op field",
 							"event": [
 								{
 									"listen": "test",
@@ -2588,6 +4317,14 @@
 											"\r",
 											"pm.test(\"Validate response JSON schema\", () => {\r",
 											"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Check error code\", () => {\r",
+											"    pm.expect(pm.response.json().code).to.eql(3);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Check error message\", () => {\r",
+											"    pm.expect(pm.response.json().message).to.eql(\"proto: (line 5:25): invalid value for string type: [\");\r",
 											"});"
 										],
 										"type": "text/javascript"
@@ -2792,7 +4529,16 @@
 											"\r",
 											"pm.test(\"Validate response JSON schema\", () => {\r",
 											"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
-											"});"
+											"});\r",
+											"\r",
+											"pm.test(\"Check error code\", () => {\r",
+											"    pm.expect(pm.response.json().code).to.eql(3);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Check error message\", () => {\r",
+											"    pm.expect(pm.response.json().message).to.eql(\"proto: syntax error (line 6:29): unexpected token \\\"nw-test-0\\\"\");\r",
+											"});\r",
+											""
 										],
 										"type": "text/javascript"
 									}
@@ -3367,6 +5113,14 @@
 											"\r",
 											"pm.test(\"Validate response JSON schema\", () => {\r",
 											"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
+											"});\r",
+											"\r",
+											"pm.test(\"code is 3\", () => {\r",
+											"    pm.expect(pm.response.json().code).to.eql(3)\r",
+											"});\r",
+											"\r",
+											"pm.test(\"check message\", () => {\r",
+											"    pm.expect(pm.response.json().message).to.eql(\"proto: (line 2:5): unknown field \\\"asdasdsa\\\"\")\r",
 											"});"
 										],
 										"type": "text/javascript"
@@ -3465,6 +5219,14 @@
 											"\r",
 											"pm.test(\"Validate response JSON schema\", () => {\r",
 											"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
+											"});\r",
+											"\r",
+											"pm.test(\"check error code is 3\", () => {\r",
+											"    pm.expect(pm.response.json().code).to.eql(3)\r",
+											"})\r",
+											"\r",
+											"pm.test(\"check message\", () => {\r",
+											"    pm.expect(pm.response.json().message).to.eql(\"proto: syntax error (line 5:26): unexpected token {\")\r",
 											"});"
 										],
 										"type": "text/javascript"
@@ -3839,7 +5601,7 @@
 											"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
 											"});\r",
 											"\r",
-											"pm.test(\"code is 13\", () => {\r",
+											"pm.test(\"code is 3\", () => {\r",
 											"    pm.expect(pm.response.json().code).to.eql(3)\r",
 											"});\r",
 											"\r",
@@ -3892,7 +5654,7 @@
 											"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
 											"});\r",
 											"\r",
-											"pm.test(\"code is 13\", () => {\r",
+											"pm.test(\"code is 3\", () => {\r",
 											"    pm.expect(pm.response.json().code).to.eql(3)\r",
 											"});\r",
 											"\r",
@@ -3945,7 +5707,7 @@
 											"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
 											"});\r",
 											"\r",
-											"pm.test(\"code is 13\", () => {\r",
+											"pm.test(\"code is 3\", () => {\r",
 											"    pm.expect(pm.response.json().code).to.eql(3)\r",
 											"});\r",
 											"\r",
@@ -3998,7 +5760,7 @@
 											"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
 											"});\r",
 											"\r",
-											"pm.test(\"code is 13\", () => {\r",
+											"pm.test(\"code is 3\", () => {\r",
 											"    pm.expect(pm.response.json().code).to.eql(3)\r",
 											"});\r",
 											"\r",
@@ -4157,7 +5919,7 @@
 											"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
 											"});\r",
 											"\r",
-											"pm.test(\"code is 13\", () => {\r",
+											"pm.test(\"code is 3\", () => {\r",
 											"    pm.expect(pm.response.json().code).to.eql(3)\r",
 											"});\r",
 											"\r",
@@ -4210,7 +5972,7 @@
 											"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
 											"});\r",
 											"\r",
-											"pm.test(\"code is 13\", () => {\r",
+											"pm.test(\"code is 3\", () => {\r",
 											"    pm.expect(pm.response.json().code).to.eql(3)\r",
 											"});\r",
 											"\r",
@@ -4263,7 +6025,7 @@
 											"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
 											"});\r",
 											"\r",
-											"pm.test(\"code is 13\", () => {\r",
+											"pm.test(\"code is 3\", () => {\r",
 											"    pm.expect(pm.response.json().code).to.eql(3)\r",
 											"});\r",
 											"\r",
@@ -4316,7 +6078,7 @@
 											"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
 											"});\r",
 											"\r",
-											"pm.test(\"code is 13\", () => {\r",
+											"pm.test(\"code is 3\", () => {\r",
 											"    pm.expect(pm.response.json().code).to.eql(3)\r",
 											"});\r",
 											"\r",
