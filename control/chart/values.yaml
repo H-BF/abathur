@@ -16,7 +16,7 @@ abathurControl:
     memory: 500Mi
   # securityContext:
   #   privileged: true
-  restartPolicy: Never 
+  restartPolicy: Never
   destroy: true
   scenario: 2
   #simple-s2s,simple-s2f,simple-s2c-ie,advanced-changeip,advanced-icmp
@@ -78,7 +78,7 @@ hbfClient:
     tag: feature-swarm-344-97f4e095
   resources:
     cpu: 100m
-    memory:  100Mi
+    memory: 100Mi
   dns:
     ip: 10.96.0.10
     port: 53
