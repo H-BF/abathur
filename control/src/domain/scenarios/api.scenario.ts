@@ -42,7 +42,7 @@ export class ApiScenario implements IScenarioInterface {
 
         this.sharedConfigMaps.push(newHbfServer.testDataConfMap({
             prefix: this.prefix,
-            data: fs.readFileSync(path.resolve(__dirname, "../../../../sql/api/hbf.api.sql"), "utf-8") 
+            data: fs.readFileSync(path.resolve(__dirname, "../../../../sql/api/hbf.api.sql"), "utf-8")
         }) as V1ConfigMap)
         this.sharedConfigMaps.push(newHbfServer.hbfConfMap({
             prefix: this.prefix,
@@ -50,7 +50,7 @@ export class ApiScenario implements IScenarioInterface {
         }) as V1ConfigMap)
         this.sharedConfigMaps.push(newHbfServer.gooseConfMap({
             prefix: this.prefix,
-         }) as V1ConfigMap)
+        }) as V1ConfigMap)
         this.sharedConfigMaps.push(apiTestPod.specConfMapNewmanTestData({
             prefix: this.prefix,
             data: JSON.stringify(data)
@@ -71,28 +71,28 @@ export class ApiScenario implements IScenarioInterface {
                 variables.get("HBF_TAG"),
                 "hbf.server" //т.к. мы тестируем API только HBF-server
             )
-            
+
             logger.info(`[SCENARIO] uuid: ${this.reporter.launchUUID}`)
             streamApiHandler.setLaunchUuid(this.reporter.launchUUID)
-    
+
             await manager.createSharedConfigMaps(this.sharedConfigMaps, this.prefix)
             await manager.createHBFServerDB(this.prefix)
             await podInf.waitStatus(
                 `${this.prefix}-p${variables.get("PIPELINE_ID")}-hbf-server-db`,
-                 PodStatus.RUNNING,
-                 this.prefix
+                PodStatus.RUNNING,
+                this.prefix
             )
-            
+
             await podInf.waitContainerIsReady(
                 `${this.prefix}-p${variables.get("PIPELINE_ID")}-hbf-server-db`,
                 this.prefix
             )
             await manager.createHBFServer(this.prefix, this.hbfServerIP, this.hbfServerPort)
-    
+
             await podInf.waitStatus(
                 `${this.prefix}-p${variables.get("PIPELINE_ID")}-hbf-server`,
-                 PodStatus.RUNNING,
-                 "API"
+                PodStatus.RUNNING,
+                "API"
             )
             await podInf.waitContainerIsReady(
                 `${this.prefix}-p${variables.get("PIPELINE_ID")}-hbf-server`,
@@ -100,19 +100,19 @@ export class ApiScenario implements IScenarioInterface {
             )
 
             await manager.createAPITestPod(
-                this.prefix, 
+                this.prefix,
                 this.apiTestIp
             )
-    
+
             await waitSetSize(streamApiHandler.getStreamList(), 1, 180_000, 5)
             await this.reporter.setStauts(LaunchStatus.IN_PORCESS)
-            await waitSetSize(streamApiHandler.getStreamList(), 0, 180_000, 10_000)
-    
+            await waitSetSize(streamApiHandler.getStreamList(), 0, 300_000, 10_000)
+
             this.failCount = streamApiHandler.failCount
             this.passCount = streamApiHandler.passCount
-    
+
             await this.reporter.closeLaunch(this.failCount, this.passCount, Date.now() - startTime)
-        } catch(err) {
+        } catch (err) {
             await this.reporter.closeLaunchWithError(`${err}`)
         } finally {
             this.finish = true
