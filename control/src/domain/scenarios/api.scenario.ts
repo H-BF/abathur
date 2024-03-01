@@ -106,7 +106,7 @@ export class ApiScenario implements IScenarioInterface {
 
             await waitSetSize(streamApiHandler.getStreamList(), 1, 180_000, 5)
             await this.reporter.setStauts(LaunchStatus.IN_PORCESS)
-            await waitSetSize(streamApiHandler.getStreamList(), 0, 300_000, 10_000)
+            await waitSetSize(streamApiHandler.getStreamList(), 0, 600_000, 10_000)
 
             this.failCount = streamApiHandler.failCount
             this.passCount = streamApiHandler.passCount

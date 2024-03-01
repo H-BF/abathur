@@ -11,6 +11,45 @@
                 ('nw-4', '10.150.0.224/32', (SELECT id FROM sgroups.tbl_sg WHERE name = 'sg-3')),
                 ('nw-5', '20.150.0.224/28', (SELECT id FROM sgroups.tbl_sg WHERE name = 'sg-4'));
             INSERT INTO
+                sgroups.tbl_ie_sg_sg_icmp_rule(ip_v, types, sg_local, sg, traffic, logs, trace)
+            VALUES
+                (
+                    'IPv4',
+                    '{255}'::sgroups.icmp_types,
+                    (SELECT id FROM sgroups.tbl_sg WHERE name = 'sg-2'),
+                    (SELECT id FROM sgroups.tbl_sg WHERE name = 'sg-1'),
+                    'ingress',
+                    true,
+                    true
+                ),
+                (
+                    'IPv4',
+                    '{252,253}'::sgroups.icmp_types,
+                    (SELECT id FROM sgroups.tbl_sg WHERE name = 'sg-3'),
+                    (SELECT id FROM sgroups.tbl_sg WHERE name = 'sg-2'),
+                    'egress',
+                    false,
+                    false
+                ),
+                (
+                    'IPv6',
+                    '{200,201,202}'::sgroups.icmp_types,
+                    (SELECT id FROM sgroups.tbl_sg WHERE name = 'sg-4'),
+                    (SELECT id FROM sgroups.tbl_sg WHERE name = 'sg-2'),
+                    'ingress',
+                    false,
+                    true
+                ),
+               (
+                    'IPv6',
+                    '{203}'::sgroups.icmp_types,
+                    (SELECT id FROM sgroups.tbl_sg WHERE name = 'sg-4'),
+                    (SELECT id FROM sgroups.tbl_sg WHERE name = 'sg-3'),
+                    'egress',
+                    true,
+                    false
+                );
+            INSERT INTO
                 sgroups.tbl_ie_sg_sg_rule(proto, sg_local, sg, traffic, ports, logs, trace)
             VALUES
                 (
@@ -191,7 +230,6 @@
                     true,
                     true
                 );
-
             INSERT INTO
                 sgroups.tbl_cidr_sg_rule (proto, cidr, sg, traffic, ports, logs, trace)
             VALUES
