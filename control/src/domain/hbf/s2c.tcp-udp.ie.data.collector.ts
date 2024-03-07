@@ -20,16 +20,16 @@ export class S2CTcpUdpIEDataCollector extends HBFDataCollector {
     async collect(): Promise<void> {
         logger.info(`Получаем данные из БД hbf-server`)
         await super.collect()
-        await this.collectS2CTcpUdpIERules()  
+        await this.collectS2CTcpUdpIERules()
     }
 
     convert(): void {
         logger.info('Выделяем тестовые данные для S2C IE TCP/UDP правил')
 
-        if (!this.sgToCidrIERules) 
+        if (!this.sgToCidrIETcpUdpRules)
             throw new Error("SG Rules is undefined")
 
-        this.sgToCidrIERules.forEach( rule => {
+        this.sgToCidrIETcpUdpRules.forEach(rule => {
 
             const sgIps = this.getIPs(rule.SG)
             const cidrIp = this.transformIECidrToIp(rule.CIDR)
@@ -42,7 +42,7 @@ export class S2CTcpUdpIEDataCollector extends HBFDataCollector {
             const toType: DirectionType = rule.traffic == "Ingress" ? DirectionType.SG : DirectionType.CIDR
             const ports = this.transformPorts(rule.ports)
 
-            if(this.isNeedTo(ipsTo))
+            if (this.isNeedTo(ipsTo))
                 return
 
             const data: ITcpUdpTestData = {
@@ -61,20 +61,20 @@ export class S2CTcpUdpIEDataCollector extends HBFDataCollector {
             })
 
             ipsTo.forEach(ip => {
-                if(!(ip in this.serversPorts)) {
+                if (!(ip in this.serversPorts)) {
                     this.serversPorts[ip] = { TCP: [], UDP: [] }
                 }
                 this.serversPorts[ip][rule.transport].push(...ports.map(item => item.dstPorts).flat())
             })
 
-            sgIps.forEach( ip => {
+            sgIps.forEach(ip => {
                 this.ips.push({
                     ip: ip,
                     haveAgent: true
                 })
             })
 
-            cidrIp.forEach( ip => {
+            cidrIp.forEach(ip => {
                 this.ips.push({
                     ip: ip,
                     haveAgent: false
@@ -86,7 +86,7 @@ export class S2CTcpUdpIEDataCollector extends HBFDataCollector {
     get() {
         return {
             testData: this.testData,
-            serverPorts: this.serversPorts,
+            serversPorts: this.serversPorts,
             ips: this.ips
         }
     }

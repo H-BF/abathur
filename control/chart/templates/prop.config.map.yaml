@@ -27,8 +27,10 @@ data:
     ICMP_HBF_SERVER_PORT={{ .Values.hbfServer.scenario.func.icmp.port | toString }}
     A_HBF_SERVER_IP={{ .Values.hbfServer.scenario.api.ip }}
     A_HBF_SERVER_PORT={{ .Values.hbfServer.scenario.api.port | toString }}
-    S2C_IE_HBF_SERVER_IP={{ .Values.hbfServer.scenario.func.s2c.ip }}
-    S2C_IE_HBF_SERVER_PORT={{ .Values.hbfServer.scenario.func.s2c.port | toString }}
+    S2C_IE_HBF_SERVER_IP={{ .Values.hbfServer.scenario.func.s2cIE.ip }}
+    S2C_IE_HBF_SERVER_PORT={{ .Values.hbfServer.scenario.func.s2cIE.port | toString }}
+    S2S_IE_HBF_SERVER_IP={{ .Values.hbfServer.scenario.func.s2sIE.ip }}
+    S2S_IE_HBF_SERVER_PORT={{ .Values.hbfServer.scenario.func.s2sIE.port | toString }}
     HBF_CLIENT_REPOSITORY={{ .Values.hbfClient.image.repository }}
     HBF_CLIENT_TAG={{ .Values.hbfClient.image.tag }}
     ABA_CLIENT_REPOSITORY={{ .Values.abathurClient.image.repository }}

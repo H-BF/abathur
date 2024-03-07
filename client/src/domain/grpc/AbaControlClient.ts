@@ -25,7 +25,7 @@ export class AbaControlClient {
             path.resolve(__dirname, CONTROL_PROTO_PATH),
             options
         )
-        
+
         const grpcObj = (grpc.loadPackageDefinition(packageDef) as unknown) as ProtoGrpcType
 
         this.client = new grpcObj.control.Control(
@@ -54,10 +54,10 @@ export class AbaControlClient {
         return new Promise((resolve) => {
             logger.info("Ждем команду от сервера")
             this.call.on('data', async (response: Res) => {
-                if(!response.msg) {
+                if (!response.msg) {
                     throw new Error("Отсутствует поле msg")
                 }
-                logger.info(`Пришло сообщение от Abathur'a: ${ response.msg }`)
+                logger.info(`Пришло сообщение от Abathur'a: ${response.msg}`)
                 resolve(response.msg)
             })
         })
@@ -69,10 +69,11 @@ export class AbaControlClient {
     ): grpc.ClientDuplexStream<Req, Res__Output> {
         let call: grpc.ClientDuplexStream<Req, Res__Output>
         logger.info(`Сценарий: ${funcType}`)
-        switch(funcType) {
+        switch (funcType) {
             case 's2s':
             case 's2f':
             case 's2c':
+            case 's2sie':
                 logger.debug("Запускаем стрим streamSimpleFunc")
                 call = this.client.streamSimpleFunc(meta)
                 break;

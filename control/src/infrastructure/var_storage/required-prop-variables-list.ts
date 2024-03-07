@@ -20,6 +20,8 @@ export const requiredPropVariablesList = [
     "A_HBF_SERVER_PORT",
     "S2C_IE_HBF_SERVER_IP",
     "S2C_IE_HBF_SERVER_PORT",
+    "S2S_IE_HBF_SERVER_IP",
+    "S2S_IE_HBF_SERVER_PORT",
     "HBF_CLIENT_REPOSITORY",
     "HBF_CLIENT_TAG",
     "ABA_CLIENT_REPOSITORY",
