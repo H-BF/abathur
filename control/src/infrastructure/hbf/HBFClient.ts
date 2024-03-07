@@ -7,7 +7,8 @@ import { ISgToFqdnRules, ISgToFqdnRulesReq } from "./interfaces/rules-sg-to-fqdn
 import { retry } from "../../domain/decorator/retry.decorator";
 import { ISgIcmpRules, ISgIcmpRulesReq } from "./interfaces/rules-sg-icmp";
 import { ISgToSgIcmpRules, ISgToSgIcmpRulesReq } from "./interfaces/rules-sg-to-sg-icmp";
-import { ISgToCidrIERules, ISgToCidrIERulesReq } from "./interfaces/rules-sg-cidr-ie";
+import { ISgToCidrIETcpUdpRules, ISgToCidrIETcpUdpRulesReq } from "./interfaces/rules-sg-cidr-ie";
+import { ISgToSgIETcpUdpRules, ISgToSgIETcpUdpRulesReq } from "./interfaces/rules-sg-sg-ie";
 
 export class HBFClient extends RestClient {
 
@@ -17,10 +18,10 @@ export class HBFClient extends RestClient {
         port: string
     ) {
         logger.info(`Создаем REST-client для: ${host}`)
-        super(host,port,protocol)
+        super(host, port, protocol)
         this.defaults.baseURL += "/v1"
     }
-    
+
     @retry()
     async getSecurityGroups(sgNames: ISecurityGroupsReq = {}): Promise<ISecurityGroups> {
         const { data } = await this.post<ISecurityGroups>('/list/security-groups', sgNames)
@@ -58,8 +59,13 @@ export class HBFClient extends RestClient {
     }
 
     @retry()
-    async getSgToCidrIERules(route: ISgToCidrIERulesReq): Promise<ISgToCidrIERules> {
-        const { data } = await this.post<ISgToCidrIERules>('/cird-sg/rules', route)
+    async getSgToCidrIETcpUdpRules(route: ISgToCidrIETcpUdpRulesReq): Promise<ISgToCidrIETcpUdpRules> {
+        const { data } = await this.post<ISgToCidrIETcpUdpRules>('/cird-sg/rules', route)
+        return data
+    }
+
+    async getSgToSgIETcpUdpRules(route: ISgToSgIETcpUdpRulesReq): Promise<ISgToSgIETcpUdpRules> {
+        const { data } = await this.post<ISgToSgIETcpUdpRules>('/ie-sg-sg/rules', route)
         return data
     }
 }

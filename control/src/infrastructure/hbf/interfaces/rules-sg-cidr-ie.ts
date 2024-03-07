@@ -1,14 +1,14 @@
 import { IRulePorts } from "./rules"
 
-export interface ISgToCidrIERulesReq {
+export interface ISgToCidrIETcpUdpRulesReq {
     sg: string[]
 }
 
-export interface ISgToCidrIERules {
-    rules: ISgToCidrIERule[]
+export interface ISgToCidrIETcpUdpRules {
+    rules: ISgToCidrIETcpUdpRule[]
 }
 
-export interface ISgToCidrIERule {
+export interface ISgToCidrIETcpUdpRule {
     CIDR: string,
     SG: string,
     transport: 'TCP' | 'UDP'

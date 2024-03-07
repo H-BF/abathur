@@ -7,7 +7,7 @@ import { manager } from "../../../k8s/PSCFabric";
 import { logger } from "../../../logger/logger.service";
 import { ScenarioTemplate } from "../scenario.template";
 
-export class Sg2CidrIEScenario extends ScenarioTemplate {
+export class Sg2CidrIETcpUdpScenario extends ScenarioTemplate {
 
     constructor() {
         super(
@@ -31,16 +31,16 @@ export class Sg2CidrIEScenario extends ScenarioTemplate {
             await collector.collect()
             collector.convert()
 
-            const { testData, serverPorts, ips } = collector.get()
+            const { testData, serversPorts, ips } = collector.get()
 
             for (let i = 0; i < ips.length; i++) {
-                if(ips[i].haveAgent) {
+                if (ips[i].haveAgent) {
                     await manager.createHBFTestStend(
                         this.prefix,
                         i,
                         ips[i].ip,
                         JSON.stringify({ scenario: this.prefix, testData: testData[ips[i].ip] }),
-                        JSON.stringify(serverPorts[ips[i].ip])
+                        JSON.stringify(serversPorts[ips[i].ip])
                     )
                 } else {
                     await manager.createTestStend(
@@ -48,7 +48,7 @@ export class Sg2CidrIEScenario extends ScenarioTemplate {
                         i,
                         ips[i].ip,
                         JSON.stringify({ scenario: this.prefix, testData: testData[ips[i].ip] }),
-                        JSON.stringify(serverPorts[ips[i].ip])
+                        JSON.stringify(serversPorts[ips[i].ip])
                     )
                 }
             }
@@ -61,7 +61,7 @@ export class Sg2CidrIEScenario extends ScenarioTemplate {
             await waitSetSize(
                 streamSimpleFuncHandler.getStreamList(SimpleFuncType.S2C),
                 Object.keys(testData).length,
-                3_600_000, 
+                3_600_000,
                 5
             )
 
@@ -75,7 +75,7 @@ export class Sg2CidrIEScenario extends ScenarioTemplate {
             this.failCount = streamSimpleFuncHandler.errorCounter[SimpleFuncType.S2C].fail
             this.passCount = streamSimpleFuncHandler.errorCounter[SimpleFuncType.S2C].pass
 
-        } catch(err) {
+        } catch (err) {
             logger.error(`${err}`)
         } finally {
             this.finish = true

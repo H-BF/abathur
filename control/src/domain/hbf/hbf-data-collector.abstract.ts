@@ -1,16 +1,17 @@
 import { HBFClient, ISecurityGroup } from "../../infrastructure";
 import { INetwork } from "../../infrastructure/hbf/interfaces/networks";
 import { IRulePorts } from "../../infrastructure/hbf/interfaces/rules";
-import { ISgToCidrIERule } from "../../infrastructure/hbf/interfaces/rules-sg-cidr-ie";
+import { ISgToCidrIETcpUdpRule } from "../../infrastructure/hbf/interfaces/rules-sg-cidr-ie";
 import { ISgIcmpRule } from "../../infrastructure/hbf/interfaces/rules-sg-icmp";
+import { ISgToSgIETcpUdpRule } from "../../infrastructure/hbf/interfaces/rules-sg-sg-ie";
 import { ISgToFqdnRule } from "../../infrastructure/hbf/interfaces/rules-sg-to-fqdn";
 import { ISgToSgRule } from "../../infrastructure/hbf/interfaces/rules-sg-to-sg";
 import { ISgToSgIcmpRule } from "../../infrastructure/hbf/interfaces/rules-sg-to-sg-icmp";
+import { IHBFDataCollector } from "./interfaces/hbf-data-collector.interface";
 import { variables } from "../../infrastructure/var_storage/variables-storage";
 import { logger } from "../logger/logger.service";
 import { Networks } from "../networks";
 import { IPorts } from "./interfaces";
-import { IHBFDataCollector } from "./interfaces/hbf-data-collector.interface";
 
 export abstract class HBFDataCollector implements IHBFDataCollector {
 
@@ -22,14 +23,15 @@ export abstract class HBFDataCollector implements IHBFDataCollector {
     protected sgToFqdnRules: ISgToFqdnRule[] | undefined
     protected sgIcmpRules: ISgIcmpRule[] | undefined
     protected sgToSgIcmpRules: ISgToSgIcmpRule[] | undefined
-    protected sgToCidrIERules: ISgToCidrIERule[] | undefined
-    
+    protected sgToCidrIETcpUdpRules: ISgToCidrIETcpUdpRule[] | undefined
+    protected sgToSgIETcpUdpRules: ISgToSgIETcpUdpRule[] | undefined
+
     constructor(
         protocol: string,
         host: string,
         port: string
     ) {
-        this.HBFClient = new HBFClient(protocol,host,port)
+        this.HBFClient = new HBFClient(protocol, host, port)
     }
 
     async collect(): Promise<void> {
@@ -38,8 +40,8 @@ export abstract class HBFDataCollector implements IHBFDataCollector {
 
         logger.info(`Список networks`)
         this.networks = (await this.HBFClient.getNetworks({
-                neteworkNames: this.sg.flatMap(group => group.networks) 
-            })
+            neteworkNames: this.sg.flatMap(group => group.networks)
+        })
         ).networks
     }
 
@@ -52,35 +54,35 @@ export abstract class HBFDataCollector implements IHBFDataCollector {
     protected async collectS2STcpUdpRules() {
         logger.info(`Правила sg-to-sg`)
 
-        if (!this.sg) 
+        if (!this.sg)
             throw new Error("SG is undefined")
 
         this.sgToSgRules = (await this.HBFClient.getSgToSgRules({
-                sgFrom: this.sg.map(group => group.name),
-                sgTo: []
-            })
+            sgFrom: this.sg.map(group => group.name),
+            sgTo: []
+        })
         ).rules
     }
 
     protected async collectS2FTcpUdpRules() {
         logger.info(`Правила sg-to-fqdn`)
 
-        if (!this.sg) 
+        if (!this.sg)
             throw new Error("SG is undefined")
 
         this.sgToFqdnRules = (await this.HBFClient.getToFqdnRules({
-            sgFrom: this.sg.map(group  => group.name)
+            sgFrom: this.sg.map(group => group.name)
         })).rules
     }
 
     protected async collectS2SIcmpRules() {
         logger.info(`Правила sg-sg-icmp`)
 
-        if (!this.sg) 
+        if (!this.sg)
             throw new Error("SG is undefined")
 
         this.sgToSgIcmpRules = (await this.HBFClient.getSgToSgIcmpRules({
-            sgFrom: this.sg.map(group  => group.name),
+            sgFrom: this.sg.map(group => group.name),
             sgTo: []
         })).rules
     }
@@ -88,27 +90,39 @@ export abstract class HBFDataCollector implements IHBFDataCollector {
     protected async collectSgIcmpRules() {
         logger.info(`Правила sg-icmp`)
 
-        if (!this.sg) 
+        if (!this.sg)
             throw new Error("SG is undefined")
 
         this.sgIcmpRules = (await this.HBFClient.getSgIcmpRules({
-            sg: this.sg.map(group  => group.name)
+            sg: this.sg.map(group => group.name)
         })).rules
     }
 
     protected async collectS2CTcpUdpIERules() {
-        logger.info(`Правила sg-cidr I/E`)
+        logger.info(`Правила sg-cidr I/E tcp/udp`)
 
-        if(!this.sg)
+        if (!this.sg)
             throw new Error("SG is undefined")
 
-        this.sgToCidrIERules = (await this.HBFClient.getSgToCidrIERules({
-            sg: this.sg.map(group  => group.name)
+        this.sgToCidrIETcpUdpRules = (await this.HBFClient.getSgToCidrIETcpUdpRules({
+            sg: this.sg.map(group => group.name)
+        })).rules
+    }
+
+    protected async collectS2STcpUdpIERules() {
+        logger.info(`Правила sg-sg I/E tcp/udp`)
+
+        if (!this.sg)
+            throw new Error("SG is undefined")
+
+        this.sgToSgIETcpUdpRules = (await this.HBFClient.getSgToSgIETcpUdpRules({
+            Sg: [],
+            SgLocal: this.sg.map(group => group.name)
         })).rules
     }
 
     ////////////////////
-    
+
     protected isNeedTo(to: string[]): boolean {
         return to.length === 1 && (to[0] === `${variables.get("HBF_REPORTER_IP")}` || to[0] === `${variables.get("ABA_CONTROL_IP")}`)
     }
@@ -122,12 +136,12 @@ export abstract class HBFDataCollector implements IHBFDataCollector {
     }
 
     protected transformIECidrToIp(cidr: string): string[] {
-    const [ip, mask] = cidr.split('/')
+        const [ip, mask] = cidr.split('/')
 
-    if(mask != "32")
-        throw new Error(`Некорректная маска! Найдено - ${mask}. Должно быть - 32`)
+        if (mask != "32")
+            throw new Error(`Некорректная маска! Найдено - ${mask}. Должно быть - 32`)
 
-    return [ip]
+        return [ip]
     }
 
     protected transformPorts(ports: IRulePorts[]): IPorts[] {
@@ -138,18 +152,18 @@ export abstract class HBFDataCollector implements IHBFDataCollector {
                 dstPorts: port.d.split(",")
             })
         })
-        return results 
+        return results
     }
 
     protected transformTypes(types: number[]): string[] {
-        if(types.length === 0)
+        if (types.length === 0)
             return ['all']
         return types.map(type => type.toString())
     }
 
     private getCIDRs(sgName: string): string[] {
         if (!this.sg) throw new Error("SG is undefined")
-    
+
         return this.sg
             .filter(sgItem => sgItem.name === sgName)
             .flatMap(item => {
