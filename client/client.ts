@@ -1,4 +1,4 @@
-import { IConfigMapTestData, ITcpUdpTestData, TestDataType } from './src/domain/interfaces';
+import { IConfigMapTestData, TestDataType } from './src/domain/interfaces';
 import { logger } from './src/domain/logger/logger.service';
 import { advancedScenarioMaping } from './src/domain/scenario/advanced/advanced.scenario.maping';
 import { SimpleFuncScenario } from './src/domain/scenario/simple.func.scenario';
@@ -10,7 +10,7 @@ import { variables } from './src/infrastructure/var_storage/variables-storage';
     const myIp = getMyIp()
     const path = './testData/testData.json'
 
-    if(!fs.existsSync(path)) {
+    if (!fs.existsSync(path)) {
         logger.info("Нет файла тестовых данных для этой машины")
         process.exit(0)
     }
@@ -25,7 +25,7 @@ import { variables } from './src/infrastructure/var_storage/variables-storage';
     const testName: string = testData.scenario
     const data: TestDataType[] = testData.testData
 
-    if(data === undefined) {
+    if (data === undefined) {
         logger.info("Нет тестовых данных для этой машины")
         process.exit(0)
     }
@@ -34,7 +34,7 @@ import { variables } from './src/infrastructure/var_storage/variables-storage';
 
     variables.set("TEST_NAME", testName)
 
-    switch(type) {
+    switch (type) {
         case 'simple':
             const simpleScenario = new SimpleFuncScenario(myIp, scenario)
             await simpleScenario.start(data)

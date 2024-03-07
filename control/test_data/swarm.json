@@ -1,7 +1,7 @@
 {
 	"info": {
-		"_postman_id": "5d62eaf6-43e7-4e1c-97ba-29a16beb9a5f",
-		"name": "Swarm main",
+		"_postman_id": "d8c2b6ae-16ce-4e57-baaf-8fb600f26846",
+		"name": "Swarm main Copy",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "16473884"
 	},
@@ -2226,7 +2226,7 @@
 									"        pm.expect(rule.logs).to.eql(testData[rule.ICMP.IPv][2])\r",
 									"        pm.expect(rule.trace).to.eql(testData[rule.ICMP.IPv][3])\r",
 									"    })\r",
-									"})\r",
+									"});\r",
 									"\r",
 									"\r",
 									"\r",
@@ -4282,6 +4282,632 @@
 								"v1",
 								"ie-sg-sg",
 								"rule"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "POST v1/ie-sg-sg-icmp/rules",
+			"item": [
+				{
+					"name": "[RULE-IE-SS-ICMP] Получение всего списка правил (пустые массивы) Copy",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Validate response JSON schema\", () => {\r",
+									"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"ruleIeSgSgIcmpResponseJsonSchema\")));\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Networks array size is 5\", () => {\r",
+									"   pm.expect(pm.response.json().rules.length).to.eql(4)\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"Sg\": [],\n  \"SgLocal\": []\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}:{{PORT}}/v1/ie-sg-sg-icmp/rules",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"v1",
+								"ie-sg-sg-icmp",
+								"rules"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[RULE-IE-SS-ICMP] Получение всего списка правил (пустое тело)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Validate response JSON schema\", () => {\r",
+									"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"ruleIeSgSgIcmpResponseJsonSchema\")));\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Networks array size is 4\", () => {\r",
+									"   pm.expect(pm.response.json().rules.length).to.eql(4)\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"Sg\": [],\n  \"SgLocal\": []\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}:{{PORT}}/v1/ie-sg-sg-icmp/rules",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"v1",
+								"ie-sg-sg-icmp",
+								"rules"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[RULE-IE-SS-ICMP] Получение несуществующего правила",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Validate response JSON schema\", () => {\r",
+									"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"ruleIeSgSgIcmpResponseJsonSchema\")));\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Networks array size is empty\", () => {\r",
+									"   pm.expect(pm.response.json().rules).to.be.empty;\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"Sg\": [\"sg-0\"],\n  \"SgLocal\": []\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}:{{PORT}}/v1/ie-sg-sg-icmp/rules",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"v1",
+								"ie-sg-sg-icmp",
+								"rules"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[RULE-IE-SS-ICMP] Получение одного правила (SG-1 - SG-2)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Validate response JSON schema\", () => {\r",
+									"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"ruleIeSgSgIcmpResponseJsonSchema\")));\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Networks array size is 1\", () => {\r",
+									"   pm.expect(pm.response.json().rules.length).to.eql(1)\r",
+									"});\r",
+									"\r",
+									"pm.test(\"check rules\", () => {\r",
+									"   pm.expect(pm.response.json().rules[0].Sg).to.eql(\"sg-1\")\r",
+									"   pm.expect(pm.response.json().rules[0].SgLocal).to.eql(\"sg-2\")\r",
+									"   pm.expect(pm.response.json().rules[0].traffic).to.eql(\"Ingress\")\r",
+									"   pm.expect(pm.response.json().rules[0].ICMP.IPv).to.eql(\"IPv4\")\r",
+									"   pm.expect(pm.response.json().rules[0].ICMP.Types[0]).to.eql(255)\r",
+									"   pm.expect(pm.response.json().rules[0].logs).to.be.true\r",
+									"   pm.expect(pm.response.json().rules[0].trace).to.be.true\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"Sg\": [\"sg-1\"],\n  \"SgLocal\": [\"sg-2\"]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}:{{PORT}}/v1/ie-sg-sg-icmp/rules",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"v1",
+								"ie-sg-sg-icmp",
+								"rules"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[RULE-IE-SS-ICMP] Получение двух правил ( 1 SG, 2 SG Local)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Validate response JSON schema\", () => {\r",
+									"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"ruleIeSgSgIcmpResponseJsonSchema\")));\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Networks array size is 2\", () => {\r",
+									"   pm.expect(pm.response.json().rules.length).to.eql(2)\r",
+									"});\r",
+									"\r",
+									"pm.test(\"check rules\", () => {\r",
+									"    pm.expect(pm.response.json().rules).to.be.not.empty\r",
+									"    const testData = {\r",
+									"        \"IPv4\": [\"sg-2\", \"sg-3\", \"Egress\", [252,253], false, false],\r",
+									"        \"IPv6\": [\"sg-2\", \"sg-4\", \"Ingress\", [200,201,202], false, true]\r",
+									"    }\r",
+									"\r",
+									"    pm.response.json().rules.forEach(rule => {\r",
+									"        pm.expect(rule.Sg).to.eql(testData[rule.ICMP.IPv][0])\r",
+									"        pm.expect(rule.SgLocal).to.eql(testData[rule.ICMP.IPv][1])\r",
+									"        pm.expect(rule.traffic).to.eql(testData[rule.ICMP.IPv][2])\r",
+									"        pm.expect(rule.ICMP.Types).to.eql(testData[rule.ICMP.IPv][3])\r",
+									"        pm.expect(rule.logs).to.eql(testData[rule.ICMP.IPv][4])\r",
+									"        pm.expect(rule.trace).to.eql(testData[rule.ICMP.IPv][5])\r",
+									"    })\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"Sg\": [\"sg-2\"],\n  \"SgLocal\": [\"sg-3\",\"sg-4\"]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}:{{PORT}}/v1/ie-sg-sg-icmp/rules",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"v1",
+								"ie-sg-sg-icmp",
+								"rules"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[RULE-IE-SS-ICMP] Некорректный запрос (опечатка)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", () => {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Сheck message\", () => {\r",
+									"    pm.expect(pm.response.json().message).to.eql(\"Not Found\")\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Code is 5\", () => {\r",
+									"    pm.expect(pm.response.json().code).to.eql(5);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Validate response JSON schema\", () => {\r",
+									"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"Sg\": [\"sg-2\"],\n  \"SgLocal\": [\"sg-3\",\"sg-4\"]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}:{{PORT}}/v1/ie-sg-sg-icmp/rule",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"v1",
+								"ie-sg-sg-icmp",
+								"rule"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[RULE-IE-SS-ICMP] Сообщение об ошибке при >255 символов в названии SG",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 500\", () => {\r",
+									"    pm.response.to.have.status(500);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Сheck message\", () => {\r",
+									"    pm.expect(pm.response.json().message).to.eql(\"ERROR: value for domain sgroups.cname violates check constraint \\\"cname_length\\\" (SQLSTATE 23514)\")\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Code is 13\", () => {\r",
+									"    pm.expect(pm.response.json().code).to.eql(13);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Validate response JSON schema\", () => {\r",
+									"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.variables.set(\"ieSsIcmp\", JSON.stringify(customFunc.generateRandomString (256, 10)))"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"Sg\": [{{ieSsIcmp}}],\n  \"SgLocal\": [\"sg-3\",\"sg-4\"]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}:{{PORT}}/v1/ie-sg-sg-icmp/rules",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"v1",
+								"ie-sg-sg-icmp",
+								"rules"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[RULE-IE-SS-ICMP] Cообщение об ошибке при пробеле в названии SG",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 500\", () => {\r",
+									"    pm.response.to.have.status(500);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Validate response JSON schema\", () => {\r",
+									"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Сheck message\", () => {\r",
+									"    pm.expect(pm.response.json().message).to.eql(\"ERROR: value for domain sgroups.cname violates check constraint \\\"cname_validity\\\" (SQLSTATE 23514)\")\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Code is 13\", () => {\r",
+									"    pm.expect(pm.response.json().code).to.eql(13);\r",
+									"});\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"Sg\": [\" sg-2\",\"sg-3\"],\n  \"SgLocal\": [\"sg-4\"]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}:{{PORT}}/v1/ie-sg-sg-icmp/rules",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"v1",
+								"ie-sg-sg-icmp",
+								"rules"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[RULE-IE-SS-ICMP] Cообщение об ошибке при пробеле в названии SG Local",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 500\", () => {\r",
+									"    pm.response.to.have.status(500);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Validate response JSON schema\", () => {\r",
+									"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Сheck message\", () => {\r",
+									"    pm.expect(pm.response.json().message).to.eql(\"ERROR: value for domain sgroups.cname violates check constraint \\\"cname_validity\\\" (SQLSTATE 23514)\")\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Code is 13\", () => {\r",
+									"    pm.expect(pm.response.json().code).to.eql(13);\r",
+									"});\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"Sg\": [\"sg-2\",\"sg-3\"],\n  \"SgLocal\": [\" sg-4\"]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}:{{PORT}}/v1/ie-sg-sg-icmp/rules",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"v1",
+								"ie-sg-sg-icmp",
+								"rules"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[RULE-IE-SS-ICMP] Cообщение об ошибке при некорректном значении существующего параметра",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", () => {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Validate response JSON schema\", () => {\r",
+									"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Сheck message\", () => {\r",
+									"    pm.expect(pm.response.json().message).to.eql(\"proto: syntax error (line 3:14): unexpected token \\\"sg-4\\\"\")\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Code is 3\", () => {\r",
+									"    pm.expect(pm.response.json().code).to.eql(3);\r",
+									"});\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"Sg\": [\"sg-2\",\"sg-3\"],\n  \"SgLocal\": \"sg-4\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}:{{PORT}}/v1/ie-sg-sg-icmp/rules",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"v1",
+								"ie-sg-sg-icmp",
+								"rules"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[RULE-IE-SS-ICMP] Cообщение об ошибке при полностью некорректном теле",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", () => {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Validate response JSON schema\", () => {\r",
+									"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Сheck message\", () => {\r",
+									"    pm.expect(pm.response.json().message).to.eql(\"proto: (line 2:2): unknown field \\\"aaaa\\\"\")\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Code is 3\", () => {\r",
+									"    pm.expect(pm.response.json().code).to.eql(3);\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n \"aaaa\":\"aaa\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}:{{PORT}}/v1/ie-sg-sg-icmp/rules",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"v1",
+								"ie-sg-sg-icmp",
+								"rules"
 							]
 						}
 					},
@@ -7690,6 +8316,554 @@
 								}
 							},
 							"response": []
+						},
+						{
+							"name": "[RULE-IE-SS-ICMP] Добавление несуществующей SG",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 500\", () => {\r",
+											"    pm.response.to.have.status(500);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Validate response JSON schema\", () => {\r",
+											"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
+											"});\r",
+											"\r",
+											"pm.test(\"code is 13\", () => {\r",
+											"    pm.expect(pm.response.json().code).to.eql(13)\r",
+											"});\r",
+											"\r",
+											"pm.test(\"check message\", () => {\r",
+											"    pm.expect(pm.response.json().message).to.eql(\"ERROR: on check Sg it found the SG(sg-1-not-exist) not exists (SQLSTATE P0001)\")\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"ieSgSgIcmpRules\": {\r\n    \"rules\": [\r\n      {\r\n        \"Sg\": \"sg-1-not-exist\",\r\n        \"SgLocal\": \"sg-2\",\r\n        \"logs\": true,\r\n        \"trace\": true,\r\n        \"traffic\": \"Ingress\",\r\n        \"ICMP\": {  \r\n          \"IPv\": \"IPv4\",\r\n          \"Types\": [100]\r\n        }\r\n      }\r\n    ]\r\n  },\r\n  \"syncOp\": \"Upsert\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{HOST}}:{{PORT}}/v1/sync",
+									"host": [
+										"{{HOST}}"
+									],
+									"port": "{{PORT}}",
+									"path": [
+										"v1",
+										"sync"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[RULE-IE-SS-ICMP] Добавление несуществующей SG Local",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 500\", () => {\r",
+											"    pm.response.to.have.status(500);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Validate response JSON schema\", () => {\r",
+											"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
+											"});\r",
+											"\r",
+											"pm.test(\"code is 13\", () => {\r",
+											"    pm.expect(pm.response.json().code).to.eql(13)\r",
+											"});\r",
+											"\r",
+											"pm.test(\"check message\", () => {\r",
+											"    pm.expect(pm.response.json().message).to.eql(\"ERROR: on check SgLocal it found the SG(sg-2-not-exist) not exists (SQLSTATE P0001)\")\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"ieSgSgIcmpRules\": {\r\n    \"rules\": [\r\n      {\r\n        \"Sg\": \"sg-1\",\r\n        \"SgLocal\": \"sg-2-not-exist\",\r\n        \"logs\": true,\r\n        \"trace\": true,\r\n        \"traffic\": \"Ingress\",\r\n        \"ICMP\": {  \r\n          \"IPv\": \"IPv4\",\r\n          \"Types\": [100]\r\n        }\r\n      }\r\n    ]\r\n  },\r\n  \"syncOp\": \"Upsert\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{HOST}}:{{PORT}}/v1/sync",
+									"host": [
+										"{{HOST}}"
+									],
+									"port": "{{PORT}}",
+									"path": [
+										"v1",
+										"sync"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[RULE-IE-SS-ICMP] Ошибка при некорректном значении traffic",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 400\", () => {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Validate response JSON schema\", () => {\r",
+											"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
+											"});\r",
+											"\r",
+											"pm.test(\"code is 3\", () => {\r",
+											"    pm.expect(pm.response.json().code).to.eql(3)\r",
+											"});\r",
+											"\r",
+											"pm.test(\"check message\", () => {\r",
+											"    pm.expect(pm.response.json().message).to.eql(\"proto: (line 9:20): invalid value for enum type: \\\"Inress\\\"\")\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"ieSgSgIcmpRules\": {\r\n    \"rules\": [\r\n      {\r\n        \"Sg\": \"sg-1\",\r\n        \"SgLocal\": \"sg-2\",\r\n        \"logs\": true,\r\n        \"trace\": true,\r\n        \"traffic\": \"Inress\",\r\n        \"ICMP\": {  \r\n          \"IPv\": \"IPv4\",\r\n          \"Types\": [100]\r\n        }\r\n      }\r\n    ]\r\n  },\r\n  \"syncOp\": \"Upsert\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{HOST}}:{{PORT}}/v1/sync",
+									"host": [
+										"{{HOST}}"
+									],
+									"port": "{{PORT}}",
+									"path": [
+										"v1",
+										"sync"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[RULE-IE-SS-ICMP] Ошибка при некорректном значении IPv",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 400\", () => {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Validate response JSON schema\", () => {\r",
+											"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
+											"});\r",
+											"\r",
+											"pm.test(\"code is 3\", () => {\r",
+											"    pm.expect(pm.response.json().code).to.eql(3)\r",
+											"});\r",
+											"\r",
+											"pm.test(\"check message\", () => {\r",
+											"    pm.expect(pm.response.json().message).to.eql(\"proto: (line 11:18): invalid value for enum type: \\\"IPv5\\\"\")\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"ieSgSgIcmpRules\": {\r\n    \"rules\": [\r\n      {\r\n        \"Sg\": \"sg-1\",\r\n        \"SgLocal\": \"sg-2\",\r\n        \"logs\": true,\r\n        \"trace\": true,\r\n        \"traffic\": \"Ingress\",\r\n        \"ICMP\": {  \r\n          \"IPv\": \"IPv5\",\r\n          \"Types\": [100]\r\n        }\r\n      }\r\n    ]\r\n  },\r\n  \"syncOp\": \"Upsert\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{HOST}}:{{PORT}}/v1/sync",
+									"host": [
+										"{{HOST}}"
+									],
+									"port": "{{PORT}}",
+									"path": [
+										"v1",
+										"sync"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[RULE-IE-SS-ICMP] Ошибка при выходе за диапазон types",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 400\", () => {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Validate response JSON schema\", () => {\r",
+											"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
+											"});\r",
+											"\r",
+											"pm.test(\"code is 3\", () => {\r",
+											"    pm.expect(pm.response.json().code).to.eql(3)\r",
+											"});\r",
+											"\r",
+											"pm.test(\"check message\", () => {\r",
+											"    pm.expect(pm.response.json().message).to.eql(\"ICMP type(s) must be in [0-255] but we got (256)\")\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"ieSgSgIcmpRules\": {\r\n    \"rules\": [\r\n      {\r\n        \"Sg\": \"sg-1\",\r\n        \"SgLocal\": \"sg-2\",\r\n        \"logs\": true,\r\n        \"trace\": true,\r\n        \"traffic\": \"Ingress\",\r\n        \"ICMP\": {  \r\n          \"IPv\": \"IPv4\",\r\n          \"Types\": [256]\r\n        }\r\n      }\r\n    ]\r\n  },\r\n  \"syncOp\": \"Upsert\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{HOST}}:{{PORT}}/v1/sync",
+									"host": [
+										"{{HOST}}"
+									],
+									"port": "{{PORT}}",
+									"path": [
+										"v1",
+										"sync"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[RULE-IE-SS-ICMP] Ошибка при пробеле в названии sg",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 500\", () => {\r",
+											"    pm.response.to.have.status(500);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Validate response JSON schema\", () => {\r",
+											"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
+											"});\r",
+											"\r",
+											"pm.test(\"code is 13\", () => {\r",
+											"    pm.expect(pm.response.json().code).to.eql(13)\r",
+											"});\r",
+											"\r",
+											"pm.test(\"check message\", () => {\r",
+											"    pm.expect(pm.response.json().message).to.eql(\"ERROR: value for domain sgroups.cname violates check constraint \\\"cname_validity\\\" (SQLSTATE 23514)\")\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"ieSgSgIcmpRules\": {\r\n    \"rules\": [\r\n      {\r\n        \"Sg\": \" sg-1\",\r\n        \"SgLocal\": \"sg-2\",\r\n        \"logs\": true,\r\n        \"trace\": true,\r\n        \"traffic\": \"Ingress\",\r\n        \"ICMP\": {  \r\n          \"IPv\": \"IPv4\",\r\n          \"Types\": [255]\r\n        }\r\n      }\r\n    ]\r\n  },\r\n  \"syncOp\": \"Upsert\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{HOST}}:{{PORT}}/v1/sync",
+									"host": [
+										"{{HOST}}"
+									],
+									"port": "{{PORT}}",
+									"path": [
+										"v1",
+										"sync"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[RULE-IE-SS-ICMP] Ошибка при пробеле в названии sg local",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 500\", () => {\r",
+											"    pm.response.to.have.status(500);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Validate response JSON schema\", () => {\r",
+											"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
+											"});\r",
+											"\r",
+											"pm.test(\"code is 13\", () => {\r",
+											"    pm.expect(pm.response.json().code).to.eql(13)\r",
+											"});\r",
+											"\r",
+											"pm.test(\"check message\", () => {\r",
+											"    pm.expect(pm.response.json().message).to.eql(\"ERROR: value for domain sgroups.cname violates check constraint \\\"cname_validity\\\" (SQLSTATE 23514)\")\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"ieSgSgIcmpRules\": {\r\n    \"rules\": [\r\n      {\r\n        \"Sg\": \"sg-1\",\r\n        \"SgLocal\": \"sg-2 \",\r\n        \"logs\": true,\r\n        \"trace\": true,\r\n        \"traffic\": \"Ingress\",\r\n        \"ICMP\": {  \r\n          \"IPv\": \"IPv4\",\r\n          \"Types\": [255]\r\n        }\r\n      }\r\n    ]\r\n  },\r\n  \"syncOp\": \"Upsert\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{HOST}}:{{PORT}}/v1/sync",
+									"host": [
+										"{{HOST}}"
+									],
+									"port": "{{PORT}}",
+									"path": [
+										"v1",
+										"sync"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[RULE-IE-SS-ICMP] Некорректное значение существующего параметра",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 400\", () => {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Validate response JSON schema\", () => {\r",
+											"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
+											"});\r",
+											"\r",
+											"pm.test(\"code is 3\", () => {\r",
+											"    pm.expect(pm.response.json().code).to.eql(3)\r",
+											"});\r",
+											"\r",
+											"pm.test(\"check message\", () => {\r",
+											"    pm.expect(pm.response.json().message).to.eql(\"proto: (line 6:20): invalid value for string type: [\")\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"ieSgSgIcmpRules\": {\r\n    \"rules\": [\r\n      {\r\n        \"Sg\": \"sg-1\",\r\n        \"SgLocal\": [\"sg-2\"],\r\n        \"logs\": true,\r\n        \"trace\": true,\r\n        \"traffic\": \"Ingress\",\r\n        \"ICMP\": {  \r\n          \"IPv\": \"IPv4\",\r\n          \"Types\": [255]\r\n        }\r\n      }\r\n    ]\r\n  },\r\n  \"syncOp\": \"Upsert\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{HOST}}:{{PORT}}/v1/sync",
+									"host": [
+										"{{HOST}}"
+									],
+									"port": "{{PORT}}",
+									"path": [
+										"v1",
+										"sync"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[RULE-IE-SS-ICMP] Ошибка при >255 символов в названии SG",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 500\", () => {\r",
+											"    pm.response.to.have.status(500);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Сheck message\", () => {\r",
+											"    pm.expect(pm.response.json().message).to.eql(\"ERROR: value for domain sgroups.cname violates check constraint \\\"cname_validity\\\" (SQLSTATE 23514)\")\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Code is 13\", () => {\r",
+											"    pm.expect(pm.response.json().code).to.eql(13);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Validate response JSON schema\", () => {\r",
+											"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.variables.set(\"syncIeIeSsIcmp\", JSON.stringify(customFunc.generateRandomString (256, 10)))"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"ieSgSgIcmpRules\": {\r\n    \"rules\": [\r\n      {\r\n        \"Sg\": {{syncIeIeSsIcmp}},\r\n        \"SgLocal\": \"sg-2 \",\r\n        \"logs\": true,\r\n        \"trace\": true,\r\n        \"traffic\": \"Ingress\",\r\n        \"ICMP\": {  \r\n          \"IPv\": \"IPv4\",\r\n          \"Types\": [255]\r\n        }\r\n      }\r\n    ]\r\n  },\r\n  \"syncOp\": \"Upsert\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{HOST}}:{{PORT}}/v1/sync",
+									"host": [
+										"{{HOST}}"
+									],
+									"port": "{{PORT}}",
+									"path": [
+										"v1",
+										"sync"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[RULE-IE-SS-ICMP] Некорректный запрос (опечатка)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 404\", () => {\r",
+											"    pm.response.to.have.status(404);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Сheck message\", () => {\r",
+											"    pm.expect(pm.response.json().message).to.eql(\"Not Found\")\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Code is 5\", () => {\r",
+											"    pm.expect(pm.response.json().code).to.eql(5);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Validate response JSON schema\", () => {\r",
+											"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.variables.set(\"syncIeIeSsIcmp\", JSON.stringify(customFunc.generateRandomString (256, 10)))"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"ieSgSgIcmpRules\": {\r\n    \"rules\": [\r\n      {\r\n        \"Sg\": \"sg-1\",\r\n        \"SgLocal\": \"sg-2 \",\r\n        \"logs\": true,\r\n        \"trace\": true,\r\n        \"traffic\": \"Ingress\",\r\n        \"ICMP\": {  \r\n          \"IPv\": \"IPv4\",\r\n          \"Types\": [255]\r\n        }\r\n      }\r\n    ]\r\n  },\r\n  \"syncOp\": \"Upsert\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{HOST}}:{{PORT}}/v1/syn",
+									"host": [
+										"{{HOST}}"
+									],
+									"port": "{{PORT}}",
+									"path": [
+										"v1",
+										"syn"
+									]
+								}
+							},
+							"response": []
 						}
 					]
 				},
@@ -7991,6 +9165,51 @@
 								"body": {
 									"mode": "raw",
 									"raw": "{\r\n  \"sgSgRules\": {\r\n    \"rules\": [\r\n      {\r\n        \"Sg\": \"sg-test-0\",\r\n        \"SgLocal\": \"sg-test-1\",\r\n        \"logs\": false,\r\n        \"ports\": [\r\n          {\r\n            \"d\": \"\",\r\n            \"s\": \"59901\"\r\n          }\r\n        ],\r\n        \"trace\": false,\r\n        \"traffic\": \"Ingress\",\r\n        \"transport\": \"TCP\"\r\n      },\r\n      {\r\n        \"Sg\": \"sg-test-0\",\r\n        \"SgLocal\": \"sg-test-1\",\r\n        \"logs\": true,\r\n        \"ports\": [\r\n          {\r\n            \"d\": \"45000-46000\",\r\n            \"s\": \"50000,50001\"\r\n          },\r\n          {\r\n            \"d\": \"46001-46100\",\r\n            \"s\": \"50002-50100\"\r\n          },\r\n          {\r\n            \"d\": \"46101,46102\",\r\n            \"s\": \"50101,50102\"\r\n          }\r\n        ],\r\n        \"trace\": true,\r\n        \"traffic\": \"Egress\",\r\n        \"transport\": \"TCP\"\r\n      },\r\n      {\r\n        \"Sg\": \"sg-test-1\",\r\n        \"SgLocal\": \"sg-test-2\",\r\n        \"logs\": true,\r\n        \"ports\": [\r\n          {\r\n            \"d\": \"46103-46200,46201\",\r\n            \"s\": \"50103-50200,50201\"\r\n          }\r\n        ],\r\n        \"trace\": false,\r\n        \"traffic\": \"Ingress\",\r\n        \"transport\": \"UDP\"\r\n      },\r\n      {\r\n        \"Sg\": \"sg-test-1\",\r\n        \"SgLocal\": \"sg-test-2\",\r\n        \"logs\": false,\r\n        \"ports\": [\r\n          {\r\n            \"d\": \"46202,46300-47000\",\r\n            \"s\": \"50202,51000-52000\"\r\n          }\r\n        ],\r\n        \"trace\": true,\r\n        \"traffic\": \"Egress\",\r\n        \"transport\": \"UDP\"\r\n      }\r\n    ]\r\n  },\r\n  \"syncOp\": \"Upsert\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{HOST}}:{{PORT}}/v1/sync",
+									"host": [
+										"{{HOST}}"
+									],
+									"port": "{{PORT}}",
+									"path": [
+										"v1",
+										"sync"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[RULE-IE-SS-ICMP] rules Upsert",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", () => {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Body is empty\", () => {\r",
+											"    pm.expect(pm.response.json()).to.be.empty\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"ieSgSgIcmpRules\": {\r\n    \"rules\": [\r\n      {\r\n        \"Sg\": \"sg-test-0\",\r\n        \"SgLocal\": \"sg-test-1\",\r\n        \"logs\": true,\r\n        \"trace\": true,\r\n        \"traffic\": \"Ingress\",\r\n        \"ICMP\": {  \r\n          \"IPv\": \"IPv4\",\r\n          \"Types\": [100]\r\n        }\r\n      },\r\n      {\r\n        \"Sg\": \"sg-test-0\",\r\n        \"SgLocal\": \"sg-test-2\",\r\n        \"logs\": false,\r\n        \"trace\": false,\r\n        \"traffic\": \"Egress\",\r\n        \"ICMP\": {  \r\n          \"IPv\": \"IPv4\",\r\n          \"Types\": [110,111,112]\r\n        }\r\n      },\r\n      {\r\n        \"Sg\": \"sg-test-0\",\r\n        \"SgLocal\": \"sg-test-3\",\r\n        \"logs\": true,\r\n        \"trace\": false,\r\n        \"traffic\": \"Ingress\",\r\n        \"ICMP\": {  \r\n          \"IPv\": \"IPv6\",\r\n          \"Types\": [120,122,125]\r\n        }\r\n      },\r\n      {\r\n        \"Sg\": \"sg-test-1\",\r\n        \"SgLocal\": \"sg-test-3\",\r\n        \"logs\": false,\r\n        \"trace\": true,\r\n        \"traffic\": \"Egress\",\r\n        \"ICMP\": {  \r\n          \"IPv\": \"IPv6\",\r\n          \"Types\": [126]\r\n        }\r\n      }\r\n    ]\r\n  },\r\n  \"syncOp\": \"Upsert\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -8377,6 +9596,51 @@
 							"response": []
 						},
 						{
+							"name": "[RULE-IE-SS-ICMP] rules FullSync",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", () => {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Body is empty\", () => {\r",
+											"    pm.expect(pm.response.json()).to.be.empty\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"ieSgSgIcmpRules\": {\r\n    \"rules\": [\r\n      {\r\n        \"Sg\": \"sg-test-0\",\r\n        \"SgLocal\": \"sg-test-1\",\r\n        \"logs\": true,\r\n        \"trace\": true,\r\n        \"traffic\": \"Ingress\",\r\n        \"ICMP\": {  \r\n          \"IPv\": \"IPv4\",\r\n          \"Types\": [100]\r\n        }\r\n      },\r\n      {\r\n        \"Sg\": \"sg-test-0\",\r\n        \"SgLocal\": \"sg-test-2\",\r\n        \"logs\": false,\r\n        \"trace\": false,\r\n        \"traffic\": \"Egress\",\r\n        \"ICMP\": {  \r\n          \"IPv\": \"IPv4\",\r\n          \"Types\": [110,111,112]\r\n        }\r\n      },\r\n      {\r\n        \"Sg\": \"sg-test-0\",\r\n        \"SgLocal\": \"sg-test-3\",\r\n        \"logs\": true,\r\n        \"trace\": false,\r\n        \"traffic\": \"Ingress\",\r\n        \"ICMP\": {  \r\n          \"IPv\": \"IPv6\",\r\n          \"Types\": [120,122,125]\r\n        }\r\n      },\r\n      {\r\n        \"Sg\": \"sg-test-1\",\r\n        \"SgLocal\": \"sg-test-3\",\r\n        \"logs\": false,\r\n        \"trace\": true,\r\n        \"traffic\": \"Egress\",\r\n        \"ICMP\": {  \r\n          \"IPv\": \"IPv6\",\r\n          \"Types\": [126]\r\n        }\r\n      }\r\n    ]\r\n  },\r\n  \"syncOp\": \"FullSync\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{HOST}}:{{PORT}}/v1/sync",
+									"host": [
+										"{{HOST}}"
+									],
+									"port": "{{PORT}}",
+									"path": [
+										"v1",
+										"sync"
+									]
+								}
+							},
+							"response": []
+						},
+						{
 							"name": "[RULE-CIDR] Rules FullSync (cidr cross network)",
 							"event": [
 								{
@@ -8541,6 +9805,51 @@
 								"body": {
 									"mode": "raw",
 									"raw": "{\r\n   \"sgSgIcmpRules\": {\r\n       \"rules\":[\r\n           {\r\n               \"ICMP\": {\r\n                   \"IPv\": \"IPv4\",\r\n                   \"Types\": [0, 8]\r\n               },\r\n               \"SgFrom\": \"sg-test-0\",\r\n               \"SgTo\": \"sg-test-1\",\r\n               \"logs\": true,\r\n               \"trace\": true\r\n           },\r\n           {\r\n               \"ICMP\": {\r\n                   \"IPv\": \"IPv6\",\r\n                   \"Types\": [0, 8]\r\n               },\r\n               \"SgFrom\": \"sg-test-0\",\r\n               \"SgTo\": \"sg-test-1\",\r\n               \"logs\": true,\r\n               \"trace\": true\r\n           },\r\n           {\r\n               \"ICMP\": {\r\n                   \"IPv\": \"IPv4\",\r\n                   \"Types\": [255,254,253]\r\n               },\r\n               \"SgFrom\": \"sg-test-2\",\r\n               \"SgTo\": \"sg-test-3\",\r\n               \"logs\": false,\r\n               \"trace\": false\r\n           },\r\n           {\r\n               \"ICMP\": {\r\n                   \"IPv\": \"IPv4\",\r\n                   \"Types\": [255,254,253]\r\n               },\r\n               \"SgFrom\": \"sg-test-3\",\r\n               \"SgTo\": \"sg-test-0\",\r\n               \"logs\": false,\r\n               \"trace\": true\r\n           }                                    \r\n       ]\r\n   },\r\n   \"syncOp\": \"Delete\" \r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{HOST}}:{{PORT}}/v1/sync",
+									"host": [
+										"{{HOST}}"
+									],
+									"port": "{{PORT}}",
+									"path": [
+										"v1",
+										"sync"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[RULE-IE-SS-ICMP] rules Delete",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", () => {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Body is empty\", () => {\r",
+											"    pm.expect(pm.response.json()).to.be.empty\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"ieSgSgIcmpRules\": {\r\n    \"rules\": [\r\n      {\r\n        \"Sg\": \"sg-test-0\",\r\n        \"SgLocal\": \"sg-test-1\",\r\n        \"logs\": true,\r\n        \"trace\": true,\r\n        \"traffic\": \"Ingress\",\r\n        \"ICMP\": {  \r\n          \"IPv\": \"IPv4\",\r\n          \"Types\": [100]\r\n        }\r\n      },\r\n      {\r\n        \"Sg\": \"sg-test-0\",\r\n        \"SgLocal\": \"sg-test-2\",\r\n        \"logs\": false,\r\n        \"trace\": false,\r\n        \"traffic\": \"Egress\",\r\n        \"ICMP\": {  \r\n          \"IPv\": \"IPv4\",\r\n          \"Types\": [110,111,112]\r\n        }\r\n      },\r\n      {\r\n        \"Sg\": \"sg-test-0\",\r\n        \"SgLocal\": \"sg-test-3\",\r\n        \"logs\": true,\r\n        \"trace\": false,\r\n        \"traffic\": \"Ingress\",\r\n        \"ICMP\": {  \r\n          \"IPv\": \"IPv6\",\r\n          \"Types\": [120,122,125]\r\n        }\r\n      },\r\n      {\r\n        \"Sg\": \"sg-test-1\",\r\n        \"SgLocal\": \"sg-test-3\",\r\n        \"logs\": false,\r\n        \"trace\": true,\r\n        \"traffic\": \"Egress\",\r\n        \"ICMP\": {  \r\n          \"IPv\": \"IPv6\",\r\n          \"Types\": [126]\r\n        }\r\n      }\r\n    ]\r\n  },\r\n  \"syncOp\": \"Delete\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -8938,6 +10247,16 @@
 		{
 			"key": "ruleIeSgSgResponseJsonSchema",
 			"value": "{\n    \"type\": \"object\",\n    \"properties\": {\n        \"rules\": {\n            \"type\": \"array\",\n            \"items\": {\n                \"type\": \"object\",\n                \"properties\": {\n                    \"transport\": { \n                        \"type\": \"string\",\n                        \"enum\": [\"TCP\", \"UDP\"]\n                    },\n                    \"Sg\": { \"type\": \"string\" },\n                    \"SgLocal\": { \"type\": \"string\" },\n                    \"traffic\": {\n                        \"type\": \"string\",\n                        \"enum\": [\"Ingress\", \"Egress\"]\n                    },\n                    \"ports\": {\n                        \"type\": \"array\",\n                        \"items\": {\n                            \"type\": \"object\",\n                            \"properties\": {\n                                \"s\": { \"type\": \"string\" },\n                                \"d\": { \"type\": \"string\" }\n                            },\n                            \"additionalProperties\": false\n                        }\n                    },\n                    \"logs\": { \"type\": \"boolean\" },\n                    \"trace\": { \"type\": \"boolean\" }\n                },\n                \"additionalProperties\": false\n            }\n        }\n    },\n    \"required\": [\"rules\"],\n    \"additionalProperties\": false\n}",
+			"type": "string"
+		},
+		{
+			"key": "ruleCidrSgIcmpResponseJsonSchema",
+			"value": "{\n    \"type\": \"object\",\n    \"properties\": {\n        \"rules\": {\n            \"type\": \"array\",\n            \"items\": {\n                \"type\": \"object\",\n                \"properties\": {\n                    \"cidr\":{ \"type\": \"string\" },\n                    \"Sg\":{ \"type\": \"string\" },\n                    \"logs\": { \"type\": \"boolean\" },\n                    \"trace\": { \"type\": \"boolean\" },\n                    \"ICMP\": {\n\t\t\t\t\t\t\"type\": \"object\",\n\t\t\t\t\t\t\"properties\": {\n\t\t\t\t\t\t\t\"IPv\": {\n\t\t\t\t\t\t\t\t\"type\": \"string\",\n\t\t\t\t\t\t\t\t\"enum\": [\"IPv4\", \"IPv6\"]\n\t\t\t\t\t\t\t},\n\t\t\t\t\t\t\t\"Types\": {\n\t\t\t\t\t\t\t\t\"type\": \"array\",\n\t\t\t\t\t\t\t\t\"items\": { \"type\": \"number\" }\n\t\t\t\t\t\t\t}\n\t\t\t\t\t\t},\n\t\t\t\t\t\t\"additionalProperties\": false\n\t\t\t\t\t},\n                    \"traffic\": {\n                        \"type\": \"string\",\n                        \"enum\": [\"Ingress\", \"Egress\"]\n                    }\n                },\n                \"additionalProperties\": false\n            }\n        }\n    },\n    \"required\": [\"rules\"],\n    \"additionalProperties\": false\n}",
+			"type": "string"
+		},
+		{
+			"key": "ruleIeSgSgIcmpResponseJsonSchema",
+			"value": "{\n    \"type\": \"object\",\n    \"properties\": {\n        \"rules\": {\n            \"type\": \"array\",\n            \"items\": {\n                \"type\": \"object\",\n                \"properties\": {\n                    \"Sg\": { \"type\": \"string\" },\n                    \"SgLocal\": { \"type\": \"string\" },\n                    \"traffic\": {\n                        \"type\": \"string\",\n                        \"enum\": [\"Ingress\", \"Egress\"]\n                    },\n                    \"ICMP\": {\n                        \"type\": \"object\",\n                        \"items\": {\n                            \"type\": \"object\",\n                            \"properties\": {\n                                \"IPv\":{ \n                                    \"type\": \"string\",\n                                    \"enum\":[\"IPv4\",\"IPv6\"]\n                                },\n                                \"Types\":{\n                                    \"type\": \"array\",\n                                    \"items\": { \"type\": \"number\" }\n                                }    \n                            },\n                            \"additionalProperties\": false\n                        }\n                    },\n                    \"logs\": { \"type\": \"boolean\" },\n                    \"trace\": { \"type\": \"boolean\" }\n                },\n                \"additionalProperties\": false\n            }\n        }\n    },\n    \"required\": [\"rules\"],\n    \"additionalProperties\": false\n}",
 			"type": "string"
 		}
 	]

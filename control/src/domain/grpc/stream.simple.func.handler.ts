@@ -12,13 +12,15 @@ class StreamSimpleFuncHandler extends StreamHeandler {
         s2s: new Set(),
         s2f: new Set(),
         s2c: new Set(),
-        c2s: new Set()
+        c2s: new Set(),
+        s2sie: new Set(),
     };
     private clientPodNumbers: ITestPodClientCount = {
         s2s: 0,
         s2f: 0,
         s2c: 0,
-        c2s: 0
+        c2s: 0,
+        s2sie: 0
     };
 
     errorCounter: Record<string, { pass: number, fail: number }> = {
@@ -37,6 +39,10 @@ class StreamSimpleFuncHandler extends StreamHeandler {
         c2s: {
             pass: 0,
             fail: 0
+        },
+        s2sie: {
+            pass: 0,
+            fail: 0
         }
     }
 
@@ -50,14 +56,14 @@ class StreamSimpleFuncHandler extends StreamHeandler {
         logger.info(`Начат стрим ${streamID}`)
 
         call.on("data", (request: Req) => {
-            if(!request.status) 
+            if (!request.status)
                 throw new Error('Обязательное поле status отсутствует')
-            
+
             const status = this.getKeyByValue(request.status as number, Status)
-            
-            switch(status) {
+
+            switch (status) {
                 case 'ready':
-                    logger.info("Попали в ветку ready") 
+                    logger.info("Попали в ветку ready")
                     const interval = setInterval(() => {
                         if (this.streamsList[simpleFuncType].size == this.clientPodNumbers[simpleFuncType]) {
                             clearInterval(interval)
@@ -67,7 +73,7 @@ class StreamSimpleFuncHandler extends StreamHeandler {
                     break;
                 case 'finish':
                     logger.info("Попали в ветку finish")
-                    if(!request.data) 
+                    if (!request.data)
                         throw new Error('Обязательное data status отсутствует')
                     const data = JSON.parse(request.data) as { fail: number, pass: number }
                     this.errorCounter[simpleFuncType].fail += data.fail
@@ -75,17 +81,17 @@ class StreamSimpleFuncHandler extends StreamHeandler {
                     break;
                 case 'error':
                     logger.info("Попали в ветку error")
-                    if(!request.data) 
+                    if (!request.data)
                         throw new Error('Обязательное data отсутствует')
                     throw new Error(request.data)
-            } 
+            }
         })
 
         call.on("end", () => {
             this.streamsList[simpleFuncType].delete(streamID)
             logger.info(`Стрим c ${streamID} завершен!`)
         })
-        
+
         call.on("error", (err: any) => {
             logger.error(err)
         })
