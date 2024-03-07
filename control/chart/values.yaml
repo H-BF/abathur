@@ -41,7 +41,11 @@ abathurServer:
 hbfServer:
   image:
     repository: harbor.wildberries.ru/swarm/swarm/swarm/sgroups/sgroups
+<<<<<<< b6e63205e2a1b9cdc1c5848ba5f64e20bde73b6c
     tag: dev-8796dd29
+=======
+    tag: feature-swarm-392-c3475bd1
+>>>>>>> 392a915a88933a03fe04d4503b1aef6f61e7d555
   database:
     name: postgres
     login: nkiver
@@ -77,7 +81,11 @@ hbfServer:
 hbfClient:
   image:
     repository: harbor.wildberries.ru/swarm/swarm/swarm/sgroups/to-nft
+<<<<<<< b6e63205e2a1b9cdc1c5848ba5f64e20bde73b6c
     tag: dev-8796dd29
+=======
+    tag: feature-swarm-392-c3475bd1
+>>>>>>> 392a915a88933a03fe04d4503b1aef6f61e7d555
   resources:
     cpu: 100m
     memory: 100Mi
@@ -89,7 +97,11 @@ hbfClient:
 hbfMigration:
   image:
     repository: harbor.wildberries.ru/swarm/swarm/swarm/sgroups/sgroups-migration
+<<<<<<< b6e63205e2a1b9cdc1c5848ba5f64e20bde73b6c
     tag: dev-8796dd29
+=======
+    tag: feature-swarm-392-c3475bd1
+>>>>>>> 392a915a88933a03fe04d4503b1aef6f61e7d555
   resources:
     cpu: 100m
     memory: 100Mi
