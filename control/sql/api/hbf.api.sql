@@ -50,6 +50,45 @@
                     false
                 );
             INSERT INTO
+                sgroups.tbl_cidr_sg_icmp_rule(ip_v, types, cidr, sg, traffic, logs, trace)
+            VALUES
+                (
+                    'IPv4',
+                    '{255}'::sgroups.icmp_types,
+                    '188.234.6.40/32',
+                    (SELECT id FROM sgroups.tbl_sg WHERE name = 'sg-0'),
+                    'ingress',
+                    true,
+                    true
+                ),
+                (
+                    'IPv4',
+                    '{250,251}'::sgroups.icmp_types,
+                    '188.234.0.0/20',
+                    (SELECT id FROM sgroups.tbl_sg WHERE name = 'sg-1'),
+                    'egress',
+                    true,
+                    false
+                ),
+                (
+                    'IPv6',
+                    '{100,101,102}'::sgroups.icmp_types,
+                    'fe80:0000:0000:0000::/64',
+                    (SELECT id FROM sgroups.tbl_sg WHERE name = 'sg-2'),
+                    'ingress',
+                    false,
+                    true
+                ),
+               (
+                    'IPv6',
+                    '{140}'::sgroups.icmp_types,
+                    'fe80::18b4:3f6c:1816:719a/128',
+                    (SELECT id FROM sgroups.tbl_sg WHERE name = 'sg-3'),
+                    'egress',
+                    false,
+                    false
+                );
+            INSERT INTO
                 sgroups.tbl_ie_sg_sg_rule(proto, sg_local, sg, traffic, ports, logs, trace)
             VALUES
                 (
