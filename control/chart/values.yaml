@@ -18,7 +18,8 @@ abathurControl:
   #   privileged: true
   restartPolicy: Never
   destroy: true
-  scenario: 1
+  # 1 - func, 2 - api
+  scenario: 2
   #simple-s2s,simple-s2f,simple-s2c-ie,simple-s2s-ie,advanced-changeip,advanced-icmp
   funcScenario: simple-s2s-ie
 
@@ -41,11 +42,7 @@ abathurServer:
 hbfServer:
   image:
     repository: harbor.wildberries.ru/swarm/swarm/swarm/sgroups/sgroups
-<<<<<<< b6e63205e2a1b9cdc1c5848ba5f64e20bde73b6c
-    tag: dev-8796dd29
-=======
-    tag: feature-swarm-392-c3475bd1
->>>>>>> 392a915a88933a03fe04d4503b1aef6f61e7d555
+    tag: feature-swarm-404-b4f4e74b
   database:
     name: postgres
     login: nkiver
@@ -81,11 +78,7 @@ hbfServer:
 hbfClient:
   image:
     repository: harbor.wildberries.ru/swarm/swarm/swarm/sgroups/to-nft
-<<<<<<< b6e63205e2a1b9cdc1c5848ba5f64e20bde73b6c
-    tag: dev-8796dd29
-=======
-    tag: feature-swarm-392-c3475bd1
->>>>>>> 392a915a88933a03fe04d4503b1aef6f61e7d555
+    tag: feature-swarm-404-b4f4e74b
   resources:
     cpu: 100m
     memory: 100Mi
@@ -97,11 +90,7 @@ hbfClient:
 hbfMigration:
   image:
     repository: harbor.wildberries.ru/swarm/swarm/swarm/sgroups/sgroups-migration
-<<<<<<< b6e63205e2a1b9cdc1c5848ba5f64e20bde73b6c
-    tag: dev-8796dd29
-=======
-    tag: feature-swarm-392-c3475bd1
->>>>>>> 392a915a88933a03fe04d4503b1aef6f61e7d555
+    tag: feature-swarm-404-b4f4e74b
   resources:
     cpu: 100m
     memory: 100Mi

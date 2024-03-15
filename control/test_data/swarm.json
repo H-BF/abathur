@@ -1,7 +1,7 @@
 {
 	"info": {
-		"_postman_id": "d8c2b6ae-16ce-4e57-baaf-8fb600f26846",
-		"name": "Swarm main Copy",
+		"_postman_id": "5d62eaf6-43e7-4e1c-97ba-29a16beb9a5f",
+		"name": "Swarm main с ie-s2c-icmp",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "16473884"
 	},
@@ -177,10 +177,7 @@
 									"pm.test(\"Code is 3\", () => {\r",
 									"    pm.expect(pm.response.json().code).to.eql(3);\r",
 									"});\r",
-									"\r",
-									"pm.test(\"Check message\", () => {\r",
-									"    pm.expect(pm.response.json().message).to.eql(\"proto: syntax error (line 2:22): unexpected token \\\"nw-err\\\"\")\r",
-									"});"
+									""
 								],
 								"type": "text/javascript"
 							}
@@ -221,10 +218,6 @@
 									"\r",
 									"pm.test(\"Validate response JSON schema\", () => {\r",
 									"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
-									"});\r",
-									"\r",
-									"pm.test(\"Сheck message\", () => {\r",
-									"    pm.expect(pm.response.json().message).to.eql(\"proto: (line 2:5): unknown field \\\"asdasdas\\\"\")\r",
 									"});\r",
 									"\r",
 									"pm.test(\"Code is 3\", () => {\r",
@@ -609,9 +602,6 @@
 									"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
 									"});\r",
 									"\r",
-									"pm.test(\"Сheck message\", () => {\r",
-									"    pm.expect(pm.response.json().message).to.eql(\"proto: syntax error (line 2:17): unexpected token \\\"sg-1\\\"\")\r",
-									"});\r",
 									"\r",
 									"pm.test(\"Code is 3\", () => {\r",
 									"    pm.expect(pm.response.json().code).to.eql(3);\r",
@@ -663,9 +653,6 @@
 									"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
 									"});\r",
 									"\r",
-									"pm.test(\"check message\", () => {\r",
-									"    pm.expect(pm.response.json().message).to.eql(\"proto: (line 2:5): unknown field \\\"asdasdas\\\"\")\r",
-									"});\r",
 									"\r",
 									"pm.test(\"code is 3\", () => {\r",
 									"    pm.expect(pm.response.json().code).to.eql(3)\r",
@@ -1296,10 +1283,6 @@
 									"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
 									"});\r",
 									"\r",
-									"pm.test(\"Сheck message\", () => {\r",
-									"    pm.expect(pm.response.json().message).to.eql(\"proto: syntax error (line 2:15): unexpected token \\\"sg-3\\\"\")\r",
-									"});\r",
-									"\r",
 									"pm.test(\"Code is 3\", () => {\r",
 									"    pm.expect(pm.response.json().code).to.eql(3);\r",
 									"});"
@@ -1342,10 +1325,6 @@
 									"\r",
 									"pm.test(\"Validate response JSON schema\", () => {\r",
 									"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
-									"});\r",
-									"\r",
-									"pm.test(\"check message\", () => {\r",
-									"    pm.expect(pm.response.json().message).to.eql(\"proto: (line 2:5): unknown field \\\"asdasdas\\\"\")\r",
 									"});\r",
 									"\r",
 									"pm.test(\"code is 3\", () => {\r",
@@ -1874,10 +1853,6 @@
 									"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
 									"});\r",
 									"\r",
-									"pm.test(\"Сheck message\", () => {\r",
-									"    pm.expect(pm.response.json().message).to.eql(\"proto: syntax error (line 2:13): unexpected token \\\"sg-0\\\"\")\r",
-									"});\r",
-									"\r",
 									"pm.test(\"Code is 3\", () => {\r",
 									"    pm.expect(pm.response.json().code).to.eql(3);\r",
 									"});"
@@ -1926,10 +1901,6 @@
 									"\r",
 									"pm.test(\"Validate response JSON schema\", () => {\r",
 									"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
-									"});\r",
-									"\r",
-									"pm.test(\"check message\", () => {\r",
-									"    pm.expect(pm.response.json().message).to.eql(\"proto: (line 2:5): unknown field \\\"asdasdas\\\"\")\r",
 									"});\r",
 									"\r",
 									"pm.test(\"Code is 3\", () => {\r",
@@ -2401,10 +2372,6 @@
 									"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
 									"});\r",
 									"\r",
-									"pm.test(\"check message\", () => {\r",
-									"    pm.expect(pm.response.json().message).to.eql(\"proto: (line 2:3): unknown field \\\"Sg\\\"\")\r",
-									"});\r",
-									"\r",
 									"pm.test(\"Code is 3\", () => {\r",
 									"    pm.expect(pm.response.json().code).to.eql(3);\r",
 									"});"
@@ -2453,10 +2420,6 @@
 									"\r",
 									"pm.test(\"Validate response JSON schema\", () => {\r",
 									"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
-									"});\r",
-									"\r",
-									"pm.test(\"check message\", () => {\r",
-									"    pm.expect(pm.response.json().message).to.eql(\"proto: (line 2:5): unknown field \\\"asdasdas\\\"\")\r",
 									"});\r",
 									"\r",
 									"pm.test(\"Code is 3\", () => {\r",
@@ -2980,10 +2943,6 @@
 									"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
 									"});\r",
 									"\r",
-									"pm.test(\"check message\", () => {\r",
-									"    pm.expect(pm.response.json().message).to.eql(\"proto: syntax error (line 2:13): unexpected token \\\"sg-0\\\"\")\r",
-									"});\r",
-									"\r",
 									"pm.test(\"Code is 3\", () => {\r",
 									"    pm.expect(pm.response.json().code).to.eql(3);\r",
 									"});"
@@ -3032,10 +2991,6 @@
 									"\r",
 									"pm.test(\"Validate response JSON schema\", () => {\r",
 									"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
-									"});\r",
-									"\r",
-									"pm.test(\"check message\", () => {\r",
-									"    pm.expect(pm.response.json().message).to.eql(\"proto: (line 2:5): unknown field \\\"asdasdas\\\"\")\r",
 									"});\r",
 									"\r",
 									"pm.test(\"Code is 3\", () => {\r",
@@ -3415,10 +3370,7 @@
 									"pm.test(\"check error code is 3\", () => {\r",
 									"    pm.expect(pm.response.json().code).to.eql(3)\r",
 									"})\r",
-									"\r",
-									"pm.test(\"check message\", () => {\r",
-									"    pm.expect(pm.response.json().message).to.eql(\"proto: syntax error (line 2:11): unexpected token \\\"sg-3\\\"\")\r",
-									"});"
+									""
 								],
 								"type": "text/javascript"
 							}
@@ -3464,10 +3416,6 @@
 									"\r",
 									"pm.test(\"Validate response JSON schema\", () => {\r",
 									"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
-									"});\r",
-									"\r",
-									"pm.test(\"check message\", () => {\r",
-									"    pm.expect(pm.response.json().message).to.eql(\"proto: (line 2:5): unknown field \\\"asdasdas\\\"\")\r",
 									"});\r",
 									"\r",
 									"pm.test(\"Error code is 3\", () => {\r",
@@ -4017,10 +3965,6 @@
 									"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
 									"});\r",
 									"\r",
-									"pm.test(\"Сheck message\", () => {\r",
-									"    pm.expect(pm.response.json().message).to.eql(\"proto: syntax error (line 3:14): unexpected token \\\"sg-4\\\"\")\r",
-									"});\r",
-									"\r",
 									"pm.test(\"Code is 3\", () => {\r",
 									"    pm.expect(pm.response.json().code).to.eql(3);\r",
 									"});\r",
@@ -4072,10 +4016,6 @@
 									"\r",
 									"pm.test(\"Validate response JSON schema\", () => {\r",
 									"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
-									"});\r",
-									"\r",
-									"pm.test(\"Сheck message\", () => {\r",
-									"    pm.expect(pm.response.json().message).to.eql(\"proto: (line 2:2): unknown field \\\"ake\\\"\")\r",
 									"});\r",
 									"\r",
 									"pm.test(\"Code is 3\", () => {\r",
@@ -4281,6 +4221,528 @@
 							"path": [
 								"v1",
 								"ie-sg-sg",
+								"rule"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "POST /v1/cird-sg-icmp/rules",
+			"item": [
+				{
+					"name": "[RULE-CIDR-S-ICMP] Получение всего списка правил",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Validate response JSON schema\", () => {\r",
+									"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"ruleCidrSgIcmpResponseJsonSchema\")));\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Networks array size is 4\", () => {\r",
+									"   pm.expect(pm.response.json().rules.length).to.eql(4)\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}:{{PORT}}/v1/cidr-sg-icmp/rules",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"v1",
+								"cidr-sg-icmp",
+								"rules"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[RULE-CIDR-S-ICMP] Получение правил для одной sg",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Validate response JSON schema\", () => {\r",
+									"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"ruleCidrSgIcmpResponseJsonSchema\")));\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Networks array size is 1\", () => {\r",
+									"   pm.expect(pm.response.json().rules.length).to.eql(1)\r",
+									"});\r",
+									"\r",
+									"pm.test(\"All rules contain value 'sg-0' in the SG field\", () => {\r",
+									"    pm.expect(pm.response.json().rules).to.be.not.empty\r",
+									"    pm.response.json().rules.forEach(rule => {\r",
+									"        pm.expect(rule.SG).be.eql(\"sg-0\")\r",
+									"    })\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"sg\": [\"sg-0\"]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}:{{PORT}}/v1/cidr-sg-icmp/rules",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"v1",
+								"cidr-sg-icmp",
+								"rules"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[RULE-CIDR-S-ICMP] Получение правил для двух sg",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Validate response JSON schema\", () => {\r",
+									"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"ruleCidrSgIcmpResponseJsonSchema\")));\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Networks array size is 2\", () => {\r",
+									"   pm.expect(pm.response.json().rules.length).to.eql(2)\r",
+									"});\r",
+									"\r",
+									"pm.test(\"check rules\", () => {\r",
+									"    pm.expect(pm.response.json().rules).to.be.not.empty\r",
+									"    const testData = {\r",
+									"        \"Ingress\": {\r",
+									"            \"CIDR\": \"188.234.6.40/32\",\r",
+									"            \"SG\": \"sg-0\",\r",
+									"            \"trace\": true,\r",
+									"            \"logs\": true,\r",
+									"            \"ICMP\": {  \r",
+									"                \"IPv\": \"IPv4\",\r",
+									"                \"Types\": [255]\r",
+									"          }\r",
+									"        },\r",
+									"        \"Egress\": {\r",
+									"            \"CIDR\": \"fe80::18b4:3f6c:1816:719a/128\",\r",
+									"            \"SG\": \"sg-3\",\r",
+									"            \"trace\": false,\r",
+									"            \"logs\": false,\r",
+									"            \"ICMP\": {  \r",
+									"                \"IPv\": \"IPv6\",\r",
+									"                \"Types\": [140]\r",
+									"          }\r",
+									"        }\r",
+									"    }\r",
+									"\r",
+									"    pm.response.json().rules.forEach(rule => {\r",
+									"        pm.expect(rule.CIDR).to.eql(testData[rule.traffic].CIDR)\r",
+									"        pm.expect(rule.SG).to.eql(testData[rule.traffic].SG)\r",
+									"        pm.expect(rule.trace).to.eql(testData[rule.traffic].trace)\r",
+									"        pm.expect(rule.logs).to.eql(testData[rule.traffic].logs)\r",
+									"        pm.expect(rule.ICMP).to.eql(testData[rule.traffic].ICMP)\r",
+									"    });\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"sg\": [\"sg-0\", \"sg-3\"]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}:{{PORT}}/v1/cidr-sg-icmp/rules",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"v1",
+								"cidr-sg-icmp",
+								"rules"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[RULE-CIDR-S-ICMP] Пустой список правил (SG-4)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Validate response JSON schema\", () => {\r",
+									"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"ruleCidrSgIcmpResponseJsonSchema\")));\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Networks array size is empty\", () => {\r",
+									"   pm.expect(pm.response.json().rules).to.be.empty;\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"sg\": [\"sg-4\"]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}:{{PORT}}/v1/cidr-sg-icmp/rules",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"v1",
+								"cidr-sg-icmp",
+								"rules"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[RULE-CIDR-S-ICMP] Cообщение об ошибке при пробеле в названии sg",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 500\", () => {\r",
+									"    pm.response.to.have.status(500);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Сheck message\", () => {\r",
+									"    pm.expect(pm.response.json().message).to.eql(\"ERROR: value for domain sgroups.cname violates check constraint \\\"cname_validity\\\" (SQLSTATE 23514)\")\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Code is 13\", () => {\r",
+									"    pm.expect(pm.response.json().code).to.eql(13);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Validate response JSON schema\", () => {\r",
+									"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"sg\": [\" sg-4\"]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}:{{PORT}}/v1/cidr-sg-icmp/rules",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"v1",
+								"cidr-sg-icmp",
+								"rules"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[RULE-CIDR-S-ICMP] Сообщение об ошибке при > 255 символов в названии NW Copy",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 500\", () => {\r",
+									"    pm.response.to.have.status(500);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Сheck message\", () => {\r",
+									"    pm.expect(pm.response.json().message).to.eql(\"ERROR: value for domain sgroups.cname violates check constraint \\\"cname_length\\\" (SQLSTATE 23514)\")\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Code is 13\", () => {\r",
+									"    pm.expect(pm.response.json().code).to.eql(13);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Validate response JSON schema\", () => {\r",
+									"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.variables.set(\"ieSgSg\", JSON.stringify(customFunc.generateRandomString (256, 10)))"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"sg\": [{{ieSgSg}}]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}:{{PORT}}/v1/cidr-sg-icmp/rules",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"v1",
+								"cidr-sg-icmp",
+								"rules"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[RULE-CIDR-S-ICMP] Cообщение об ошибке при некорректном значении существующего параметра",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", () => {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Validate response JSON schema\", () => {\r",
+									"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Code is 3\", () => {\r",
+									"    pm.expect(pm.response.json().code).to.eql(3);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"sg\": \"sg-4\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}:{{PORT}}/v1/cidr-sg-icmp/rules",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"v1",
+								"cidr-sg-icmp",
+								"rules"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[RULE-CIDR-S-ICMP] Cообщение об ошибке при полностью некорректном теле",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", () => {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Validate response JSON schema\", () => {\r",
+									"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Code is 3\", () => {\r",
+									"    pm.expect(pm.response.json().code).to.eql(3);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"aaaa\":\"aaaa\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}:{{PORT}}/v1/cidr-sg-icmp/rules",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"v1",
+								"cidr-sg-icmp",
+								"rules"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[RULE-CIDR-S-ICMP] Некорректный запрос (опечатка)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", () => {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Сheck message\", () => {\r",
+									"    pm.expect(pm.response.json().message).to.eql(\"Not Found\")\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Code is 5\", () => {\r",
+									"    pm.expect(pm.response.json().code).to.eql(5);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Validate response JSON schema\", () => {\r",
+									"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"aaaa\":\"aaaa\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}:{{PORT}}/v1/cidr-sg-icmp/rule",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"v1",
+								"cidr-sg-icmp",
 								"rule"
 							]
 						}
@@ -4815,10 +5277,6 @@
 									"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
 									"});\r",
 									"\r",
-									"pm.test(\"Сheck message\", () => {\r",
-									"    pm.expect(pm.response.json().message).to.eql(\"proto: syntax error (line 3:14): unexpected token \\\"sg-4\\\"\")\r",
-									"});\r",
-									"\r",
 									"pm.test(\"Code is 3\", () => {\r",
 									"    pm.expect(pm.response.json().code).to.eql(3);\r",
 									"});\r",
@@ -4870,10 +5328,6 @@
 									"\r",
 									"pm.test(\"Validate response JSON schema\", () => {\r",
 									"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
-									"});\r",
-									"\r",
-									"pm.test(\"Сheck message\", () => {\r",
-									"    pm.expect(pm.response.json().message).to.eql(\"proto: (line 2:2): unknown field \\\"aaaa\\\"\")\r",
 									"});\r",
 									"\r",
 									"pm.test(\"Code is 3\", () => {\r",
@@ -5103,7 +5557,6 @@
 									"    ]\r",
 									"\r",
 									"    const data = pm.response.json().rules[0]\r",
-									"    console.log(data)\r",
 									"    pm.expect(data.transport).to.eql(\"TCP\")\r",
 									"    pm.expect(data.ports.length).to.eql(2)\r",
 									"    for (let i = 0; i < data.ports.length; i++) {\r",
@@ -5558,10 +6011,7 @@
 											"pm.test(\"Check error code\", () => {\r",
 											"    pm.expect(pm.response.json().code).to.eql(3);\r",
 											"});\r",
-											"\r",
-											"pm.test(\"Check error message\", () => {\r",
-											"    pm.expect(pm.response.json().message).to.eql(\"proto: (line 5:25): invalid value for string type: [\");\r",
-											"});"
+											""
 										],
 										"type": "text/javascript"
 									}
@@ -5771,9 +6221,6 @@
 											"    pm.expect(pm.response.json().code).to.eql(3);\r",
 											"});\r",
 											"\r",
-											"pm.test(\"Check error message\", () => {\r",
-											"    pm.expect(pm.response.json().message).to.eql(\"proto: syntax error (line 6:29): unexpected token \\\"nw-test-0\\\"\");\r",
-											"});\r",
 											""
 										],
 										"type": "text/javascript"
@@ -5824,10 +6271,7 @@
 											"pm.test(\"code is 3\", () => {\r",
 											"    pm.expect(pm.response.json().code).to.eql(3)\r",
 											"});\r",
-											"\r",
-											"pm.test(\"check message\", () => {\r",
-											"    pm.expect(pm.response.json().message).to.include(\"proto: (line 9:34): invalid value for enum type: \\\"QWERTY\\\"\")\r",
-											"});"
+											""
 										],
 										"type": "text/javascript"
 									}
@@ -6036,10 +6480,7 @@
 											"pm.test(\"code is 3\", () => {\r",
 											"    pm.expect(pm.response.json().code).to.eql(3)\r",
 											"});\r",
-											"\r",
-											"pm.test(\"check message\", () => {\r",
-											"    pm.expect(pm.response.json().message).to.eql(\"proto: (line 2:5): unknown field \\\"asdasdsa\\\"\")\r",
-											"});"
+											""
 										],
 										"type": "text/javascript"
 									}
@@ -6089,10 +6530,7 @@
 											"pm.test(\"code is 3\", () => {\r",
 											"    pm.expect(pm.response.json().code).to.eql(3)\r",
 											"});\r",
-											"\r",
-											"pm.test(\"check message\", () => {\r",
-											"    pm.expect(pm.response.json().message).to.eql(\"proto: syntax error (line 5:26): unexpected token {\")\r",
-											"});"
+											""
 										],
 										"type": "text/javascript"
 									}
@@ -6354,10 +6792,7 @@
 											"pm.test(\"code is 3\", () => {\r",
 											"    pm.expect(pm.response.json().code).to.eql(3)\r",
 											"});\r",
-											"\r",
-											"pm.test(\"check message\", () => {\r",
-											"    pm.expect(pm.response.json().message).to.eql(\"proto: (line 2:5): unknown field \\\"asdasdsa\\\"\")\r",
-											"});"
+											""
 										],
 										"type": "text/javascript"
 									}
@@ -6460,10 +6895,7 @@
 											"pm.test(\"check error code is 3\", () => {\r",
 											"    pm.expect(pm.response.json().code).to.eql(3)\r",
 											"})\r",
-											"\r",
-											"pm.test(\"check message\", () => {\r",
-											"    pm.expect(pm.response.json().message).to.eql(\"proto: syntax error (line 5:26): unexpected token {\")\r",
-											"});"
+											""
 										],
 										"type": "text/javascript"
 									}
@@ -6619,10 +7051,7 @@
 											"pm.test(\"check error code is 3\", () => {\r",
 											"    pm.expect(pm.response.json().code).to.eql(3)\r",
 											"})\r",
-											"\r",
-											"pm.test(\"check message\", () => {\r",
-											"    pm.expect(pm.response.json().message).to.eql(\"proto: (line 15:31): invalid value for string type: 1\")\r",
-											"});"
+											""
 										],
 										"type": "text/javascript"
 									}
@@ -6840,10 +7269,7 @@
 											"pm.test(\"code is 3\", () => {\r",
 											"    pm.expect(pm.response.json().code).to.eql(3)\r",
 											"});\r",
-											"\r",
-											"pm.test(\"check message\", () => {\r",
-											"    pm.expect(pm.response.json().message).to.eql(\"proto: (line 6:27): invalid value for enum type: \\\"IPv10\\\"\")\r",
-											"});"
+											""
 										],
 										"type": "text/javascript"
 									}
@@ -6893,10 +7319,7 @@
 											"pm.test(\"code is 3\", () => {\r",
 											"    pm.expect(pm.response.json().code).to.eql(3)\r",
 											"});\r",
-											"\r",
-											"pm.test(\"check message\", () => {\r",
-											"    pm.expect(pm.response.json().message).to.eql(\"proto: (line 7:30): invalid value for uint32 type: \\\"sdfsd\\\"\")\r",
-											"});"
+											""
 										],
 										"type": "text/javascript"
 									}
@@ -7158,10 +7581,7 @@
 											"pm.test(\"code is 3\", () => {\r",
 											"    pm.expect(pm.response.json().code).to.eql(3)\r",
 											"});\r",
-											"\r",
-											"pm.test(\"check message\", () => {\r",
-											"    pm.expect(pm.response.json().message).to.eql(\"proto: (line 6:27): invalid value for enum type: \\\"IPv10\\\"\")\r",
-											"});"
+											""
 										],
 										"type": "text/javascript"
 									}
@@ -7211,10 +7631,7 @@
 											"pm.test(\"code is 3\", () => {\r",
 											"    pm.expect(pm.response.json().code).to.eql(3)\r",
 											"});\r",
-											"\r",
-											"pm.test(\"check message\", () => {\r",
-											"    pm.expect(pm.response.json().message).to.eql(\"proto: (line 7:36): invalid value for uint32 type: \\\"asdasd\\\"\")\r",
-											"});"
+											""
 										],
 										"type": "text/javascript"
 									}
@@ -7476,10 +7893,7 @@
 											"pm.test(\"code is 3\", () => {\r",
 											"    pm.expect(pm.response.json().code).to.eql(3)\r",
 											"});\r",
-											"\r",
-											"pm.test(\"check message\", () => {\r",
-											"    pm.expect(pm.response.json().message).to.eql(\"proto: (line 2:5): unknown field \\\"asdasdsa\\\"\")\r",
-											"});"
+											""
 										],
 										"type": "text/javascript"
 									}
@@ -7529,10 +7943,7 @@
 											"pm.test(\"code is 3\", () => {\r",
 											"    pm.expect(pm.response.json().code).to.eql(3)\r",
 											"});\r",
-											"\r",
-											"pm.test(\"check message\", () => {\r",
-											"    pm.expect(pm.response.json().message).to.eql(\"proto: syntax error (line 7:18): unexpected token {\")\r",
-											"});"
+											""
 										],
 										"type": "text/javascript"
 									}
@@ -7955,10 +8366,7 @@
 											"pm.test(\"code is 3\", () => {\r",
 											"    pm.expect(pm.response.json().code).to.eql(3)\r",
 											"});\r",
-											"\r",
-											"pm.test(\"check message\", () => {\r",
-											"    pm.expect(pm.response.json().message).to.eql(\"proto: (line 2:5): unknown field \\\"aaa\\\"\")\r",
-											"});"
+											""
 										],
 										"type": "text/javascript"
 									}
@@ -8061,10 +8469,7 @@
 											"pm.test(\"check error code is 3\", () => {\r",
 											"    pm.expect(pm.response.json().code).to.eql(3)\r",
 											"})\r",
-											"\r",
-											"pm.test(\"check message\", () => {\r",
-											"    pm.expect(pm.response.json().message).to.eql(\"proto: (line 19:20): invalid value for enum type: \\\"egress\\\"\")\r",
-											"});"
+											""
 										],
 										"type": "text/javascript"
 									}
@@ -8114,10 +8519,7 @@
 											"pm.test(\"check error code is 3\", () => {\r",
 											"    pm.expect(pm.response.json().code).to.eql(3)\r",
 											"})\r",
-											"\r",
-											"pm.test(\"check message\", () => {\r",
-											"    pm.expect(pm.response.json().message).to.eql(\"proto: (line 20:22): invalid value for enum type: \\\"UPD\\\"\")\r",
-											"});"
+											""
 										],
 										"type": "text/javascript"
 									}
@@ -8318,6 +8720,483 @@
 							"response": []
 						},
 						{
+							"name": "[RULE-CIDR-S-ICMP] Некорректный CIDR",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 400\", () => {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Validate response JSON schema\", () => {\r",
+											"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
+											"});\r",
+											"\r",
+											"pm.test(\"code is 3\", () => {\r",
+											"    pm.expect(pm.response.json().code).to.eql(3)\r",
+											"});\r",
+											"\r",
+											"pm.test(\"check message\", () => {\r",
+											"    pm.expect(pm.response.json().message).to.eql(\"the '10.150.0.220/28' seems just an IP address but not subnet; maybe you will try '10.150.0.208/28'\")\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n   \"cidrSgIcmpRules\": {\r\n       \"rules\":[\r\n            {\r\n               \"CIDR\": \"10.150.0.220/28\",\r\n               \"SG\": \"sg-0-not-exist\",\r\n               \"logs\": true,\r\n               \"trace\": true,\r\n               \"ICMP\": {\r\n                   \"IPv\": \"IPv4\",\r\n                   \"Types\": [1,2,3]\r\n               },\r\n                \"traffic\": \"Ingress\"\r\n            }          \r\n       ]\r\n   },\r\n   \"syncOp\": \"Upsert\" \r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{HOST}}:{{PORT}}/v1/sync",
+									"host": [
+										"{{HOST}}"
+									],
+									"port": "{{PORT}}",
+									"path": [
+										"v1",
+										"sync"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[RULE-CIDR-S-ICMP] Добавление несуществующей SG к правилу",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 500\", () => {\r",
+											"    pm.response.to.have.status(500);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Validate response JSON schema\", () => {\r",
+											"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
+											"});\r",
+											"\r",
+											"pm.test(\"code is 13\", () => {\r",
+											"    pm.expect(pm.response.json().code).to.eql(13)\r",
+											"});\r",
+											"\r",
+											"pm.test(\"check message\", () => {\r",
+											"    pm.expect(pm.response.json().message).to.eql(\"ERROR: on check SG it found the SG(sg-0-not-exist) not exists (SQLSTATE P0001)\")\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n   \"cidrSgIcmpRules\": {\r\n       \"rules\":[\r\n            {\r\n               \"CIDR\": \"188.192.0.0/10\",\r\n               \"SG\": \"sg-0-not-exist\",\r\n               \"logs\": true,\r\n               \"trace\": true,\r\n               \"ICMP\": {\r\n                   \"IPv\": \"IPv4\",\r\n                   \"Types\": [1,2,3]\r\n               },\r\n                \"traffic\": \"Ingress\"\r\n            }          \r\n       ]\r\n   },\r\n   \"syncOp\": \"Upsert\" \r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{HOST}}:{{PORT}}/v1/sync",
+									"host": [
+										"{{HOST}}"
+									],
+									"port": "{{PORT}}",
+									"path": [
+										"v1",
+										"sync"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[RULE-CIDR-S-ICMP] Некорректное значение traffic",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 400\", () => {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Validate response JSON schema\", () => {\r",
+											"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
+											"});\r",
+											"\r",
+											"pm.test(\"check error code is 3\", () => {\r",
+											"    pm.expect(pm.response.json().code).to.eql(3)\r",
+											"})\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n   \"cidrSgIcmpRules\": {\r\n       \"rules\":[\r\n            {\r\n               \"CIDR\": \"188.192.0.0/10\",\r\n               \"SG\": \"sg-0\",\r\n               \"logs\": true,\r\n               \"trace\": true,\r\n               \"ICMP\": {\r\n                   \"IPv\": \"IPv4\",\r\n                   \"Types\": [1,2,3]\r\n               },\r\n                \"traffic\": \"Ingess\"\r\n            }          \r\n       ]\r\n   },\r\n   \"syncOp\": \"Upsert\" \r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{HOST}}:{{PORT}}/v1/sync",
+									"host": [
+										"{{HOST}}"
+									],
+									"port": "{{PORT}}",
+									"path": [
+										"v1",
+										"sync"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[RULE-CIDR-S-ICMP] Некорректное значение IPv",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 400\", () => {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Validate response JSON schema\", () => {\r",
+											"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
+											"});\r",
+											"\r",
+											"pm.test(\"check error code is 3\", () => {\r",
+											"    pm.expect(pm.response.json().code).to.eql(3)\r",
+											"})\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n   \"cidrSgIcmpRules\": {\r\n       \"rules\":[\r\n            {\r\n               \"CIDR\": \"188.192.0.0/10\",\r\n               \"SG\": \"sg-0\",\r\n               \"logs\": true,\r\n               \"trace\": true,\r\n               \"ICMP\": {\r\n                   \"IPv\": \"IPv10\",\r\n                   \"Types\": [1,2,3]\r\n               },\r\n                \"traffic\": \"Ingress\"\r\n            }          \r\n       ]\r\n   },\r\n   \"syncOp\": \"Upsert\" \r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{HOST}}:{{PORT}}/v1/sync",
+									"host": [
+										"{{HOST}}"
+									],
+									"port": "{{PORT}}",
+									"path": [
+										"v1",
+										"sync"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[RULE-CIDR-S-ICMP] Некорректный диапазон types",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 400\", () => {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Validate response JSON schema\", () => {\r",
+											"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
+											"});\r",
+											"\r",
+											"pm.test(\"check error code is 3\", () => {\r",
+											"    pm.expect(pm.response.json().code).to.eql(3)\r",
+											"})\r",
+											"\r",
+											"pm.test(\"check message\", () => {\r",
+											"    pm.expect(pm.response.json().message).to.eql(\"ICMP type(s) must be in [0-255] but we got (256)\")\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n   \"cidrSgIcmpRules\": {\r\n       \"rules\":[\r\n            {\r\n               \"CIDR\": \"188.192.0.0/10\",\r\n               \"SG\": \"sg-0\",\r\n               \"logs\": true,\r\n               \"trace\": true,\r\n               \"ICMP\": {\r\n                   \"IPv\": \"IPv4\",\r\n                   \"Types\": [256]\r\n               },\r\n                \"traffic\": \"Ingress\"\r\n            }          \r\n       ]\r\n   },\r\n   \"syncOp\": \"Upsert\" \r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{HOST}}:{{PORT}}/v1/sync",
+									"host": [
+										"{{HOST}}"
+									],
+									"port": "{{PORT}}",
+									"path": [
+										"v1",
+										"sync"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[RULE-CIDR-S-ICMP] Некорректный запрос (опечатка)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 404\", () => {\r",
+											"    pm.response.to.have.status(404);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Сheck message\", () => {\r",
+											"    pm.expect(pm.response.json().message).to.eql(\"Not Found\")\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Code is 5\", () => {\r",
+											"    pm.expect(pm.response.json().code).to.eql(5);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Validate response JSON schema\", () => {\r",
+											"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n   \"cidrSgIcmpRules\": {\r\n       \"rules\":[\r\n            {\r\n               \"cidr\": \"10.150.0.220/28\",\r\n               \"Sg\": \"sg-0\",\r\n               \"logs\": true,\r\n               \"trace\": true,\r\n               \"ICMP\": {\r\n                   \"IPv\": \"IPv4\",\r\n                   \"Types\": [256]\r\n               },\r\n                \"traffic\": \"ingress\"\r\n            }          \r\n       ]\r\n   },\r\n   \"syncOp\": \"Upsert\" \r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{HOST}}:{{PORT}}/v1/syn",
+									"host": [
+										"{{HOST}}"
+									],
+									"port": "{{PORT}}",
+									"path": [
+										"v1",
+										"syn"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[RULE-CIDR-S-ICMP] Некорректное значение существующего параметра",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 400\", () => {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Validate response JSON schema\", () => {\r",
+											"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
+											"});\r",
+											"\r",
+											"pm.test(\"code is 3\", () => {\r",
+											"    pm.expect(pm.response.json().code).to.eql(3)\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n   \"cidrSgIcmpRules\": {\r\n       \"rules\":[\r\n            {\r\n               \"CIDR\": \"10.150.0.220/28\",\r\n               \"SG\": [\"sg-0\"],\r\n               \"logs\": true,\r\n               \"trace\": true,\r\n               \"ICMP\": {\r\n                   \"IPv\": \"IPv4\",\r\n                   \"Types\": [251]\r\n               },\r\n                \"traffic\": \"Ingress\"\r\n            }          \r\n       ]\r\n   },\r\n   \"syncOp\": \"Upsert\" \r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{HOST}}:{{PORT}}/v1/sync",
+									"host": [
+										"{{HOST}}"
+									],
+									"port": "{{PORT}}",
+									"path": [
+										"v1",
+										"sync"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[RULE-CIDR-S-ICMP] Cообщение об ошибке при пробеле в названии sg",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 500\", () => {\r",
+											"    pm.response.to.have.status(500);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Validate response JSON schema\", () => {\r",
+											"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
+											"});\r",
+											"\r",
+											"pm.test(\"check error code is 13\", () => {\r",
+											"    pm.expect(pm.response.json().code).to.eql(13)\r",
+											"})\r",
+											"\r",
+											"pm.test(\"check message\", () => {\r",
+											"    pm.expect(pm.response.json().message).to.eql(\"ERROR: value for domain sgroups.cname violates check constraint \\\"cname_validity\\\" (SQLSTATE 23514)\")\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n   \"cidrSgIcmpRules\": {\r\n       \"rules\":[\r\n            {\r\n               \"CIDR\": \"188.234.6.40/30\",\r\n               \"SG\": \" sg-0\",\r\n               \"logs\": true,\r\n               \"trace\": true,\r\n               \"ICMP\": {\r\n                   \"IPv\": \"IPv4\",\r\n                   \"Types\": [253]\r\n               },\r\n                \"traffic\": \"Ingress\"\r\n            }          \r\n       ]\r\n   },\r\n   \"syncOp\": \"Upsert\" \r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{HOST}}:{{PORT}}/v1/sync",
+									"host": [
+										"{{HOST}}"
+									],
+									"port": "{{PORT}}",
+									"path": [
+										"v1",
+										"sync"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[RULE-CIDR-S-ICMP] Cообщение об ошибке при > 255 символов в названии sg",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 500\", () => {\r",
+											"    pm.response.to.have.status(500);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Сheck message\", () => {\r",
+											"    pm.expect(pm.response.json().message).to.eql(\"ERROR: value for domain sgroups.cname violates check constraint \\\"cname_length\\\" (SQLSTATE 23514)\")\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Code is 13\", () => {\r",
+											"    pm.expect(pm.response.json().code).to.eql(13);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Validate response JSON schema\", () => {\r",
+											"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.variables.set(\"syncCird1\", JSON.stringify(customFunc.generateRandomString (256, 10)))"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n   \"cidrSgIcmpRules\": {\r\n       \"rules\":[\r\n            {\r\n               \"CIDR\": \"188.234.6.40/30\",\r\n               \"SG\": {{syncCird1}},\r\n               \"logs\": true,\r\n               \"trace\": true,\r\n               \"ICMP\": {\r\n                   \"IPv\": \"IPv4\",\r\n                   \"Types\": [255]\r\n               },\r\n                \"traffic\": \"Ingress\"\r\n            }          \r\n       ]\r\n   },\r\n   \"syncOp\": \"Upsert\" \r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{HOST}}:{{PORT}}/v1/sync",
+									"host": [
+										"{{HOST}}"
+									],
+									"port": "{{PORT}}",
+									"path": [
+										"v1",
+										"sync"
+									]
+								}
+							},
+							"response": []
+						},
+						{
 							"name": "[RULE-IE-SS-ICMP] Добавление несуществующей SG",
 							"event": [
 								{
@@ -8441,10 +9320,7 @@
 											"pm.test(\"code is 3\", () => {\r",
 											"    pm.expect(pm.response.json().code).to.eql(3)\r",
 											"});\r",
-											"\r",
-											"pm.test(\"check message\", () => {\r",
-											"    pm.expect(pm.response.json().message).to.eql(\"proto: (line 9:20): invalid value for enum type: \\\"Inress\\\"\")\r",
-											"});"
+											""
 										],
 										"type": "text/javascript"
 									}
@@ -8494,10 +9370,7 @@
 											"pm.test(\"code is 3\", () => {\r",
 											"    pm.expect(pm.response.json().code).to.eql(3)\r",
 											"});\r",
-											"\r",
-											"pm.test(\"check message\", () => {\r",
-											"    pm.expect(pm.response.json().message).to.eql(\"proto: (line 11:18): invalid value for enum type: \\\"IPv5\\\"\")\r",
-											"});"
+											""
 										],
 										"type": "text/javascript"
 									}
@@ -8706,10 +9579,7 @@
 											"pm.test(\"code is 3\", () => {\r",
 											"    pm.expect(pm.response.json().code).to.eql(3)\r",
 											"});\r",
-											"\r",
-											"pm.test(\"check message\", () => {\r",
-											"    pm.expect(pm.response.json().message).to.eql(\"proto: (line 6:20): invalid value for string type: [\")\r",
-											"});"
+											""
 										],
 										"type": "text/javascript"
 									}
@@ -9075,6 +9945,51 @@
 								"body": {
 									"mode": "raw",
 									"raw": "{\r\n   \"sgIcmpRules\": {\r\n       \"rules\":[\r\n            {\r\n               \"ICMP\": {\r\n                   \"IPv\": \"IPv4\",\r\n                   \"Types\": [0]\r\n               },\r\n               \"Sg\": \"sg-test-0\",\r\n               \"logs\": true,\r\n               \"trace\": true\r\n            },\r\n            {\r\n               \"ICMP\": {\r\n                   \"IPv\": \"IPv6\",\r\n                   \"Types\": [0, 8, 255]\r\n               },\r\n               \"Sg\": \"sg-test-1\",\r\n               \"logs\": true,\r\n               \"trace\": false\r\n            },\r\n            {\r\n               \"ICMP\": {\r\n                   \"IPv\": \"IPv4\",\r\n                   \"Types\": [100,101,102]\r\n               },\r\n               \"Sg\": \"sg-test-2\",\r\n               \"logs\": false,\r\n               \"trace\": true\r\n            },\r\n            {\r\n               \"ICMP\": {\r\n                   \"IPv\": \"IPv6\",\r\n                   \"Types\": [100,101,102]\r\n               },\r\n               \"Sg\": \"sg-test-3\",\r\n               \"logs\": false,\r\n               \"trace\": false\r\n           }           \r\n       ]\r\n   },\r\n   \"syncOp\": \"Upsert\" \r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{HOST}}:{{PORT}}/v1/sync",
+									"host": [
+										"{{HOST}}"
+									],
+									"port": "{{PORT}}",
+									"path": [
+										"v1",
+										"sync"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[RULE-CIDR-S-ICMP] Rules Upsert",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", () => {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Body is empty\", () => {\r",
+											"    pm.expect(pm.response.json()).to.be.empty\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n   \"cidrSgIcmpRules\": {\r\n       \"rules\":[\r\n            {\r\n               \"CIDR\": \"188.234.0.0/17\",\r\n               \"SG\": \"sg-test-0\",\r\n               \"logs\": true,\r\n               \"trace\": true,\r\n               \"ICMP\": {\r\n                   \"IPv\": \"IPv4\",\r\n                   \"Types\": [1,2,3]\r\n               },\r\n                \"traffic\": \"Ingress\"\r\n            },\r\n            {\r\n               \"CIDR\": \"188.234.6.0/23\",\r\n               \"SG\": \"sg-test-1\",\r\n               \"logs\": true,\r\n               \"trace\": false,\r\n               \"ICMP\": {\r\n                   \"IPv\": \"IPv4\",\r\n                   \"Types\": [6,7,8]\r\n               },\r\n                \"traffic\": \"Egress\"\r\n            },\r\n            {\r\n               \"CIDR\": \"2001:0db8:85a3:0000::/50\",\r\n               \"SG\": \"sg-test-2\",\r\n               \"logs\": false,\r\n               \"trace\": true,\r\n               \"ICMP\": {\r\n                   \"IPv\": \"IPv6\",\r\n                   \"Types\": [10]\r\n               },\r\n                \"traffic\": \"Ingress\"\r\n            },\r\n            {\r\n               \"CIDR\": \"2001:0d00::/24\",\r\n               \"SG\": \"sg-test-3\",\r\n               \"logs\": false,\r\n               \"trace\": false,\r\n               \"ICMP\": {\r\n                   \"IPv\": \"IPv6\",\r\n                   \"Types\": [155,255]\r\n               },\r\n                \"traffic\": \"Egress\"\r\n            }          \r\n       ]\r\n   },\r\n   \"syncOp\": \"Upsert\" \r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -9506,6 +10421,51 @@
 							"response": []
 						},
 						{
+							"name": "[RULE-CIDR-S-ICMP] Rules FullSync",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", () => {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Body is empty\", () => {\r",
+											"    pm.expect(pm.response.json()).to.be.empty\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n   \"cidrSgIcmpRules\": {\r\n       \"rules\":[\r\n            {\r\n               \"CIDR\": \"188.234.0.0/17\",\r\n               \"SG\": \"sg-test-0\",\r\n               \"logs\": true,\r\n               \"trace\": true,\r\n               \"ICMP\": {\r\n                   \"IPv\": \"IPv4\",\r\n                   \"Types\": [1,2,3]\r\n               },\r\n                \"traffic\": \"Ingress\"\r\n            },\r\n            {\r\n               \"CIDR\": \"188.234.6.0/23\",\r\n               \"SG\": \"sg-test-1\",\r\n               \"logs\": true,\r\n               \"trace\": false,\r\n               \"ICMP\": {\r\n                   \"IPv\": \"IPv4\",\r\n                   \"Types\": [6,7,8]\r\n               },\r\n                \"traffic\": \"Egress\"\r\n            },\r\n            {\r\n               \"CIDR\": \"2001:0db8:85a3:0000::/50\",\r\n               \"SG\": \"sg-test-2\",\r\n               \"logs\": false,\r\n               \"trace\": true,\r\n               \"ICMP\": {\r\n                   \"IPv\": \"IPv6\",\r\n                   \"Types\": [10]\r\n               },\r\n                \"traffic\": \"Ingress\"\r\n            },\r\n            {\r\n               \"CIDR\": \"2001:0d00::/24\",\r\n               \"SG\": \"sg-test-3\",\r\n               \"logs\": false,\r\n               \"trace\": false,\r\n               \"ICMP\": {\r\n                   \"IPv\": \"IPv6\",\r\n                   \"Types\": [155,255]\r\n               },\r\n                \"traffic\": \"Egress\"\r\n            }          \r\n       ]\r\n   },\r\n   \"syncOp\": \"FullSync\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{HOST}}:{{PORT}}/v1/sync",
+									"host": [
+										"{{HOST}}"
+									],
+									"port": "{{PORT}}",
+									"path": [
+										"v1",
+										"sync"
+									]
+								}
+							},
+							"response": []
+						},
+						{
 							"name": "[RULE-ICMP-SS] Rules FullSync",
 							"event": [
 								{
@@ -9916,6 +10876,51 @@
 							"response": []
 						},
 						{
+							"name": "[RULE-CIDR-S-ICMP] Rules Delete",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", () => {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Body is empty\", () => {\r",
+											"    pm.expect(pm.response.json()).to.be.empty\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n   \"cidrSgIcmpRules\": {\r\n       \"rules\":[\r\n            {\r\n               \"CIDR\": \"188.234.0.0/17\",\r\n               \"SG\": \"sg-test-0\",\r\n               \"logs\": true,\r\n               \"trace\": true,\r\n               \"ICMP\": {\r\n                   \"IPv\": \"IPv4\",\r\n                   \"Types\": [1,2,3]\r\n               },\r\n                \"traffic\": \"Ingress\"\r\n            },\r\n            {\r\n               \"CIDR\": \"188.234.6.0/23\",\r\n               \"SG\": \"sg-test-1\",\r\n               \"logs\": true,\r\n               \"trace\": false,\r\n               \"ICMP\": {\r\n                   \"IPv\": \"IPv4\",\r\n                   \"Types\": [6,7,8]\r\n               },\r\n                \"traffic\": \"Egress\"\r\n            },\r\n            {\r\n               \"CIDR\": \"2001:0db8:85a3:0000::/50\",\r\n               \"SG\": \"sg-test-2\",\r\n               \"logs\": false,\r\n               \"trace\": true,\r\n               \"ICMP\": {\r\n                   \"IPv\": \"IPv6\",\r\n                   \"Types\": [10]\r\n               },\r\n                \"traffic\": \"Ingress\"\r\n            },\r\n            {\r\n               \"CIDR\": \"2001:0d00::/24\",\r\n               \"SG\": \"sg-test-3\",\r\n               \"logs\": false,\r\n               \"trace\": false,\r\n               \"ICMP\": {\r\n                   \"IPv\": \"IPv6\",\r\n                   \"Types\": [155,255]\r\n               },\r\n                \"traffic\": \"Egress\"\r\n            }          \r\n       ]\r\n   },\r\n   \"syncOp\": \"Delete\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{HOST}}:{{PORT}}/v1/sync",
+									"host": [
+										"{{HOST}}"
+									],
+									"port": "{{PORT}}",
+									"path": [
+										"v1",
+										"sync"
+									]
+								}
+							},
+							"response": []
+						},
+						{
 							"name": "[RULE-FQDN] Rules Delete",
 							"event": [
 								{
@@ -10251,7 +11256,7 @@
 		},
 		{
 			"key": "ruleCidrSgIcmpResponseJsonSchema",
-			"value": "{\n    \"type\": \"object\",\n    \"properties\": {\n        \"rules\": {\n            \"type\": \"array\",\n            \"items\": {\n                \"type\": \"object\",\n                \"properties\": {\n                    \"cidr\":{ \"type\": \"string\" },\n                    \"Sg\":{ \"type\": \"string\" },\n                    \"logs\": { \"type\": \"boolean\" },\n                    \"trace\": { \"type\": \"boolean\" },\n                    \"ICMP\": {\n\t\t\t\t\t\t\"type\": \"object\",\n\t\t\t\t\t\t\"properties\": {\n\t\t\t\t\t\t\t\"IPv\": {\n\t\t\t\t\t\t\t\t\"type\": \"string\",\n\t\t\t\t\t\t\t\t\"enum\": [\"IPv4\", \"IPv6\"]\n\t\t\t\t\t\t\t},\n\t\t\t\t\t\t\t\"Types\": {\n\t\t\t\t\t\t\t\t\"type\": \"array\",\n\t\t\t\t\t\t\t\t\"items\": { \"type\": \"number\" }\n\t\t\t\t\t\t\t}\n\t\t\t\t\t\t},\n\t\t\t\t\t\t\"additionalProperties\": false\n\t\t\t\t\t},\n                    \"traffic\": {\n                        \"type\": \"string\",\n                        \"enum\": [\"Ingress\", \"Egress\"]\n                    }\n                },\n                \"additionalProperties\": false\n            }\n        }\n    },\n    \"required\": [\"rules\"],\n    \"additionalProperties\": false\n}",
+			"value": "{\n    \"type\": \"object\",\n    \"properties\": {\n        \"rules\": {\n            \"type\": \"array\",\n            \"items\": {\n                \"type\": \"object\",\n                \"properties\": {\n                    \"CIDR\":{ \"type\": \"string\" },\n                    \"SG\":{ \"type\": \"string\" },\n                    \"traffic\": {\n                        \"type\": \"string\",\n                        \"enum\": [\"Ingress\", \"Egress\"]\n                    },\n                    \"ICMP\": {\n                        \"type\": \"object\",\n                        \"items\": {\n                            \"type\": \"object\",\n                            \"properties\": {\n                                \"IPv\":{ \n                                    \"type\": \"string\",\n                                    \"enum\":[\"IPv4\",\"IPv6\"]\n                                },\n                                \"Types\":{\n                                    \"type\": \"array\",\n                                    \"items\": { \"type\": \"number\" }\n                                }    \n                            },\n                            \"additionalProperties\": false\n                        }\n                    },\n                    \"logs\": { \"type\": \"boolean\" },\n                    \"trace\": { \"type\": \"boolean\" }\n                },\n                \"additionalProperties\": false\n            }\n        }\n    },\n    \"required\": [\"rules\"],\n    \"additionalProperties\": false\n}",
 			"type": "string"
 		},
 		{
