@@ -31,13 +31,13 @@ import { variables } from "./src/infrastructure/var_storage/variables-storage";
             case 1: {
                 const funcDefault = new InitFuncScenarios(funcScenario.split(","))
                 funcDefault.start()
-                await waitScenarioIsFinish([funcDefault])
+                await waitScenarioIsFinish([funcDefault], 300_000)
                 break
             }
             case 2: {
                 const apiScenario = new ApiScenario()
                 apiScenario.start()
-                await waitScenarioIsFinish([apiScenario])
+                await waitScenarioIsFinish([apiScenario], 600_000)
                 break
             }
             case 99: {
@@ -48,7 +48,7 @@ import { variables } from "./src/infrastructure/var_storage/variables-storage";
                 await waitScenarioIsFinish([
                     funcDefault,
                     apiScenario
-                ])
+                ], 600_000)
                 break
             }
             default: {
