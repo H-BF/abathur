@@ -1,7 +1,7 @@
 {
 	"info": {
-		"_postman_id": "60811da8-a672-4196-bdc8-633f291e4dbd",
-		"name": "Swarm main с ie-s2c-icmp и полем ACTION",
+		"_postman_id": "f9b30c51-13c2-4eab-ae20-a8fd0515ce1a",
+		"name": "Swarm main с priority",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "16473884"
 	},
@@ -896,8 +896,8 @@
 									"\r",
 									"pm.test(\"Check rules\", () => {\r",
 									"    const testData = {\r",
-									"        \"UDP\": [\"sg-3\", \"\", \"5600-5900\", \"DROP\"], \r",
-									"        \"TCP\": [\"sg-0\", \"\", \"5000\", \"ACCEPT\"]\r",
+									"        \"UDP\": [\"sg-3\", \"\", \"5600-5900\", \"DROP\", -200], \r",
+									"        \"TCP\": [\"sg-0\", \"\", \"5000\", \"ACCEPT\", -200]\r",
 									"    }\r",
 									"    pm.expect(pm.response.json().rules).to.be.not.empty\r",
 									"    pm.response.json().rules.forEach(rule => {\r",
@@ -906,6 +906,7 @@
 									"        pm.expect(rule.ports[0].s).to.eql(testData[rule.transport][1])\r",
 									"        pm.expect(rule.ports[0].d).to.eql(testData[rule.transport][2])\r",
 									"        pm.expect(rule.action).to.eql(testData[rule.transport][3])\r",
+									"        pm.expect(rule.priority.some).to.eql(testData[rule.transport][4])\r",
 									"    })\r",
 									"});\r",
 									"\r",
@@ -1055,7 +1056,10 @@
 									"                }\r",
 									"            ],\r",
 									"            \"logs\": false,\r",
-									"            \"action\": \"ACCEPT\"\r",
+									"            \"action\": \"ACCEPT\",\r",
+									"            \"priority\": {\r",
+									"                \"some\": 2\r",
+									"            }\r",
 									"        },\r",
 									"        \"TCP\": {\r",
 									"            \"sgFrom\": \"sg-0\",\r",
@@ -1075,7 +1079,10 @@
 									"                }\r",
 									"            ],\r",
 									"            \"logs\": false,\r",
-									"            \"action\":\"DROP\"\r",
+									"            \"action\":\"DROP\",\r",
+									"            \"priority\": {\r",
+									"                \"some\": 1\r",
+									"            }\r",
 									"        }\r",
 									"    }\r",
 									"\r",
@@ -1085,6 +1092,7 @@
 									"        pm.expect(rule.ports).to.eql(testData[rule.transport].ports)\r",
 									"        pm.expect(rule.logs).to.eql(testData[rule.transport].logs)\r",
 									"        pm.expect(rule.action).to.eql(testData[rule.transport].action)\r",
+									"        pm.expect(rule.priority).to.eql(testData[rule.transport].priority)\r",
 									"    });\r",
 									"});"
 								],
@@ -1157,6 +1165,7 @@
 									"    pm.expect(data.ports.length).to.eql(2)\r",
 									"    pm.expect(data.ports).to.eql(ports)\r",
 									"    pm.expect(data.action).to.eql(\"DROP\")\r",
+									"    pm.expect(data.priority).to.be.empty\r",
 									"});\r",
 									""
 								],
@@ -1579,6 +1588,7 @@
 									"        pm.expect(rule.logs).to.be.true\r",
 									"        pm.expect(rule.protocols).to.be.eql(protocols)\r",
 									"        pm.expect(rule.action).to.be.eql(\"DROP\")\r",
+									"        pm.expect(rule.priority.some).to.be.eql(100)\r",
 									"    })\r",
 									"})"
 								],
@@ -1658,7 +1668,10 @@
 									"                \"http\",\r",
 									"                \"ssh\"\r",
 									"            ],\r",
-									"            \"action\": \"DROP\"\r",
+									"            \"action\": \"DROP\",\r",
+									"            \"priority\": {\r",
+									"                \"some\": 5000\r",
+									"            }\r",
 									"        },\r",
 									"        \"sg-1\": {\r",
 									"            \"FQDN\":\"yandex.ru\",\r",
@@ -1673,7 +1686,10 @@
 									"            }],\r",
 									"            \"logs\": false,\r",
 									"            \"protocols\": [],\r",
-									"            \"action\": \"ACCEPT\"\r",
+									"            \"action\": \"ACCEPT\",\r",
+									"            \"priority\": {\r",
+									"                \"some\": 5000\r",
+									"            }\r",
 									"        }\r",
 									"    }\r",
 									"\r",
@@ -1815,8 +1831,8 @@
 									"pm.test(\"Check rules\", () => {\r",
 									"    pm.expect(pm.response.json().rules).to.be.not.empty\r",
 									"    const testData = {\r",
-									"        \"TCP\": [\"sg-0\", \"google.com\", [[\"4446\", \"7600-7700,7800\"]], true, [\"http\", \"ssh\"], \"DROP\"],\r",
-									"        \"UDP\": [\"sg-1\", \"yandex.ru\", [[\"1000-2000,8888\", \"55000,56000-57000\"], [\"7777,45000-46000\", \"60000\"]], false, [], \"ACCEPT\"]\r",
+									"        \"TCP\": [\"sg-0\", \"google.com\", [[\"4446\", \"7600-7700,7800\"]], true, [\"http\", \"ssh\"], \"DROP\", 100],\r",
+									"        \"UDP\": [\"sg-1\", \"yandex.ru\", [[\"1000-2000,8888\", \"55000,56000-57000\"], [\"7777,45000-46000\", \"60000\"]], false, [], \"ACCEPT\", 5000]\r",
 									"    }\r",
 									"\r",
 									"    pm.response.json().rules.forEach(rule => {\r",
@@ -1824,13 +1840,15 @@
 									"        pm.expect(rule.FQDN).to.eql(testData[rule.transport][1])\r",
 									"        pm.expect(rule.ports.length).to.eql(testData[rule.transport][2].length)\r",
 									"        pm.expect(rule.action).to.eql(testData[rule.transport][5])\r",
-									"\r",
+									"        pm.expect(rule.priority.some).to.deep.eql(testData[rule.transport][6])\r",
+									"        \r",
 									"        for (var i = 0; i < rule.ports.length; i++) {\r",
 									"            pm.expect(rule.ports[i].s).to.eql(testData[rule.transport][2][i][0])\r",
 									"            pm.expect(rule.ports[i].d).to.eql(testData[rule.transport][2][i][1])\r",
 									"        }\r",
 									"        pm.expect(rule.logs).to.eql(testData[rule.transport][3])\r",
 									"        pm.expect(rule.protocols).to.deep.eql(testData[rule.transport][4])\r",
+									"        \r",
 									"    })\r",
 									"})"
 								],
@@ -2214,7 +2232,7 @@
 									"pm.test(\"check rules\", () => {\r",
 									"    pm.expect(pm.response.json().rules).to.be.not.empty\r",
 									"    const testData = {\r",
-									"        \"IPv4\": [\"sg-0\", [0], true, true, \"DROP\"],\r",
+									"        \"IPv4\": [\"sg-0\", [0], true, true, \"DROP\",],\r",
 									"        \"IPv6\": [\"sg-0\", [0,8,100], false, true, \"DROP\"]\r",
 									"    }\r",
 									"\r",
@@ -2709,8 +2727,8 @@
 									"pm.test(\"check rules\", () => {\r",
 									"    pm.expect(pm.response.json().rules).to.be.not.empty\r",
 									"    const testData = {\r",
-									"        \"IPv4\": [\"sg-0\", \"sg-1\", [0], true, true, \"ACCEPT\"],\r",
-									"        \"IPv6\": [\"sg-0\", \"sg-1\", [8,10], true, false, \"DROP\"]\r",
+									"        \"IPv4\": [\"sg-0\", \"sg-1\", [0], true, true, \"ACCEPT\", -32768],\r",
+									"        \"IPv6\": [\"sg-0\", \"sg-1\", [8,10], true, false, \"DROP\", 32767]\r",
 									"    }\r",
 									"\r",
 									"    pm.response.json().rules.forEach(rule => {\r",
@@ -2720,6 +2738,7 @@
 									"        pm.expect(rule.logs).to.eql(testData[rule.ICMP.IPv][3])\r",
 									"        pm.expect(rule.trace).to.eql(testData[rule.ICMP.IPv][4])\r",
 									"        pm.expect(rule.action).to.eql(testData[rule.ICMP.IPv][5])\r",
+									"        pm.expect(rule.priority.some).to.eql(testData[rule.ICMP.IPv][6])\r",
 									"    })\r",
 									"})"
 								],
@@ -2783,6 +2802,7 @@
 									"    pm.expect(rule.logs).to.eql(false)\r",
 									"    pm.expect(rule.trace).to.eql(true)\r",
 									"    pm.expect(rule.action).to.eql(\"ACCEPT\")\r",
+									"    pm.expect(rule.priority.some).to.eql(-300)\r",
 									"})\r",
 									"\r",
 									"\r",
@@ -2908,8 +2928,8 @@
 									"pm.test(\"check rules\", () => {\r",
 									"    pm.expect(pm.response.json().rules).to.be.not.empty\r",
 									"    const testData = {\r",
-									"        \"IPv4\": [\"sg-2\", \"sg-0\", [100,101,102], true, true, \"DROP\"],\r",
-									"        \"IPv6\": [\"sg-2\", \"sg-3\", [8], false, false, \"ACCEPT\"]\r",
+									"        \"IPv4\": [\"sg-2\", \"sg-0\", [100,101,102], true, true, \"DROP\", undefined],\r",
+									"        \"IPv6\": [\"sg-2\", \"sg-3\", [8], false, false, \"ACCEPT\", -300]\r",
 									"    }\r",
 									"\r",
 									"    pm.response.json().rules.forEach(rule => {\r",
@@ -2919,6 +2939,7 @@
 									"        pm.expect(rule.logs).to.eql(testData[rule.ICMP.IPv][3])\r",
 									"        pm.expect(rule.trace).to.eql(testData[rule.ICMP.IPv][4])\r",
 									"        pm.expect(rule.action).to.eql(testData[rule.ICMP.IPv][5])\r",
+									"        pm.expect(rule.priority.some).to.eql(testData[rule.ICMP.IPv][6])\r",
 									"    })\r",
 									"});\r",
 									"\r",
@@ -3318,7 +3339,10 @@
 									"            ],\r",
 									"            \"logs\": true,\r",
 									"            \"trace\": true,\r",
-									"            \"action\": \"DROP\" \r",
+									"            \"action\": \"DROP\",\r",
+									"            \"priority\": {\r",
+									"                \"some\": 300\r",
+									"            }\r",
 									"        },\r",
 									"        \"UDP\": {\r",
 									"            \"CIDR\": \"21.21.0.240/28\",\r",
@@ -3332,7 +3356,10 @@
 									"            ],\r",
 									"            \"logs\": false,\r",
 									"            \"trace\": true,\r",
-									"            \"action\": \"ACCEPT\"\r",
+									"            \"action\": \"ACCEPT\",\r",
+									"            \"priority\": {\r",
+									"                \"some\": 300\r",
+									"            }\r",
 									"        }\r",
 									"    }\r",
 									"\r",
@@ -3344,6 +3371,7 @@
 									"        pm.expect(rule.logs).to.eql(testData[rule.transport].logs);\r",
 									"        pm.expect(rule.trace).to.eql(testData[rule.transport].trace);\r",
 									"        pm.expect(rule.action).to.eql(testData[rule.transport].action);\r",
+									"        pm.expect(rule.priority).to.eql(testData[rule.transport].priority);\r",
 									"    });\r",
 									"});"
 								],
@@ -3896,7 +3924,10 @@
 									"                \"s\": \"\",\r",
 									"                \"d\": \"60000\"\r",
 									"            }],\r",
-									"            \"action\": \"DROP\"\r",
+									"            \"action\": \"DROP\",\r",
+									"            \"priority\": {\r",
+									"                \"some\": 0\r",
+									"            }\r",
 									"        },\r",
 									"        \"Egress\": {\r",
 									"            \"transport\": \"TCP\",\r",
@@ -3914,7 +3945,10 @@
 									"                \"s\": \"45002\",\r",
 									"                \"d\": \"56000-56500\"\r",
 									"            }],\r",
-									"            \"action\":\"ACCEPT\"\r",
+									"            \"action\":\"ACCEPT\",\r",
+									"            \"priority\": {\r",
+									"                \"some\": 0\r",
+									"            }\r",
 									"        }\r",
 									"    }\r",
 									"\r",
@@ -3924,6 +3958,7 @@
 									"        pm.expect(rule.logs).to.eql(testData[rule.traffic].logs)\r",
 									"        pm.expect(rule.trace).to.eql(testData[rule.traffic].trace)\r",
 									"        pm.expect(rule.action).to.eql(testData[rule.traffic].action)\r",
+									"        pm.expect(rule.priority).to.eql(testData[rule.traffic].priority)\r",
 									"\r",
 									"    });\r",
 									"});"
@@ -4326,7 +4361,7 @@
 									"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"ruleIeSgSgIcmpResponseJsonSchema\")));\r",
 									"});\r",
 									"\r",
-									"pm.test(\"Networks array size is 5\", () => {\r",
+									"pm.test(\"Networks array size is 4\", () => {\r",
 									"   pm.expect(pm.response.json().rules.length).to.eql(4)\r",
 									"});"
 								],
@@ -4491,6 +4526,7 @@
 									"        pm.expect(rule.logs).to.be.true\r",
 									"        pm.expect(rule.trace).to.be.true\r",
 									"        pm.expect(rule.action).to.be.eql(\"DROP\")\r",
+									"        pm.expect(rule.priority.some).to.be.eql(-100)\r",
 									"    })\r",
 									"});"
 								],
@@ -4547,8 +4583,8 @@
 									"pm.test(\"check rules\", () => {\r",
 									"    pm.expect(pm.response.json().rules).to.be.not.empty\r",
 									"    const testData = {\r",
-									"        \"IPv4\": [\"sg-2\", \"sg-3\", \"Egress\", [252,253], false, false, \"ACCEPT\"],\r",
-									"        \"IPv6\": [\"sg-2\", \"sg-4\", \"Ingress\", [200,201,202], false, true, \"ACCEPT\"]\r",
+									"        \"IPv4\": [\"sg-2\", \"sg-3\", \"Egress\", [252,253], false, false, \"ACCEPT\", 32767],\r",
+									"        \"IPv6\": [\"sg-2\", \"sg-4\", \"Ingress\", [200,201,202], false, true, \"ACCEPT\", -32768]\r",
 									"    }\r",
 									"\r",
 									"    pm.response.json().rules.forEach(rule => {\r",
@@ -4559,6 +4595,7 @@
 									"        pm.expect(rule.logs).to.eql(testData[rule.ICMP.IPv][4])\r",
 									"        pm.expect(rule.trace).to.eql(testData[rule.ICMP.IPv][5])\r",
 									"        pm.expect(rule.action).to.eql(testData[rule.ICMP.IPv][6])\r",
+									"        pm.expect(rule.priority.some).to.eql(testData[rule.ICMP.IPv][7])\r",
 									"    })\r",
 									"});"
 								],
@@ -5073,7 +5110,10 @@
 									"            \"ICMP\": {  \r",
 									"                \"IPv\": \"IPv4\",\r",
 									"                \"Types\": [255]\r",
-									"          }\r",
+									"            },\r",
+									"            \"priority\": {\r",
+									"                \"some\": 200\r",
+									"            }\r",
 									"        },\r",
 									"        \"Egress\": {\r",
 									"            \"CIDR\": \"fe80::18b4:3f6c:1816:719a/128\",\r",
@@ -5083,7 +5123,8 @@
 									"            \"ICMP\": {  \r",
 									"                \"IPv\": \"IPv6\",\r",
 									"                \"Types\": [140]\r",
-									"          }\r",
+									"           },\r",
+									"           \"priority\": {} \r",
 									"        }\r",
 									"    }\r",
 									"\r",
@@ -5093,6 +5134,7 @@
 									"        pm.expect(rule.trace).to.eql(testData[rule.traffic].trace)\r",
 									"        pm.expect(rule.logs).to.eql(testData[rule.traffic].logs)\r",
 									"        pm.expect(rule.ICMP).to.eql(testData[rule.traffic].ICMP)\r",
+									"        pm.expect(rule.priority).to.eql(testData[rule.traffic].priority)\r",
 									"    });\r",
 									"});\r",
 									""
@@ -6799,6 +6841,168 @@
 							"response": []
 						},
 						{
+							"name": "[RULE] Ошибка при большом значении параметра priority",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 400\", () => {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Validate response JSON schema\", () => {\r",
+											"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
+											"});\r",
+											"\r",
+											"pm.test(\"check error code is 3\", () => {\r",
+											"    pm.expect(pm.response.json().code).to.eql(3)\r",
+											"})\r",
+											"\r",
+											"pm.test(\"check message\", () => {\r",
+											"    pm.expect(pm.response.json().message).to.eql(\"rule priority (32768) is out of range [-32768, 32767]\")\r",
+											"})\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"sgRules\": {\r\n        \"rules\": [\r\n            {\r\n                \"ports\": [\r\n                    {\r\n                    \"s\": \"9999-10000\",\r\n                    \"d\": \"40000-45000\"\r\n                    }\r\n                ],\r\n                \"sgFrom\": \"sg-4\",\r\n                \"sgTo\": \"sg-0\",\r\n                \"transport\": \"TCP\",\r\n                \"action\":\"ACCEPT\",\r\n                \"priority\": {\r\n                    \"some\": 32768\r\n                }\r\n            }\r\n        ]\r\n    },\r\n    \"syncOp\": \"Upsert\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{HOST}}:{{PORT}}/v1/sync",
+									"host": [
+										"{{HOST}}"
+									],
+									"port": "{{PORT}}",
+									"path": [
+										"v1",
+										"sync"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[RULE] Ошибка при маленьком значении параметра priority",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 400\", () => {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Validate response JSON schema\", () => {\r",
+											"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
+											"});\r",
+											"\r",
+											"pm.test(\"check error code is 3\", () => {\r",
+											"    pm.expect(pm.response.json().code).to.eql(3)\r",
+											"})\r",
+											"\r",
+											"pm.test(\"check message\", () => {\r",
+											"    pm.expect(pm.response.json().message).to.eql(\"rule priority (-32769) is out of range [-32768, 32767]\")\r",
+											"})\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"sgRules\": {\r\n        \"rules\": [\r\n            {\r\n                \"ports\": [\r\n                    {\r\n                    \"s\": \"9999-10000\",\r\n                    \"d\": \"40000-45000\"\r\n                    }\r\n                ],\r\n                \"sgFrom\": \"sg-4\",\r\n                \"sgTo\": \"sg-0\",\r\n                \"transport\": \"TCP\",\r\n                \"action\":\"ACCEPT\",\r\n                \"priority\": {\r\n                    \"some\": -32769\r\n                }\r\n            }\r\n        ]\r\n    },\r\n    \"syncOp\": \"Upsert\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{HOST}}:{{PORT}}/v1/sync",
+									"host": [
+										"{{HOST}}"
+									],
+									"port": "{{PORT}}",
+									"path": [
+										"v1",
+										"sync"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[RULE] Ошибка при буквенном значении параметра priority Copy",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 400\", () => {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Validate response JSON schema\", () => {\r",
+											"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
+											"});\r",
+											"\r",
+											"pm.test(\"check error code is 3\", () => {\r",
+											"    pm.expect(pm.response.json().code).to.eql(3)\r",
+											"})\r",
+											"\r",
+											"pm.test(\"check message\", () => {\r",
+											"    pm.expect(pm.response.json().message).includes(\"invalid value for int32\")\r",
+											"})\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"sgRules\": {\r\n        \"rules\": [\r\n            {\r\n                \"ports\": [\r\n                    {\r\n                    \"s\": \"9999-10000\",\r\n                    \"d\": \"40000-45000\"\r\n                    }\r\n                ],\r\n                \"sgFrom\": \"sg-4\",\r\n                \"sgTo\": \"sg-0\",\r\n                \"transport\": \"TCP\",\r\n                \"action\":\"ACCEPT\",\r\n                \"priority\": {\r\n                    \"some\": \"fd\"\r\n                }\r\n            }\r\n        ]\r\n    },\r\n    \"syncOp\": \"Upsert\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{HOST}}:{{PORT}}/v1/sync",
+									"host": [
+										"{{HOST}}"
+									],
+									"port": "{{PORT}}",
+									"path": [
+										"v1",
+										"sync"
+									]
+								}
+							},
+							"response": []
+						},
+						{
 							"name": "[RULE] Ошибка при отсутствии поля action",
 							"event": [
 								{
@@ -7430,6 +7634,165 @@
 							"response": []
 						},
 						{
+							"name": "[RULE-FQDN] Ошибка при большом значении параметра priority",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 400\", () => {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Validate response JSON schema\", () => {\r",
+											"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
+											"});\r",
+											"\r",
+											"pm.test(\"check error code is 3\", () => {\r",
+											"    pm.expect(pm.response.json().code).to.eql(3)\r",
+											"})\r",
+											"\r",
+											"pm.test(\"check message\", () => {\r",
+											"    pm.expect(pm.response.json().message).to.eql(\"rule priority (32768) is out of range [-32768, 32767]\")\r",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"fqdnRules\": {\r\n        \"rules\": [\r\n            {\r\n                \"ports\": [\r\n                    {\r\n                    \"s\": \"\",\r\n                    \"d\": \"40000-45000\"\r\n                    }\r\n                ],\r\n                \"sgFrom\": \"sg-4\",\r\n                \"FQDN\": \"google.com\",\r\n                \"transport\": \"TCP\",\r\n                \"logs\": true,\r\n                \"protocols\": [\"ssh\"],\r\n                \"action\":\"DROP\",\r\n                \"priority\": {\r\n                    \"some\": 32768\r\n                }\r\n            }\r\n        ]\r\n    },\r\n    \"syncOp\": \"Upsert\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{HOST}}:{{PORT}}/v1/sync",
+									"host": [
+										"{{HOST}}"
+									],
+									"port": "{{PORT}}",
+									"path": [
+										"v1",
+										"sync"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[RULE-FQDN] Ошибка при маленьком значении параметра priority",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 400\", () => {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Validate response JSON schema\", () => {\r",
+											"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
+											"});\r",
+											"\r",
+											"pm.test(\"check error code is 3\", () => {\r",
+											"    pm.expect(pm.response.json().code).to.eql(3)\r",
+											"})\r",
+											"\r",
+											"pm.test(\"check message\", () => {\r",
+											"    pm.expect(pm.response.json().message).to.eql(\"rule priority (-32769) is out of range [-32768, 32767]\")\r",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"fqdnRules\": {\r\n        \"rules\": [\r\n            {\r\n                \"ports\": [\r\n                    {\r\n                    \"s\": \"\",\r\n                    \"d\": \"40000-45000\"\r\n                    }\r\n                ],\r\n                \"sgFrom\": \"sg-4\",\r\n                \"FQDN\": \"google.com\",\r\n                \"transport\": \"TCP\",\r\n                \"logs\": true,\r\n                \"protocols\": [\"ssh\"],\r\n                \"action\":\"DROP\",\r\n                \"priority\": {\r\n                    \"some\": -32769\r\n                }\r\n            }\r\n        ]\r\n    },\r\n    \"syncOp\": \"Upsert\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{HOST}}:{{PORT}}/v1/sync",
+									"host": [
+										"{{HOST}}"
+									],
+									"port": "{{PORT}}",
+									"path": [
+										"v1",
+										"sync"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[RULE-FQDN] Ошибка при буквенном значении параметра priority",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 400\", () => {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Validate response JSON schema\", () => {\r",
+											"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
+											"});\r",
+											"\r",
+											"pm.test(\"check error code is 3\", () => {\r",
+											"    pm.expect(pm.response.json().code).to.eql(3)\r",
+											"})\r",
+											"\r",
+											"pm.test(\"check error code is 3\", () => {\r",
+											"    pm.expect(pm.response.json().message).includes(\"invalid value for int32\")\r",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"fqdnRules\": {\r\n        \"rules\": [\r\n            {\r\n                \"ports\": [\r\n                    {\r\n                    \"s\": \"\",\r\n                    \"d\": \"40000-45000\"\r\n                    }\r\n                ],\r\n                \"sgFrom\": \"sg-4\",\r\n                \"FQDN\": \"google.com\",\r\n                \"transport\": \"TCP\",\r\n                \"logs\": true,\r\n                \"protocols\": [\"ssh\"],\r\n                \"action\":\"DROP\",\r\n                \"priority\": {\r\n                    \"some\": \"hehe\"\r\n                }\r\n            }\r\n        ]\r\n    },\r\n    \"syncOp\": \"Upsert\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{HOST}}:{{PORT}}/v1/sync",
+									"host": [
+										"{{HOST}}"
+									],
+									"port": "{{PORT}}",
+									"path": [
+										"v1",
+										"sync"
+									]
+								}
+							},
+							"response": []
+						},
+						{
 							"name": "[RULE-FQDN] Ошибка при отсутствии поля action",
 							"event": [
 								{
@@ -7771,6 +8134,60 @@
 								"body": {
 									"mode": "raw",
 									"raw": "{\r\n   \"sgIcmpRules\": {\r\n       \"rules\":[\r\n           {\r\n               \"ICMP\": {\r\n                   \"IPv\": \"IPv4\",\r\n                   \"Types\": [0, 8]\r\n               },\r\n               \"Sg\": \"sg-1\",\r\n               \"logs\": false,\r\n               \"trace\": true,\r\n               \"action\": \"lalala\"\r\n           }\r\n       ]\r\n   },\r\n   \"syncOp\": \"Upsert\" \r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{HOST}}:{{PORT}}/v1/sync",
+									"host": [
+										"{{HOST}}"
+									],
+									"port": "{{PORT}}",
+									"path": [
+										"v1",
+										"sync"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[RULE-ICMP-S] Ошибка при наличии поля priority",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 400\", () => {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Validate response JSON schema\", () => {\r",
+											"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
+											"});\r",
+											"\r",
+											"pm.test(\"code is 3\", () => {\r",
+											"    pm.expect(pm.response.json().code).to.eql(3)\r",
+											"});\r",
+											"\r",
+											"pm.test(\"check message\", () => {\r",
+											"    pm.expect(pm.response.json().message).includes(\"unknown field \\\"priority\\\"\")\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n   \"sgIcmpRules\": {\r\n       \"rules\":[\r\n           {\r\n               \"ICMP\": {\r\n                   \"IPv\": \"IPv4\",\r\n                   \"Types\": [0, 8]\r\n               },\r\n               \"Sg\": \"sg-1\",\r\n               \"logs\": false,\r\n               \"trace\": true,\r\n               \"action\": \"ACCEPT\",\r\n               \"priority\": \"-400\"\r\n           }\r\n       ]\r\n   },\r\n   \"syncOp\": \"Upsert\" \r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -8187,6 +8604,168 @@
 								"body": {
 									"mode": "raw",
 									"raw": "{\r\n   \"sgSgIcmpRules\": {\r\n       \"rules\":[\r\n           {\r\n               \"ICMP\": {\r\n                   \"IPv\": \"IPv4\",\r\n                   \"Types\": [0, 8]\r\n               },\r\n               \"SgFrom\": \"sg-no-exist\",\r\n               \"SgTo\": \"sg-1\",\r\n               \"logs\": true,\r\n               \"trace\": true,\r\n               \"action\": \"DOP\"\r\n           }\r\n       ]\r\n   },\r\n   \"syncOp\": \"Upsert\" \r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{HOST}}:{{PORT}}/v1/sync",
+									"host": [
+										"{{HOST}}"
+									],
+									"port": "{{PORT}}",
+									"path": [
+										"v1",
+										"sync"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[RULE-ICMP-SS] Ошибка при большом значении параметра priority",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 400\", () => {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Validate response JSON schema\", () => {\r",
+											"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
+											"});\r",
+											"\r",
+											"pm.test(\"code is 3\", () => {\r",
+											"    pm.expect(pm.response.json().code).to.eql(3)\r",
+											"});\r",
+											"\r",
+											"pm.test(\"check message\", () => {\r",
+											"    pm.expect(pm.response.json().message).to.eql(\"rule priority (32768) is out of range [-32768, 32767]\")\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n   \"sgSgIcmpRules\": {\r\n       \"rules\":[\r\n           {\r\n               \"ICMP\": {\r\n                   \"IPv\": \"IPv4\",\r\n                   \"Types\": [0, 8]\r\n               },\r\n               \"SgFrom\": \"sg-no-exist\",\r\n               \"SgTo\": \"sg-1\",\r\n               \"logs\": true,\r\n               \"trace\": true,\r\n               \"action\": \"DROP\",\r\n               \"priority\": {\r\n                    \"some\": 32768\r\n                }\r\n           }\r\n       ]\r\n   },\r\n   \"syncOp\": \"Upsert\" \r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{HOST}}:{{PORT}}/v1/sync",
+									"host": [
+										"{{HOST}}"
+									],
+									"port": "{{PORT}}",
+									"path": [
+										"v1",
+										"sync"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[RULE-ICMP-SS] Ошибка при маленьком значении параметра priority",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 400\", () => {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Validate response JSON schema\", () => {\r",
+											"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
+											"});\r",
+											"\r",
+											"pm.test(\"code is 3\", () => {\r",
+											"    pm.expect(pm.response.json().code).to.eql(3)\r",
+											"});\r",
+											"\r",
+											"pm.test(\"code is 3\", () => {\r",
+											"    pm.expect(pm.response.json().message).to.eql(\"rule priority (-32769) is out of range [-32768, 32767]\")\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n   \"sgSgIcmpRules\": {\r\n       \"rules\":[\r\n           {\r\n               \"ICMP\": {\r\n                   \"IPv\": \"IPv4\",\r\n                   \"Types\": [0, 8]\r\n               },\r\n               \"SgFrom\": \"sg-no-exist\",\r\n               \"SgTo\": \"sg-1\",\r\n               \"logs\": true,\r\n               \"trace\": true,\r\n               \"action\": \"DROP\",\r\n               \"priority\": {\r\n                    \"some\": -32769\r\n                }\r\n           }\r\n       ]\r\n   },\r\n   \"syncOp\": \"Upsert\" \r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{HOST}}:{{PORT}}/v1/sync",
+									"host": [
+										"{{HOST}}"
+									],
+									"port": "{{PORT}}",
+									"path": [
+										"v1",
+										"sync"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[RULE-ICMP-SS] Ошибка при буквенном значении параметра priority",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 400\", () => {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Validate response JSON schema\", () => {\r",
+											"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
+											"});\r",
+											"\r",
+											"pm.test(\"code is 3\", () => {\r",
+											"    pm.expect(pm.response.json().code).to.eql(3)\r",
+											"});\r",
+											"\r",
+											"pm.test(\"check message\", () => {\r",
+											"    pm.expect(pm.response.json().message).includes(\"invalid value for int32\")\r",
+											"});\r",
+											"\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n   \"sgSgIcmpRules\": {\r\n       \"rules\":[\r\n           {\r\n               \"ICMP\": {\r\n                   \"IPv\": \"IPv4\",\r\n                   \"Types\": [0, 8]\r\n               },\r\n               \"SgFrom\": \"sg-no-exist\",\r\n               \"SgTo\": \"sg-1\",\r\n               \"logs\": true,\r\n               \"trace\": true,\r\n               \"action\": \"DROP\",\r\n               \"priority\": {\r\n                    \"some\": \"aaa\"\r\n                }\r\n           }\r\n       ]\r\n   },\r\n   \"syncOp\": \"Upsert\" \r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -8656,6 +9235,165 @@
 								"body": {
 									"mode": "raw",
 									"raw": "{\r\n  \"cidrSgRules\": {\r\n    \"rules\": [\r\n      {\r\n        \"CIDR\": \"21.21.0.240/28\",\r\n        \"SG\": \"sg-nonexist-1\",\r\n        \"ports\": [\r\n\t\t\t\t\t{\r\n\t\t\t\t\t\t\"s\": \"33-55\",\r\n\t\t\t\t\t\t\"d\": \"5000\"\r\n\t\t\t\t\t}\r\n        ],\r\n        \"trace\": true,\r\n        \"logs\": true,\r\n        \"traffic\": \"Egress\",\r\n        \"transport\": \"TCP\",\r\n        \"action\": \"ACEPT\"\r\n      }\r\n    ]\r\n  },\r\n  \"syncOp\": \"Upsert\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{HOST}}:{{PORT}}/v1/sync",
+									"host": [
+										"{{HOST}}"
+									],
+									"port": "{{PORT}}",
+									"path": [
+										"v1",
+										"sync"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[RULE-CIDR] Ошибка при большом значении параметра priority",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 400\", () => {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Validate response JSON schema\", () => {\r",
+											"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
+											"});\r",
+											"\r",
+											"pm.test(\"code is 3\", () => {\r",
+											"    pm.expect(pm.response.json().code).to.eql(3)\r",
+											"});\r",
+											"\r",
+											"pm.test(\"check message\", () => {\r",
+											"    pm.expect(pm.response.json().message).to.eql(\"rule priority (32768) is out of range [-32768, 32767]\")\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"cidrSgRules\": {\r\n    \"rules\": [\r\n      {\r\n        \"CIDR\": \"21.21.0.240/28\",\r\n        \"SG\": \"sg-nonexist-1\",\r\n        \"ports\": [\r\n\t\t\t\t\t{\r\n\t\t\t\t\t\t\"s\": \"33-55\",\r\n\t\t\t\t\t\t\"d\": \"5000\"\r\n\t\t\t\t\t}\r\n        ],\r\n        \"trace\": true,\r\n        \"logs\": true,\r\n        \"traffic\": \"Egress\",\r\n        \"transport\": \"TCP\",\r\n        \"action\": \"ACCEPT\",\r\n        \"priority\": {\r\n                    \"some\": 32768\r\n                }\r\n      }\r\n    ]\r\n  },\r\n  \"syncOp\": \"Upsert\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{HOST}}:{{PORT}}/v1/sync",
+									"host": [
+										"{{HOST}}"
+									],
+									"port": "{{PORT}}",
+									"path": [
+										"v1",
+										"sync"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[RULE-CIDR] Ошибка при маленьком значении параметра priority",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 400\", () => {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Validate response JSON schema\", () => {\r",
+											"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
+											"});\r",
+											"\r",
+											"pm.test(\"code is 3\", () => {\r",
+											"    pm.expect(pm.response.json().code).to.eql(3)\r",
+											"});\r",
+											"\r",
+											"pm.test(\"check message\", () => {\r",
+											"    pm.expect(pm.response.json().message).to.eql(\"rule priority (-32769) is out of range [-32768, 32767]\")\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"cidrSgRules\": {\r\n    \"rules\": [\r\n      {\r\n        \"CIDR\": \"21.21.0.240/28\",\r\n        \"SG\": \"sg-nonexist-1\",\r\n        \"ports\": [\r\n\t\t\t\t\t{\r\n\t\t\t\t\t\t\"s\": \"33-55\",\r\n\t\t\t\t\t\t\"d\": \"5000\"\r\n\t\t\t\t\t}\r\n        ],\r\n        \"trace\": true,\r\n        \"logs\": true,\r\n        \"traffic\": \"Egress\",\r\n        \"transport\": \"TCP\",\r\n        \"action\": \"ACCEPT\",\r\n        \"priority\": {\r\n                    \"some\": -32769\r\n                }\r\n      }\r\n    ]\r\n  },\r\n  \"syncOp\": \"Upsert\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{HOST}}:{{PORT}}/v1/sync",
+									"host": [
+										"{{HOST}}"
+									],
+									"port": "{{PORT}}",
+									"path": [
+										"v1",
+										"sync"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[RULE-CIDR] Ошибка при буквенном значении параметра priority",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 400\", () => {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Validate response JSON schema\", () => {\r",
+											"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
+											"});\r",
+											"\r",
+											"pm.test(\"code is 3\", () => {\r",
+											"    pm.expect(pm.response.json().code).to.eql(3)\r",
+											"});\r",
+											"\r",
+											"pm.test(\"check message\", () => {\r",
+											"    pm.expect(pm.response.json().message).includes(\"invalid value for int32\")\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"cidrSgRules\": {\r\n    \"rules\": [\r\n      {\r\n        \"CIDR\": \"21.21.0.240/28\",\r\n        \"SG\": \"sg-nonexist-1\",\r\n        \"ports\": [\r\n\t\t\t\t\t{\r\n\t\t\t\t\t\t\"s\": \"33-55\",\r\n\t\t\t\t\t\t\"d\": \"5000\"\r\n\t\t\t\t\t}\r\n        ],\r\n        \"trace\": true,\r\n        \"logs\": true,\r\n        \"traffic\": \"Egress\",\r\n        \"transport\": \"TCP\",\r\n        \"action\": \"ACCEPT\",\r\n        \"priority\": {\r\n                    \"some\": \"hhh\"\r\n                }\r\n      }\r\n    ]\r\n  },\r\n  \"syncOp\": \"Upsert\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -9287,6 +10025,168 @@
 								"body": {
 									"mode": "raw",
 									"raw": "{\r\n  \"sgSgRules\": {\r\n    \"rules\": [\r\n      {\r\n        \"Sg\": \"sg-2\",\r\n        \"SgLocal\": \"sg-3\",\r\n        \"logs\": false,\r\n        \"ports\": [\r\n          {\r\n            \"d\": \"50001\",\r\n            \"s\": \"51000\"\r\n          },\r\n          {\r\n            \"d\": \"50300\",\r\n            \"s\": \"52000\"\r\n          }\r\n        ],\r\n        \"trace\": true,\r\n        \"traffic\": \"Egress\",\r\n        \"transport\": \"UDP\",\r\n        \"action\": \"DOP\"\r\n      }\r\n    ]\r\n  },\r\n  \"syncOp\": \"FullSync\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{HOST}}:{{PORT}}/v1/sync",
+									"host": [
+										"{{HOST}}"
+									],
+									"port": "{{PORT}}",
+									"path": [
+										"v1",
+										"sync"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[RULE-IE-SS] Ошибка при большом значении параметра priority",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 400\", () => {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Validate response JSON schema\", () => {\r",
+											"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
+											"});\r",
+											"\r",
+											"pm.test(\"code is 3\", () => {\r",
+											"    pm.expect(pm.response.json().code).to.eql(3)\r",
+											"});\r",
+											"\r",
+											"pm.test(\"check message\", () => {\r",
+											"    pm.expect(pm.response.json().message).to.eql(\"rule priority (32768) is out of range [-32768, 32767]\")\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"sgSgRules\": {\r\n    \"rules\": [\r\n      {\r\n        \"Sg\": \"sg-2\",\r\n        \"SgLocal\": \"sg-3\",\r\n        \"logs\": false,\r\n        \"ports\": [\r\n          {\r\n            \"d\": \"50001\",\r\n            \"s\": \"51000\"\r\n          },\r\n          {\r\n            \"d\": \"50300\",\r\n            \"s\": \"52000\"\r\n          }\r\n        ],\r\n        \"trace\": true,\r\n        \"traffic\": \"Egress\",\r\n        \"transport\": \"UDP\",\r\n        \"action\": \"DROP\",\r\n        \"priority\": {\r\n                    \"some\": 32768\r\n                }\r\n      }\r\n    ]\r\n  },\r\n  \"syncOp\": \"FullSync\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{HOST}}:{{PORT}}/v1/sync",
+									"host": [
+										"{{HOST}}"
+									],
+									"port": "{{PORT}}",
+									"path": [
+										"v1",
+										"sync"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[RULE-IE-SS] Ошибка при маленьком значении параметра priority",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 400\", () => {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Validate response JSON schema\", () => {\r",
+											"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
+											"});\r",
+											"\r",
+											"pm.test(\"code is 3\", () => {\r",
+											"    pm.expect(pm.response.json().code).to.eql(3)\r",
+											"});\r",
+											"\r",
+											"pm.test(\"check message\", () => {\r",
+											"    pm.expect(pm.response.json().message).to.eql(\"rule priority (-32769) is out of range [-32768, 32767]\")\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"sgSgRules\": {\r\n    \"rules\": [\r\n      {\r\n        \"Sg\": \"sg-2\",\r\n        \"SgLocal\": \"sg-3\",\r\n        \"logs\": false,\r\n        \"ports\": [\r\n          {\r\n            \"d\": \"50001\",\r\n            \"s\": \"51000\"\r\n          },\r\n          {\r\n            \"d\": \"50300\",\r\n            \"s\": \"52000\"\r\n          }\r\n        ],\r\n        \"trace\": true,\r\n        \"traffic\": \"Egress\",\r\n        \"transport\": \"UDP\",\r\n        \"action\": \"DROP\",\r\n        \"priority\": {\r\n                    \"some\": -32769\r\n                }\r\n      }\r\n    ]\r\n  },\r\n  \"syncOp\": \"FullSync\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{HOST}}:{{PORT}}/v1/sync",
+									"host": [
+										"{{HOST}}"
+									],
+									"port": "{{PORT}}",
+									"path": [
+										"v1",
+										"sync"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[RULE-IE-SS] Ошибка при буквенном значении параметра priority",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 400\", () => {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Validate response JSON schema\", () => {\r",
+											"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
+											"});\r",
+											"\r",
+											"pm.test(\"code is 3\", () => {\r",
+											"    pm.expect(pm.response.json().code).to.eql(3)\r",
+											"});\r",
+											"\r",
+											"pm.test(\"check message\", () => {\r",
+											"    pm.expect(pm.response.json().message).includes(\"invalid value for int32\")\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"sgSgRules\": {\r\n    \"rules\": [\r\n      {\r\n        \"Sg\": \"sg-2\",\r\n        \"SgLocal\": \"sg-3\",\r\n        \"logs\": false,\r\n        \"ports\": [\r\n          {\r\n            \"d\": \"50001\",\r\n            \"s\": \"51000\"\r\n          },\r\n          {\r\n            \"d\": \"50300\",\r\n            \"s\": \"52000\"\r\n          }\r\n        ],\r\n        \"trace\": true,\r\n        \"traffic\": \"Egress\",\r\n        \"transport\": \"UDP\",\r\n        \"action\": \"DROP\",\r\n        \"priority\": {\r\n                    \"some\": \"qwert\"\r\n                }\r\n      }\r\n    ]\r\n  },\r\n  \"syncOp\": \"FullSync\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -9948,6 +10848,166 @@
 							"response": []
 						},
 						{
+							"name": "[RULE-IE-SS-ICMP] Ошибка при большом значении параметра priority",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 400\", () => {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Validate response JSON schema\", () => {\r",
+											"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
+											"});\r",
+											"\r",
+											"pm.test(\"code is 3\", () => {\r",
+											"    pm.expect(pm.response.json().code).to.eql(3)\r",
+											"});\r",
+											"\r",
+											"pm.test(\"check message\", () => {\r",
+											"    pm.expect(pm.response.json().message).to.eql(\"rule priority (40000) is out of range [-32768, 32767]\")\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"ieSgSgIcmpRules\": {\r\n    \"rules\": [\r\n      {\r\n        \"Sg\": \"sg-1\",\r\n        \"SgLocal\": \"sg-2\",\r\n        \"logs\": true,\r\n        \"trace\": true,\r\n        \"traffic\": \"Ingress\",\r\n        \"ICMP\": {  \r\n          \"IPv\": \"IPv4\",\r\n          \"Types\": [100]\r\n        },\r\n        \"action\": \"ACCEPT\",\r\n        \"priority\": {\r\n                    \"some\": 40000\r\n                }\r\n      }\r\n    ]\r\n  },\r\n  \"syncOp\": \"Upsert\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{HOST}}:{{PORT}}/v1/sync",
+									"host": [
+										"{{HOST}}"
+									],
+									"port": "{{PORT}}",
+									"path": [
+										"v1",
+										"sync"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[RULE-IE-SS-ICMP] Ошибка при маленьком значении параметра priority",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 400\", () => {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Validate response JSON schema\", () => {\r",
+											"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
+											"});\r",
+											"\r",
+											"pm.test(\"code is 3\", () => {\r",
+											"    pm.expect(pm.response.json().code).to.eql(3)\r",
+											"});\r",
+											"\r",
+											"pm.test(\"check message\", () => {\r",
+											"    pm.expect(pm.response.json().message).to.eql(\"rule priority (-40000) is out of range [-32768, 32767]\")\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"ieSgSgIcmpRules\": {\r\n    \"rules\": [\r\n      {\r\n        \"Sg\": \"sg-1\",\r\n        \"SgLocal\": \"sg-2\",\r\n        \"logs\": true,\r\n        \"trace\": true,\r\n        \"traffic\": \"Ingress\",\r\n        \"ICMP\": {  \r\n          \"IPv\": \"IPv4\",\r\n          \"Types\": [100]\r\n        },\r\n        \"action\": \"ACCEPT\",\r\n        \"priority\": {\r\n                    \"some\": -40000\r\n                }\r\n      }\r\n    ]\r\n  },\r\n  \"syncOp\": \"Upsert\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{HOST}}:{{PORT}}/v1/sync",
+									"host": [
+										"{{HOST}}"
+									],
+									"port": "{{PORT}}",
+									"path": [
+										"v1",
+										"sync"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[RULE-IE-SS-ICMP] Ошибка при буквенном значении параметра priority",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 400\", () => {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Validate response JSON schema\", () => {\r",
+											"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
+											"});\r",
+											"\r",
+											"pm.test(\"code is 3\", () => {\r",
+											"    pm.expect(pm.response.json().code).to.eql(3)\r",
+											"});\r",
+											"\r",
+											"pm.test(\"check message\", () => {\r",
+											"    pm.expect(pm.response.json().message).includes(\"invalid value for int32\")\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"ieSgSgIcmpRules\": {\r\n    \"rules\": [\r\n      {\r\n        \"Sg\": \"sg-1\",\r\n        \"SgLocal\": \"sg-2\",\r\n        \"logs\": true,\r\n        \"trace\": true,\r\n        \"traffic\": \"Ingress\",\r\n        \"ICMP\": {  \r\n          \"IPv\": \"IPv4\",\r\n          \"Types\": [100]\r\n        },\r\n        \"action\": \"ACCEPT\",\r\n        \"priority\": {\r\n                    \"some\": \"rfv\"\r\n                }\r\n      }\r\n    ]\r\n  },\r\n  \"syncOp\": \"Upsert\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{HOST}}:{{PORT}}/v1/sync",
+									"host": [
+										"{{HOST}}"
+									],
+									"port": "{{PORT}}",
+									"path": [
+										"v1",
+										"sync"
+									]
+								}
+							},
+							"response": []
+						},
+						{
 							"name": "[RULE-IE-SS-ICMP] Ошибка при отсутствии поля action",
 							"event": [
 								{
@@ -10579,6 +11639,159 @@
 								}
 							},
 							"response": []
+						},
+						{
+							"name": "[RULE-CIDR-S-ICMP] Сообщение об ошибке при большом значении priority",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 400\", () => {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Validate response JSON schema\", () => {\r",
+											"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
+											"});\r",
+											"\r",
+											"pm.test(\"code is 3\", () => {\r",
+											"    pm.expect(pm.response.json().code).to.eql(3)\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n   \"cidrSgIcmpRules\": {\r\n       \"rules\":[\r\n            {\r\n               \"CIDR\": \"10.150.0.208/28\",\r\n               \"SG\": \"sg-0-not-exist\",\r\n               \"logs\": true,\r\n               \"trace\": true,\r\n               \"ICMP\": {\r\n                   \"IPv\": \"IPv4\",\r\n                   \"Types\": [1,2,3]\r\n               },\r\n                \"traffic\": \"Ingress\",\r\n                \"action\": \"ACCEPT\",\r\n                \"priority\": {\r\n                    \"some\": 40000\r\n                }\r\n            }          \r\n       ]\r\n   },\r\n   \"syncOp\": \"Upsert\" \r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{HOST}}:{{PORT}}/v1/sync",
+									"host": [
+										"{{HOST}}"
+									],
+									"port": "{{PORT}}",
+									"path": [
+										"v1",
+										"sync"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[RULE-CIDR-S-ICMP] Сообщение об ошибке при маленьком значении priority",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 400\", () => {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Validate response JSON schema\", () => {\r",
+											"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
+											"});\r",
+											"\r",
+											"pm.test(\"code is 3\", () => {\r",
+											"    pm.expect(pm.response.json().code).to.eql(3)\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n   \"cidrSgIcmpRules\": {\r\n       \"rules\":[\r\n            {\r\n               \"CIDR\": \"10.150.0.208/28\",\r\n               \"SG\": \"sg-0-not-exist\",\r\n               \"logs\": true,\r\n               \"trace\": true,\r\n               \"ICMP\": {\r\n                   \"IPv\": \"IPv4\",\r\n                   \"Types\": [1,2,3]\r\n               },\r\n                \"traffic\": \"Ingress\",\r\n                \"action\": \"ACCEPT\",\r\n                \"priority\": {\r\n                    \"some\": -100000\r\n                }\r\n            }          \r\n       ]\r\n   },\r\n   \"syncOp\": \"Upsert\" \r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{HOST}}:{{PORT}}/v1/sync",
+									"host": [
+										"{{HOST}}"
+									],
+									"port": "{{PORT}}",
+									"path": [
+										"v1",
+										"sync"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[RULE-CIDR-S-ICMP] Сообщение об ошибке при буквенном значении priority",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 400\", () => {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Validate response JSON schema\", () => {\r",
+											"    pm.response.to.have.jsonSchema(JSON.parse(pm.variables.get(\"errorResponseJsonSchema\")));\r",
+											"});\r",
+											"\r",
+											"pm.test(\"code is 3\", () => {\r",
+											"    pm.expect(pm.response.json().code).to.eql(3)\r",
+											"});\r",
+											"\r",
+											"pm.test(\"check message\", () => {\r",
+											"    pm.expect(pm.response.json().message).includes(\"invalid value for int32\")\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n   \"cidrSgIcmpRules\": {\r\n       \"rules\":[\r\n            {\r\n               \"CIDR\": \"10.150.0.208/28\",\r\n               \"SG\": \"sg-0-not-exist\",\r\n               \"logs\": true,\r\n               \"trace\": true,\r\n               \"ICMP\": {\r\n                   \"IPv\": \"IPv4\",\r\n                   \"Types\": [1,2,3]\r\n               },\r\n                \"traffic\": \"Ingress\",\r\n                \"action\": \"ACCEPT\",\r\n                \"priority\": {\r\n                    \"some\": \"qws\"\r\n                }\r\n            }          \r\n       ]\r\n   },\r\n   \"syncOp\": \"Upsert\" \r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{HOST}}:{{PORT}}/v1/sync",
+									"host": [
+										"{{HOST}}"
+									],
+									"port": "{{PORT}}",
+									"path": [
+										"v1",
+										"sync"
+									]
+								}
+							},
+							"response": []
 						}
 					]
 				},
@@ -10699,7 +11912,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"sgRules\": {\r\n        \"rules\": [\r\n            {\r\n                \"ports\": [\r\n                    {\r\n                    \"s\": \"\",\r\n                    \"d\": \"40000-45000\"\r\n                    }\r\n                ],\r\n                \"sgFrom\": \"sg-test-0\",\r\n                \"sgTo\": \"sg-test-1\",\r\n                \"transport\": \"TCP\",\r\n                \"logs\": true,\r\n                \"action\": \"DROP\"\r\n            },\r\n            {\r\n                \"ports\": [\r\n                    {\r\n                    \"s\": \"50000\",\r\n                    \"d\": \"35000\"\r\n                    }\r\n                ],\r\n                \"sgFrom\": \"sg-test-1\",\r\n                \"sgTo\": \"sg-test-2\",\r\n                \"transport\": \"TCP\",\r\n                \"logs\": false,\r\n                \"action\": \"ACCEPT\"\r\n            },\r\n            {\r\n                \"ports\": [\r\n                    {\r\n                    \"s\": \"30000-31000\",\r\n                    \"d\": \"55000-56000\"\r\n                    }\r\n                ],\r\n                \"sgFrom\": \"sg-test-2\",\r\n                \"sgTo\": \"sg-test-3\",\r\n                \"transport\": \"TCP\",\r\n                \"action\": \"DROP\"\r\n            },\r\n            {\r\n                \"ports\": [\r\n                    {\r\n                    \"s\": \"5000, 6000-7000\",\r\n                    \"d\": \"55000-56000\"\r\n                    }\r\n                ],\r\n                \"sgFrom\": \"sg-test-3\",\r\n                \"sgTo\": \"sg-test-0\",\r\n                \"transport\": \"TCP\",\r\n                \"action\": \"ACCEPT\"\r\n            },\r\n                        {\r\n                \"ports\": [\r\n                    {\r\n                    \"s\": \"\",\r\n                    \"d\": \"4444\"\r\n                    }\r\n                ],\r\n                \"sgFrom\": \"sg-test-1\",\r\n                \"sgTo\": \"sg-test-3\",\r\n                \"transport\": \"UDP\",\r\n                \"action\": \"DROP\"\r\n            }\r\n        ]\r\n    },\r\n    \"syncOp\": \"Upsert\"\r\n}",
+									"raw": "{\r\n    \"sgRules\": {\r\n        \"rules\": [\r\n            {\r\n                \"ports\": [\r\n                    {\r\n                    \"s\": \"\",\r\n                    \"d\": \"40000-45000\"\r\n                    }\r\n                ],\r\n                \"sgFrom\": \"sg-test-0\",\r\n                \"sgTo\": \"sg-test-1\",\r\n                \"transport\": \"TCP\",\r\n                \"logs\": true,\r\n                \"action\": \"DROP\",\r\n                \"priority\": {\r\n                    \"some\": 32767\r\n                }\r\n            },\r\n            {\r\n                \"ports\": [\r\n                    {\r\n                    \"s\": \"50000\",\r\n                    \"d\": \"35000\"\r\n                    }\r\n                ],\r\n                \"sgFrom\": \"sg-test-1\",\r\n                \"sgTo\": \"sg-test-2\",\r\n                \"transport\": \"TCP\",\r\n                \"logs\": false,\r\n                \"action\": \"ACCEPT\",\r\n                \"priority\": {\r\n                    \"some\": -32768\r\n                }\r\n            },\r\n            {\r\n                \"ports\": [\r\n                    {\r\n                    \"s\": \"30000-31000\",\r\n                    \"d\": \"55000-56000\"\r\n                    }\r\n                ],\r\n                \"sgFrom\": \"sg-test-2\",\r\n                \"sgTo\": \"sg-test-3\",\r\n                \"transport\": \"TCP\",\r\n                \"action\": \"DROP\",\r\n                \"priority\": {\r\n                    \"some\": -200\r\n                }\r\n            },\r\n            {\r\n                \"ports\": [\r\n                    {\r\n                    \"s\": \"5000, 6000-7000\",\r\n                    \"d\": \"55000-56000\"\r\n                    }\r\n                ],\r\n                \"sgFrom\": \"sg-test-3\",\r\n                \"sgTo\": \"sg-test-0\",\r\n                \"transport\": \"TCP\",\r\n                \"action\": \"ACCEPT\"\r\n            },\r\n                        {\r\n                \"ports\": [\r\n                    {\r\n                    \"s\": \"\",\r\n                    \"d\": \"4444\"\r\n                    }\r\n                ],\r\n                \"sgFrom\": \"sg-test-1\",\r\n                \"sgTo\": \"sg-test-3\",\r\n                \"transport\": \"UDP\",\r\n                \"action\": \"DROP\"\r\n            }\r\n        ]\r\n    },\r\n    \"syncOp\": \"Upsert\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -10744,7 +11957,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"fqdnRules\": {\r\n        \"rules\": [\r\n            {\r\n                \"ports\": [\r\n                    {\r\n                    \"s\": \"\",\r\n                    \"d\": \"40000-45000\"\r\n                    }\r\n                ],\r\n                \"sgFrom\": \"sg-test-0\",\r\n                \"FQDN\": \"google.com\",\r\n                \"transport\": \"TCP\",\r\n                \"logs\": true,\r\n                \"protocols\": [],\r\n                \"action\": \"DROP\"\r\n            },\r\n            {\r\n                \"ports\": [\r\n                    {\r\n                    \"s\": \"50000\",\r\n                    \"d\": \"35000\"\r\n                    }\r\n                ],\r\n                \"sgFrom\": \"sg-test-1\",\r\n                \"FQDN\": \"google.com\",\r\n                \"transport\": \"TCP\",\r\n                \"logs\": false,\r\n                \"protocols\": [\"asd\"],\r\n                \"action\": \"ACCEPT\"\r\n            },\r\n            {\r\n                \"ports\": [\r\n                    {\r\n                    \"s\": \"30000-31000\",\r\n                    \"d\": \"55000-56000\"\r\n                    }\r\n                ],\r\n                \"sgFrom\": \"sg-test-2\",\r\n                \"FQDN\": \"google.com\",\r\n                \"transport\": \"TCP\",\r\n                \"protocols\": [\"asdasd\", \"asdasd_q1\"],\r\n                \"action\": \"DROP\"\r\n            },\r\n            {\r\n                \"ports\": [\r\n                    {\r\n                    \"s\": \"5000, 6000-7000\",\r\n                    \"d\": \"55000-56000\"\r\n                    }\r\n                ],\r\n                \"sgFrom\": \"sg-test-3\",\r\n                \"FQDN\": \"google.com\",\r\n                \"transport\": \"TCP\",\r\n                \"action\": \"ACCEPT\"\r\n            },\r\n                        {\r\n                \"ports\": [\r\n                    {\r\n                    \"s\": \"\",\r\n                    \"d\": \"4444\"\r\n                    }\r\n                ],\r\n                \"sgFrom\": \"sg-test-1\",\r\n                \"FQDN\": \"google.com\",\r\n                \"transport\": \"UDP\",\r\n                \"action\": \"DROP\"\r\n            }\r\n        ]\r\n    },\r\n    \"syncOp\": \"Upsert\"\r\n}",
+									"raw": "{\r\n    \"fqdnRules\": {\r\n        \"rules\": [\r\n            {\r\n                \"ports\": [\r\n                    {\r\n                    \"s\": \"\",\r\n                    \"d\": \"40000-45000\"\r\n                    }\r\n                ],\r\n                \"sgFrom\": \"sg-test-0\",\r\n                \"FQDN\": \"google.com\",\r\n                \"transport\": \"TCP\",\r\n                \"logs\": true,\r\n                \"protocols\": [],\r\n                \"action\": \"DROP\",\r\n                \"priority\": {\r\n                    \"some\": 0\r\n                }\r\n            },\r\n            {\r\n                \"ports\": [\r\n                    {\r\n                    \"s\": \"50000\",\r\n                    \"d\": \"35000\"\r\n                    }\r\n                ],\r\n                \"sgFrom\": \"sg-test-1\",\r\n                \"FQDN\": \"google.com\",\r\n                \"transport\": \"TCP\",\r\n                \"logs\": false,\r\n                \"protocols\": [\"asd\"],\r\n                \"action\": \"ACCEPT\",\r\n                \"priority\": {\r\n                    \"some\": -32768\r\n                }\r\n            },\r\n            {\r\n                \"ports\": [\r\n                    {\r\n                    \"s\": \"30000-31000\",\r\n                    \"d\": \"55000-56000\"\r\n                    }\r\n                ],\r\n                \"sgFrom\": \"sg-test-2\",\r\n                \"FQDN\": \"google.com\",\r\n                \"transport\": \"TCP\",\r\n                \"protocols\": [\"asdasd\", \"asdasd_q1\"],\r\n                \"action\": \"DROP\",\r\n                \"priority\": {\r\n                    \"some\": 32767\r\n                }\r\n            },\r\n            {\r\n                \"ports\": [\r\n                    {\r\n                    \"s\": \"5000, 6000-7000\",\r\n                    \"d\": \"55000-56000\"\r\n                    }\r\n                ],\r\n                \"sgFrom\": \"sg-test-3\",\r\n                \"FQDN\": \"google.com\",\r\n                \"transport\": \"TCP\",\r\n                \"action\": \"ACCEPT\",\r\n                \"priority\": {\r\n                    \"some\": 100\r\n                }\r\n            },\r\n                        {\r\n                \"ports\": [\r\n                    {\r\n                    \"s\": \"\",\r\n                    \"d\": \"4444\"\r\n                    }\r\n                ],\r\n                \"sgFrom\": \"sg-test-1\",\r\n                \"FQDN\": \"google.com\",\r\n                \"transport\": \"UDP\",\r\n                \"action\": \"DROP\"\r\n            }\r\n        ]\r\n    },\r\n    \"syncOp\": \"Upsert\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -10834,7 +12047,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n   \"sgSgIcmpRules\": {\r\n       \"rules\":[\r\n           {\r\n               \"ICMP\": {\r\n                   \"IPv\": \"IPv4\",\r\n                   \"Types\": [0, 8]\r\n               },\r\n               \"SgFrom\": \"sg-test-0\",\r\n               \"SgTo\": \"sg-test-1\",\r\n               \"logs\": true,\r\n               \"trace\": true,\r\n               \"action\": \"DROP\"\r\n           },\r\n           {\r\n               \"ICMP\": {\r\n                   \"IPv\": \"IPv6\",\r\n                   \"Types\": [0, 8]\r\n               },\r\n               \"SgFrom\": \"sg-test-0\",\r\n               \"SgTo\": \"sg-test-1\",\r\n               \"logs\": true,\r\n               \"trace\": true,\r\n               \"action\": \"ACCEPT\"\r\n           },\r\n           {\r\n               \"ICMP\": {\r\n                   \"IPv\": \"IPv4\",\r\n                   \"Types\": [255,254,253]\r\n               },\r\n               \"SgFrom\": \"sg-test-2\",\r\n               \"SgTo\": \"sg-test-3\",\r\n               \"logs\": false,\r\n               \"trace\": false,\r\n               \"action\": \"ACCEPT\"\r\n           },\r\n           {\r\n               \"ICMP\": {\r\n                   \"IPv\": \"IPv4\",\r\n                   \"Types\": [255,254,253]\r\n               },\r\n               \"SgFrom\": \"sg-test-3\",\r\n               \"SgTo\": \"sg-test-0\",\r\n               \"logs\": false,\r\n               \"trace\": true,\r\n               \"action\": \"DROP\"\r\n           }                                    \r\n       ]\r\n   },\r\n   \"syncOp\": \"Upsert\" \r\n}",
+									"raw": "{\r\n   \"sgSgIcmpRules\": {\r\n       \"rules\":[\r\n           {\r\n               \"ICMP\": {\r\n                   \"IPv\": \"IPv4\",\r\n                   \"Types\": [0, 8]\r\n               },\r\n               \"SgFrom\": \"sg-test-0\",\r\n               \"SgTo\": \"sg-test-1\",\r\n               \"logs\": true,\r\n               \"trace\": true,\r\n               \"action\": \"DROP\",\r\n               \"priority\": {\r\n                    \"some\": 32767\r\n                }\r\n           },\r\n           {\r\n               \"ICMP\": {\r\n                   \"IPv\": \"IPv6\",\r\n                   \"Types\": [0, 8]\r\n               },\r\n               \"SgFrom\": \"sg-test-0\",\r\n               \"SgTo\": \"sg-test-1\",\r\n               \"logs\": true,\r\n               \"trace\": true,\r\n               \"action\": \"ACCEPT\",\r\n               \"priority\": {\r\n                    \"some\": -32768\r\n                }\r\n           },\r\n           {\r\n               \"ICMP\": {\r\n                   \"IPv\": \"IPv4\",\r\n                   \"Types\": [255,254,253]\r\n               },\r\n               \"SgFrom\": \"sg-test-2\",\r\n               \"SgTo\": \"sg-test-3\",\r\n               \"logs\": false,\r\n               \"trace\": false,\r\n               \"action\": \"ACCEPT\",\r\n               \"priority\": {\r\n                    \"some\": 32767\r\n                }\r\n           },\r\n           {\r\n               \"ICMP\": {\r\n                   \"IPv\": \"IPv4\",\r\n                   \"Types\": [255,254,253]\r\n               },\r\n               \"SgFrom\": \"sg-test-3\",\r\n               \"SgTo\": \"sg-test-0\",\r\n               \"logs\": false,\r\n               \"trace\": true,\r\n               \"action\": \"DROP\"\r\n           }                                    \r\n       ]\r\n   },\r\n   \"syncOp\": \"Upsert\" \r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -10879,7 +12092,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n  \"sgSgRules\": {\r\n    \"rules\": [\r\n      {\r\n        \"Sg\": \"sg-test-0\",\r\n        \"SgLocal\": \"sg-test-1\",\r\n        \"logs\": false,\r\n        \"ports\": [\r\n          {\r\n            \"d\": \"\",\r\n            \"s\": \"59901\"\r\n          }\r\n        ],\r\n        \"trace\": false,\r\n        \"traffic\": \"Ingress\",\r\n        \"transport\": \"TCP\",\r\n        \"action\": \"DROP\"\r\n      },\r\n      {\r\n        \"Sg\": \"sg-test-0\",\r\n        \"SgLocal\": \"sg-test-1\",\r\n        \"logs\": true,\r\n        \"ports\": [\r\n          {\r\n            \"d\": \"45000-46000\",\r\n            \"s\": \"50000,50001\"\r\n          },\r\n          {\r\n            \"d\": \"46001-46100\",\r\n            \"s\": \"50002-50100\"\r\n          },\r\n          {\r\n            \"d\": \"46101,46102\",\r\n            \"s\": \"50101,50102\"\r\n          }\r\n        ],\r\n        \"trace\": true,\r\n        \"traffic\": \"Egress\",\r\n        \"transport\": \"TCP\",\r\n        \"action\": \"ACCEPT\"\r\n      },\r\n      {\r\n        \"Sg\": \"sg-test-1\",\r\n        \"SgLocal\": \"sg-test-2\",\r\n        \"logs\": true,\r\n        \"ports\": [\r\n          {\r\n            \"d\": \"46103-46200,46201\",\r\n            \"s\": \"50103-50200,50201\"\r\n          }\r\n        ],\r\n        \"trace\": false,\r\n        \"traffic\": \"Ingress\",\r\n        \"transport\": \"UDP\",\r\n        \"action\": \"DROP\"\r\n      },\r\n      {\r\n        \"Sg\": \"sg-test-1\",\r\n        \"SgLocal\": \"sg-test-2\",\r\n        \"logs\": false,\r\n        \"ports\": [\r\n          {\r\n            \"d\": \"46202,46300-47000\",\r\n            \"s\": \"50202,51000-52000\"\r\n          }\r\n        ],\r\n        \"trace\": true,\r\n        \"traffic\": \"Egress\",\r\n        \"transport\": \"UDP\",\r\n        \"action\": \"ACCEPT\"\r\n      }\r\n    ]\r\n  },\r\n  \"syncOp\": \"Upsert\"\r\n}",
+									"raw": "{\r\n  \"sgSgRules\": {\r\n    \"rules\": [\r\n      {\r\n        \"Sg\": \"sg-test-0\",\r\n        \"SgLocal\": \"sg-test-1\",\r\n        \"logs\": false,\r\n        \"ports\": [\r\n          {\r\n            \"d\": \"\",\r\n            \"s\": \"59901\"\r\n          }\r\n        ],\r\n        \"trace\": false,\r\n        \"traffic\": \"Ingress\",\r\n        \"transport\": \"TCP\",\r\n        \"action\": \"DROP\",\r\n        \"priority\": {\r\n                    \"some\": -32768\r\n                }\r\n      },\r\n      {\r\n        \"Sg\": \"sg-test-0\",\r\n        \"SgLocal\": \"sg-test-1\",\r\n        \"logs\": true,\r\n        \"ports\": [\r\n          {\r\n            \"d\": \"45000-46000\",\r\n            \"s\": \"50000,50001\"\r\n          },\r\n          {\r\n            \"d\": \"46001-46100\",\r\n            \"s\": \"50002-50100\"\r\n          },\r\n          {\r\n            \"d\": \"46101,46102\",\r\n            \"s\": \"50101,50102\"\r\n          }\r\n        ],\r\n        \"trace\": true,\r\n        \"traffic\": \"Egress\",\r\n        \"transport\": \"TCP\",\r\n        \"action\": \"ACCEPT\",\r\n        \"priority\": {\r\n                    \"some\": 32767\r\n                }\r\n      },\r\n      {\r\n        \"Sg\": \"sg-test-1\",\r\n        \"SgLocal\": \"sg-test-2\",\r\n        \"logs\": true,\r\n        \"ports\": [\r\n          {\r\n            \"d\": \"46103-46200,46201\",\r\n            \"s\": \"50103-50200,50201\"\r\n          }\r\n        ],\r\n        \"trace\": false,\r\n        \"traffic\": \"Ingress\",\r\n        \"transport\": \"UDP\",\r\n        \"action\": \"DROP\",\r\n        \"priority\": {\r\n                    \"some\": 0\r\n                }\r\n      },\r\n      {\r\n        \"Sg\": \"sg-test-1\",\r\n        \"SgLocal\": \"sg-test-2\",\r\n        \"logs\": false,\r\n        \"ports\": [\r\n          {\r\n            \"d\": \"46202,46300-47000\",\r\n            \"s\": \"50202,51000-52000\"\r\n          }\r\n        ],\r\n        \"trace\": true,\r\n        \"traffic\": \"Egress\",\r\n        \"transport\": \"UDP\",\r\n        \"action\": \"ACCEPT\"\r\n      }\r\n    ]\r\n  },\r\n  \"syncOp\": \"Upsert\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -10924,7 +12137,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n  \"ieSgSgIcmpRules\": {\r\n    \"rules\": [\r\n      {\r\n        \"Sg\": \"sg-test-0\",\r\n        \"SgLocal\": \"sg-test-1\",\r\n        \"logs\": true,\r\n        \"trace\": true,\r\n        \"traffic\": \"Ingress\",\r\n        \"ICMP\": {  \r\n          \"IPv\": \"IPv4\",\r\n          \"Types\": [100]\r\n        },\r\n        \"action\": \"DROP\"\r\n      },\r\n      {\r\n        \"Sg\": \"sg-test-0\",\r\n        \"SgLocal\": \"sg-test-2\",\r\n        \"logs\": false,\r\n        \"trace\": false,\r\n        \"traffic\": \"Egress\",\r\n        \"ICMP\": {  \r\n          \"IPv\": \"IPv4\",\r\n          \"Types\": [110,111,112]\r\n        },\r\n        \"action\": \"ACCEPT\"\r\n      },\r\n      {\r\n        \"Sg\": \"sg-test-0\",\r\n        \"SgLocal\": \"sg-test-3\",\r\n        \"logs\": true,\r\n        \"trace\": false,\r\n        \"traffic\": \"Ingress\",\r\n        \"ICMP\": {  \r\n          \"IPv\": \"IPv6\",\r\n          \"Types\": [120,122,125]\r\n        },\r\n        \"action\": \"DROP\"\r\n      },\r\n      {\r\n        \"Sg\": \"sg-test-1\",\r\n        \"SgLocal\": \"sg-test-3\",\r\n        \"logs\": false,\r\n        \"trace\": true,\r\n        \"traffic\": \"Egress\",\r\n        \"ICMP\": {  \r\n          \"IPv\": \"IPv6\",\r\n          \"Types\": [126]\r\n        },\r\n        \"action\": \"ACCEPT\"\r\n      }\r\n    ]\r\n  },\r\n  \"syncOp\": \"Upsert\"\r\n}",
+									"raw": "{\r\n  \"ieSgSgIcmpRules\": {\r\n    \"rules\": [\r\n      {\r\n        \"Sg\": \"sg-test-0\",\r\n        \"SgLocal\": \"sg-test-1\",\r\n        \"logs\": true,\r\n        \"trace\": true,\r\n        \"traffic\": \"Ingress\",\r\n        \"ICMP\": {  \r\n          \"IPv\": \"IPv4\",\r\n          \"Types\": [100]\r\n        },\r\n        \"action\": \"DROP\",\r\n        \"priority\": {\r\n                    \"some\": -32768\r\n                }\r\n      },\r\n      {\r\n        \"Sg\": \"sg-test-0\",\r\n        \"SgLocal\": \"sg-test-2\",\r\n        \"logs\": false,\r\n        \"trace\": false,\r\n        \"traffic\": \"Egress\",\r\n        \"ICMP\": {  \r\n          \"IPv\": \"IPv4\",\r\n          \"Types\": [110,111,112]\r\n        },\r\n        \"action\": \"ACCEPT\",\r\n        \"priority\": {\r\n                    \"some\": 32767\r\n                }\r\n      },\r\n      {\r\n        \"Sg\": \"sg-test-0\",\r\n        \"SgLocal\": \"sg-test-3\",\r\n        \"logs\": true,\r\n        \"trace\": false,\r\n        \"traffic\": \"Ingress\",\r\n        \"ICMP\": {  \r\n          \"IPv\": \"IPv6\",\r\n          \"Types\": [120,122,125]\r\n        },\r\n        \"action\": \"DROP\",\r\n        \"priority\": {\r\n                    \"some\": 100\r\n                }\r\n      },\r\n      {\r\n        \"Sg\": \"sg-test-1\",\r\n        \"SgLocal\": \"sg-test-3\",\r\n        \"logs\": false,\r\n        \"trace\": true,\r\n        \"traffic\": \"Egress\",\r\n        \"ICMP\": {  \r\n          \"IPv\": \"IPv6\",\r\n          \"Types\": [126]\r\n        },\r\n        \"action\": \"ACCEPT\"\r\n      }\r\n    ]\r\n  },\r\n  \"syncOp\": \"Upsert\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -10969,7 +12182,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n      \"cidrSgRules\": {\r\n    \"rules\": [\r\n      {\r\n        \"CIDR\": \"10.150.0.208/28\",\r\n        \"SG\": \"sg-test-0\",\r\n        \"logs\": true,\r\n        \"ports\": [\r\n          {\r\n            \"s\": \"40025\",\r\n            \"d\": \"40026\"\r\n\r\n          }\r\n        ],\r\n        \"trace\": true,\r\n        \"traffic\": \"Ingress\",\r\n        \"transport\": \"TCP\",\r\n        \"action\": \"DROP\"\r\n      }\r\n    ]\r\n  },\r\n  \t\"syncOp\": \"Upsert\"\r\n}",
+									"raw": "{\r\n      \"cidrSgRules\": {\r\n    \"rules\": [\r\n      {\r\n        \"CIDR\": \"10.150.0.208/28\",\r\n        \"SG\": \"sg-test-0\",\r\n        \"logs\": true,\r\n        \"ports\": [\r\n          {\r\n            \"s\": \"40025\",\r\n            \"d\": \"40026\"\r\n\r\n          }\r\n        ],\r\n        \"trace\": true,\r\n        \"traffic\": \"Ingress\",\r\n        \"transport\": \"TCP\",\r\n        \"action\": \"DROP\",\r\n        \"priority\": {\r\n                    \"some\": 300\r\n                }\r\n      }\r\n    ]\r\n  },\r\n  \t\"syncOp\": \"Upsert\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -11014,7 +12227,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n   \"cidrSgIcmpRules\": {\r\n       \"rules\":[\r\n            {\r\n               \"CIDR\": \"188.234.0.0/17\",\r\n               \"SG\": \"sg-test-0\",\r\n               \"logs\": true,\r\n               \"trace\": true,\r\n               \"ICMP\": {\r\n                   \"IPv\": \"IPv4\",\r\n                   \"Types\": [1,2,3]\r\n               },\r\n                \"traffic\": \"Ingress\",\r\n                \"action\": \"DROP\"\r\n            },\r\n            {\r\n               \"CIDR\": \"188.234.6.0/23\",\r\n               \"SG\": \"sg-test-1\",\r\n               \"logs\": true,\r\n               \"trace\": false,\r\n               \"ICMP\": {\r\n                   \"IPv\": \"IPv4\",\r\n                   \"Types\": [6,7,8]\r\n               },\r\n                \"traffic\": \"Egress\",\r\n                \"action\": \"ACCEPT\"\r\n            },\r\n            {\r\n               \"CIDR\": \"2001:0db8:85a3:0000::/50\",\r\n               \"SG\": \"sg-test-2\",\r\n               \"logs\": false,\r\n               \"trace\": true,\r\n               \"ICMP\": {\r\n                   \"IPv\": \"IPv6\",\r\n                   \"Types\": [10]\r\n               },\r\n                \"traffic\": \"Ingress\",\r\n                \"action\": \"ACCEPT\"\r\n            },\r\n            {\r\n               \"CIDR\": \"2001:0d00::/24\",\r\n               \"SG\": \"sg-test-3\",\r\n               \"logs\": false,\r\n               \"trace\": false,\r\n               \"ICMP\": {\r\n                   \"IPv\": \"IPv6\",\r\n                   \"Types\": [155,255]\r\n               },\r\n                \"traffic\": \"Egress\",\r\n                \"action\": \"DROP\"\r\n            }          \r\n       ]\r\n   },\r\n   \"syncOp\": \"Upsert\" \r\n}",
+									"raw": "{\r\n   \"cidrSgIcmpRules\": {\r\n       \"rules\":[\r\n            {\r\n               \"CIDR\": \"188.234.0.0/17\",\r\n               \"SG\": \"sg-test-0\",\r\n               \"logs\": true,\r\n               \"trace\": true,\r\n               \"ICMP\": {\r\n                   \"IPv\": \"IPv4\",\r\n                   \"Types\": [1,2,3]\r\n               },\r\n                \"traffic\": \"Ingress\",\r\n                \"action\": \"DROP\",\r\n                \"priority\": {\r\n                    \"some\": -32768\r\n                }\r\n            },\r\n            {\r\n               \"CIDR\": \"188.234.6.0/23\",\r\n               \"SG\": \"sg-test-1\",\r\n               \"logs\": true,\r\n               \"trace\": false,\r\n               \"ICMP\": {\r\n                   \"IPv\": \"IPv4\",\r\n                   \"Types\": [6,7,8]\r\n               },\r\n                \"traffic\": \"Egress\",\r\n                \"action\": \"ACCEPT\",\r\n                \"priority\": {\r\n                    \"some\": 32767\r\n                }\r\n            },\r\n            {\r\n               \"CIDR\": \"2001:0db8:85a3:0000::/50\",\r\n               \"SG\": \"sg-test-2\",\r\n               \"logs\": false,\r\n               \"trace\": true,\r\n               \"ICMP\": {\r\n                   \"IPv\": \"IPv6\",\r\n                   \"Types\": [10]\r\n               },\r\n                \"traffic\": \"Ingress\",\r\n                \"action\": \"ACCEPT\",\r\n                \"priority\": {\r\n                    \"some\": 200\r\n                }\r\n            },\r\n            {\r\n               \"CIDR\": \"2001:0d00::/24\",\r\n               \"SG\": \"sg-test-3\",\r\n               \"logs\": false,\r\n               \"trace\": false,\r\n               \"ICMP\": {\r\n                   \"IPv\": \"IPv6\",\r\n                   \"Types\": [155,255]\r\n               },\r\n                \"traffic\": \"Egress\",\r\n                \"action\": \"DROP\"\r\n            }          \r\n       ]\r\n   },\r\n   \"syncOp\": \"Upsert\" \r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -11154,7 +12367,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"sgRules\": {\r\n        \"rules\": [\r\n            {\r\n                \"ports\": [\r\n                    {\r\n                    \"s\": \"\",\r\n                    \"d\": \"40000-45000\"\r\n                    }\r\n                ],\r\n                \"sgFrom\": \"sg-test-0\",\r\n                \"sgTo\": \"sg-test-1\",\r\n                \"transport\": \"TCP\",\r\n                \"logs\": true,\r\n                \"action\": \"DROP\"\r\n            },\r\n            {\r\n                \"ports\": [\r\n                    {\r\n                    \"s\": \"50000\",\r\n                    \"d\": \"35000\"\r\n                    }\r\n                ],\r\n                \"sgFrom\": \"sg-test-1\",\r\n                \"sgTo\": \"sg-test-2\",\r\n                \"transport\": \"TCP\",\r\n                \"logs\": false,\r\n                \"action\": \"ACCEPT\"\r\n            },\r\n            {\r\n                \"ports\": [\r\n                    {\r\n                    \"s\": \"30000-31000\",\r\n                    \"d\": \"55000-56000\"\r\n                    }\r\n                ],\r\n                \"sgFrom\": \"sg-test-2\",\r\n                \"sgTo\": \"sg-test-3\",\r\n                \"transport\": \"TCP\",\r\n                \"action\": \"DROP\"\r\n            },\r\n            {\r\n                \"ports\": [\r\n                    {\r\n                    \"s\": \"5000, 6000-7000\",\r\n                    \"d\": \"55000-56000\"\r\n                    }\r\n                ],\r\n                \"sgFrom\": \"sg-test-3\",\r\n                \"sgTo\": \"sg-test-0\",\r\n                \"transport\": \"TCP\",\r\n                \"action\": \"ACCEPT\"\r\n            },\r\n                        {\r\n                \"ports\": [\r\n                    {\r\n                    \"s\": \"\",\r\n                    \"d\": \"4444\"\r\n                    }\r\n                ],\r\n                \"sgFrom\": \"sg-test-1\",\r\n                \"sgTo\": \"sg-test-3\",\r\n                \"transport\": \"UDP\",\r\n                \"action\": \"DROP\"\r\n            }\r\n        ]\r\n    },\r\n    \"syncOp\": \"FullSync\"\r\n}",
+									"raw": "{\r\n    \"sgRules\": {\r\n        \"rules\": [\r\n            {\r\n                \"ports\": [\r\n                    {\r\n                    \"s\": \"\",\r\n                    \"d\": \"40000-45000\"\r\n                    }\r\n                ],\r\n                \"sgFrom\": \"sg-test-0\",\r\n                \"sgTo\": \"sg-test-1\",\r\n                \"transport\": \"TCP\",\r\n                \"logs\": true,\r\n                \"action\": \"DROP\",\r\n                \"priority\": {\r\n                    \"some\": 32767\r\n                }\r\n            },\r\n            {\r\n                \"ports\": [\r\n                    {\r\n                    \"s\": \"50000\",\r\n                    \"d\": \"35000\"\r\n                    }\r\n                ],\r\n                \"sgFrom\": \"sg-test-1\",\r\n                \"sgTo\": \"sg-test-2\",\r\n                \"transport\": \"TCP\",\r\n                \"logs\": false,\r\n                \"action\": \"ACCEPT\",\r\n                \"priority\": {\r\n                    \"some\": -32768\r\n                }\r\n            },\r\n            {\r\n                \"ports\": [\r\n                    {\r\n                    \"s\": \"30000-31000\",\r\n                    \"d\": \"55000-56000\"\r\n                    }\r\n                ],\r\n                \"sgFrom\": \"sg-test-2\",\r\n                \"sgTo\": \"sg-test-3\",\r\n                \"transport\": \"TCP\",\r\n                \"action\": \"DROP\",\r\n                \"priority\": {\r\n                    \"some\": -200\r\n                }\r\n            },\r\n            {\r\n                \"ports\": [\r\n                    {\r\n                    \"s\": \"5000, 6000-7000\",\r\n                    \"d\": \"55000-56000\"\r\n                    }\r\n                ],\r\n                \"sgFrom\": \"sg-test-3\",\r\n                \"sgTo\": \"sg-test-0\",\r\n                \"transport\": \"TCP\",\r\n                \"action\": \"ACCEPT\"\r\n            },\r\n                        {\r\n                \"ports\": [\r\n                    {\r\n                    \"s\": \"\",\r\n                    \"d\": \"4444\"\r\n                    }\r\n                ],\r\n                \"sgFrom\": \"sg-test-1\",\r\n                \"sgTo\": \"sg-test-3\",\r\n                \"transport\": \"UDP\",\r\n                \"action\": \"DROP\"\r\n            }\r\n        ]\r\n    },\r\n    \"syncOp\": \"FullSync\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -11199,7 +12412,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"fqdnRules\": {\r\n        \"rules\": [\r\n            {\r\n                \"ports\": [\r\n                    {\r\n                    \"s\": \"\",\r\n                    \"d\": \"40000-45000\"\r\n                    }\r\n                ],\r\n                \"sgFrom\": \"sg-test-0\",\r\n                \"FQDN\": \"google.com\",\r\n                \"transport\": \"TCP\",\r\n                \"logs\": true,\r\n                \"protocols\": [],\r\n                \"action\": \"DROP\"\r\n            },\r\n            {\r\n                \"ports\": [\r\n                    {\r\n                    \"s\": \"50000\",\r\n                    \"d\": \"35000\"\r\n                    }\r\n                ],\r\n                \"sgFrom\": \"sg-test-1\",\r\n                \"FQDN\": \"google.com\",\r\n                \"transport\": \"TCP\",\r\n                \"logs\": false,\r\n                \"protocols\": [\"asd\"],\r\n                \"action\": \"ACCEPT\"\r\n            },\r\n            {\r\n                \"ports\": [\r\n                    {\r\n                    \"s\": \"30000-31000\",\r\n                    \"d\": \"55000-56000\"\r\n                    }\r\n                ],\r\n                \"sgFrom\": \"sg-test-2\",\r\n                \"FQDN\": \"google.com\",\r\n                \"transport\": \"TCP\",\r\n                \"protocols\": [\"asdasd\", \"asdasd_q1\"],\r\n                \"action\": \"DROP\"\r\n            },\r\n            {\r\n                \"ports\": [\r\n                    {\r\n                    \"s\": \"5000, 6000-7000\",\r\n                    \"d\": \"55000-56000\"\r\n                    }\r\n                ],\r\n                \"sgFrom\": \"sg-test-3\",\r\n                \"FQDN\": \"google.com\",\r\n                \"transport\": \"TCP\",\r\n                \"action\": \"ACCEPT\"\r\n            },\r\n                        {\r\n                \"ports\": [\r\n                    {\r\n                    \"s\": \"\",\r\n                    \"d\": \"4444\"\r\n                    }\r\n                ],\r\n                \"sgFrom\": \"sg-test-1\",\r\n                \"FQDN\": \"google.com\",\r\n                \"transport\": \"UDP\",\r\n                \"action\": \"DROP\"\r\n            }\r\n        ]\r\n    },\r\n    \"syncOp\": \"FullSync\"\r\n}",
+									"raw": "{\r\n    \"fqdnRules\": {\r\n        \"rules\": [\r\n            {\r\n                \"ports\": [\r\n                    {\r\n                    \"s\": \"\",\r\n                    \"d\": \"40000-45000\"\r\n                    }\r\n                ],\r\n                \"sgFrom\": \"sg-test-0\",\r\n                \"FQDN\": \"google.com\",\r\n                \"transport\": \"TCP\",\r\n                \"logs\": true,\r\n                \"protocols\": [],\r\n                \"action\": \"DROP\",\r\n                \"priority\": {\r\n                    \"some\": 0\r\n                }\r\n            },\r\n            {\r\n                \"ports\": [\r\n                    {\r\n                    \"s\": \"50000\",\r\n                    \"d\": \"35000\"\r\n                    }\r\n                ],\r\n                \"sgFrom\": \"sg-test-1\",\r\n                \"FQDN\": \"google.com\",\r\n                \"transport\": \"TCP\",\r\n                \"logs\": false,\r\n                \"protocols\": [\"asd\"],\r\n                \"action\": \"ACCEPT\",\r\n                \"priority\": {\r\n                    \"some\": -32768\r\n                }\r\n            },\r\n            {\r\n                \"ports\": [\r\n                    {\r\n                    \"s\": \"30000-31000\",\r\n                    \"d\": \"55000-56000\"\r\n                    }\r\n                ],\r\n                \"sgFrom\": \"sg-test-2\",\r\n                \"FQDN\": \"google.com\",\r\n                \"transport\": \"TCP\",\r\n                \"protocols\": [\"asdasd\", \"asdasd_q1\"],\r\n                \"action\": \"DROP\",\r\n                \"priority\": {\r\n                    \"some\": 32767\r\n                }\r\n            },\r\n            {\r\n                \"ports\": [\r\n                    {\r\n                    \"s\": \"5000, 6000-7000\",\r\n                    \"d\": \"55000-56000\"\r\n                    }\r\n                ],\r\n                \"sgFrom\": \"sg-test-3\",\r\n                \"FQDN\": \"google.com\",\r\n                \"transport\": \"TCP\",\r\n                \"action\": \"ACCEPT\",\r\n                \"priority\": {\r\n                    \"some\": 100\r\n                }\r\n            },\r\n                        {\r\n                \"ports\": [\r\n                    {\r\n                    \"s\": \"\",\r\n                    \"d\": \"4444\"\r\n                    }\r\n                ],\r\n                \"sgFrom\": \"sg-test-1\",\r\n                \"FQDN\": \"google.com\",\r\n                \"transport\": \"UDP\",\r\n                \"action\": \"DROP\"\r\n            }\r\n        ]\r\n    },\r\n    \"syncOp\": \"FullSync\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -11289,7 +12502,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n   \"sgSgIcmpRules\": {\r\n       \"rules\":[\r\n           {\r\n               \"ICMP\": {\r\n                   \"IPv\": \"IPv4\",\r\n                   \"Types\": [0, 8]\r\n               },\r\n               \"SgFrom\": \"sg-test-0\",\r\n               \"SgTo\": \"sg-test-1\",\r\n               \"logs\": true,\r\n               \"trace\": true,\r\n               \"action\": \"DROP\"\r\n           },\r\n           {\r\n               \"ICMP\": {\r\n                   \"IPv\": \"IPv6\",\r\n                   \"Types\": [0, 8]\r\n               },\r\n               \"SgFrom\": \"sg-test-0\",\r\n               \"SgTo\": \"sg-test-1\",\r\n               \"logs\": true,\r\n               \"trace\": true,\r\n               \"action\": \"ACCEPT\"\r\n           },\r\n           {\r\n               \"ICMP\": {\r\n                   \"IPv\": \"IPv4\",\r\n                   \"Types\": [255,254,253]\r\n               },\r\n               \"SgFrom\": \"sg-test-2\",\r\n               \"SgTo\": \"sg-test-3\",\r\n               \"logs\": false,\r\n               \"trace\": false,\r\n               \"action\": \"ACCEPT\"\r\n           },\r\n           {\r\n               \"ICMP\": {\r\n                   \"IPv\": \"IPv4\",\r\n                   \"Types\": [255,254,253]\r\n               },\r\n               \"SgFrom\": \"sg-test-3\",\r\n               \"SgTo\": \"sg-test-0\",\r\n               \"logs\": false,\r\n               \"trace\": true,\r\n               \"action\": \"DROP\"\r\n           }                                    \r\n       ]\r\n   },\r\n   \"syncOp\": \"FullSync\" \r\n}",
+									"raw": "{\r\n   \"sgSgIcmpRules\": {\r\n       \"rules\":[\r\n           {\r\n               \"ICMP\": {\r\n                   \"IPv\": \"IPv4\",\r\n                   \"Types\": [0, 8]\r\n               },\r\n               \"SgFrom\": \"sg-test-0\",\r\n               \"SgTo\": \"sg-test-1\",\r\n               \"logs\": true,\r\n               \"trace\": true,\r\n               \"action\": \"DROP\",\r\n               \"priority\": {\r\n                    \"some\": 32767\r\n                }\r\n           },\r\n           {\r\n               \"ICMP\": {\r\n                   \"IPv\": \"IPv6\",\r\n                   \"Types\": [0, 8]\r\n               },\r\n               \"SgFrom\": \"sg-test-0\",\r\n               \"SgTo\": \"sg-test-1\",\r\n               \"logs\": true,\r\n               \"trace\": true,\r\n               \"action\": \"ACCEPT\",\r\n               \"priority\": {\r\n                    \"some\": -32768\r\n                }\r\n           },\r\n           {\r\n               \"ICMP\": {\r\n                   \"IPv\": \"IPv4\",\r\n                   \"Types\": [255,254,253]\r\n               },\r\n               \"SgFrom\": \"sg-test-2\",\r\n               \"SgTo\": \"sg-test-3\",\r\n               \"logs\": false,\r\n               \"trace\": false,\r\n               \"action\": \"ACCEPT\",\r\n               \"priority\": {\r\n                    \"some\": 32767\r\n                }\r\n           },\r\n           {\r\n               \"ICMP\": {\r\n                   \"IPv\": \"IPv4\",\r\n                   \"Types\": [255,254,253]\r\n               },\r\n               \"SgFrom\": \"sg-test-3\",\r\n               \"SgTo\": \"sg-test-0\",\r\n               \"logs\": false,\r\n               \"trace\": true,\r\n               \"action\": \"DROP\"\r\n           }                                    \r\n       ]\r\n   },\r\n   \"syncOp\": \"FullSync\" \r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -11334,7 +12547,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n  \"sgSgRules\": {\r\n    \"rules\": [\r\n      {\r\n        \"Sg\": \"sg-test-0\",\r\n        \"SgLocal\": \"sg-test-1\",\r\n        \"logs\": false,\r\n        \"ports\": [\r\n          {\r\n            \"d\": \"\",\r\n            \"s\": \"59901\"\r\n          }\r\n        ],\r\n        \"trace\": false,\r\n        \"traffic\": \"Ingress\",\r\n        \"transport\": \"TCP\",\r\n        \"action\": \"DROP\"\r\n      },\r\n      {\r\n        \"Sg\": \"sg-test-0\",\r\n        \"SgLocal\": \"sg-test-1\",\r\n        \"logs\": true,\r\n        \"ports\": [\r\n          {\r\n            \"d\": \"45000-46000\",\r\n            \"s\": \"50000,50001\"\r\n          },\r\n          {\r\n            \"d\": \"46001-46100\",\r\n            \"s\": \"50002-50100\"\r\n          },\r\n          {\r\n            \"d\": \"46101,46102\",\r\n            \"s\": \"50101,50102\"\r\n          }\r\n        ],\r\n        \"trace\": true,\r\n        \"traffic\": \"Egress\",\r\n        \"transport\": \"TCP\",\r\n        \"action\": \"ACCEPT\"\r\n      },\r\n      {\r\n        \"Sg\": \"sg-test-1\",\r\n        \"SgLocal\": \"sg-test-2\",\r\n        \"logs\": true,\r\n        \"ports\": [\r\n          {\r\n            \"d\": \"46103-46200,46201\",\r\n            \"s\": \"50103-50200,50201\"\r\n          }\r\n        ],\r\n        \"trace\": false,\r\n        \"traffic\": \"Ingress\",\r\n        \"transport\": \"UDP\",\r\n        \"action\": \"DROP\"\r\n      },\r\n      {\r\n        \"Sg\": \"sg-test-1\",\r\n        \"SgLocal\": \"sg-test-2\",\r\n        \"logs\": false,\r\n        \"ports\": [\r\n          {\r\n            \"d\": \"46202,46300-47000\",\r\n            \"s\": \"50202,51000-52000\"\r\n          }\r\n        ],\r\n        \"trace\": true,\r\n        \"traffic\": \"Egress\",\r\n        \"transport\": \"UDP\",\r\n        \"action\": \"ACCEPT\"\r\n      }\r\n    ]\r\n  },\r\n  \"syncOp\": \"FullSync\"\r\n}",
+									"raw": "{\r\n  \"sgSgRules\": {\r\n    \"rules\": [\r\n      {\r\n        \"Sg\": \"sg-test-0\",\r\n        \"SgLocal\": \"sg-test-1\",\r\n        \"logs\": false,\r\n        \"ports\": [\r\n          {\r\n            \"d\": \"\",\r\n            \"s\": \"59901\"\r\n          }\r\n        ],\r\n        \"trace\": false,\r\n        \"traffic\": \"Ingress\",\r\n        \"transport\": \"TCP\",\r\n        \"action\": \"DROP\",\r\n        \"priority\": {\r\n                    \"some\": -32768\r\n                }\r\n      },\r\n      {\r\n        \"Sg\": \"sg-test-0\",\r\n        \"SgLocal\": \"sg-test-1\",\r\n        \"logs\": true,\r\n        \"ports\": [\r\n          {\r\n            \"d\": \"45000-46000\",\r\n            \"s\": \"50000,50001\"\r\n          },\r\n          {\r\n            \"d\": \"46001-46100\",\r\n            \"s\": \"50002-50100\"\r\n          },\r\n          {\r\n            \"d\": \"46101,46102\",\r\n            \"s\": \"50101,50102\"\r\n          }\r\n        ],\r\n        \"trace\": true,\r\n        \"traffic\": \"Egress\",\r\n        \"transport\": \"TCP\",\r\n        \"action\": \"ACCEPT\",\r\n        \"priority\": {\r\n                    \"some\": 32767\r\n                }\r\n      },\r\n      {\r\n        \"Sg\": \"sg-test-1\",\r\n        \"SgLocal\": \"sg-test-2\",\r\n        \"logs\": true,\r\n        \"ports\": [\r\n          {\r\n            \"d\": \"46103-46200,46201\",\r\n            \"s\": \"50103-50200,50201\"\r\n          }\r\n        ],\r\n        \"trace\": false,\r\n        \"traffic\": \"Ingress\",\r\n        \"transport\": \"UDP\",\r\n        \"action\": \"DROP\",\r\n        \"priority\": {\r\n                    \"some\": 0\r\n                }\r\n      },\r\n      {\r\n        \"Sg\": \"sg-test-1\",\r\n        \"SgLocal\": \"sg-test-2\",\r\n        \"logs\": false,\r\n        \"ports\": [\r\n          {\r\n            \"d\": \"46202,46300-47000\",\r\n            \"s\": \"50202,51000-52000\"\r\n          }\r\n        ],\r\n        \"trace\": true,\r\n        \"traffic\": \"Egress\",\r\n        \"transport\": \"UDP\",\r\n        \"action\": \"ACCEPT\"\r\n      }\r\n    ]\r\n  },\r\n  \"syncOp\": \"FullSync\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -11379,7 +12592,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n  \"ieSgSgIcmpRules\": {\r\n    \"rules\": [\r\n      {\r\n        \"Sg\": \"sg-test-0\",\r\n        \"SgLocal\": \"sg-test-1\",\r\n        \"logs\": true,\r\n        \"trace\": true,\r\n        \"traffic\": \"Ingress\",\r\n        \"ICMP\": {  \r\n          \"IPv\": \"IPv4\",\r\n          \"Types\": [100]\r\n        },\r\n        \"action\": \"DROP\"\r\n      },\r\n      {\r\n        \"Sg\": \"sg-test-0\",\r\n        \"SgLocal\": \"sg-test-2\",\r\n        \"logs\": false,\r\n        \"trace\": false,\r\n        \"traffic\": \"Egress\",\r\n        \"ICMP\": {  \r\n          \"IPv\": \"IPv4\",\r\n          \"Types\": [110,111,112]\r\n        },\r\n        \"action\": \"ACCEPT\"\r\n      },\r\n      {\r\n        \"Sg\": \"sg-test-0\",\r\n        \"SgLocal\": \"sg-test-3\",\r\n        \"logs\": true,\r\n        \"trace\": false,\r\n        \"traffic\": \"Ingress\",\r\n        \"ICMP\": {  \r\n          \"IPv\": \"IPv6\",\r\n          \"Types\": [120,122,125]\r\n        },\r\n        \"action\": \"DROP\"\r\n      },\r\n      {\r\n        \"Sg\": \"sg-test-1\",\r\n        \"SgLocal\": \"sg-test-3\",\r\n        \"logs\": false,\r\n        \"trace\": true,\r\n        \"traffic\": \"Egress\",\r\n        \"ICMP\": {  \r\n          \"IPv\": \"IPv6\",\r\n          \"Types\": [126]\r\n        },\r\n        \"action\": \"ACCEPT\"\r\n      }\r\n    ]\r\n  },\r\n  \"syncOp\": \"FullSync\"\r\n}",
+									"raw": "{\r\n  \"ieSgSgIcmpRules\": {\r\n    \"rules\": [\r\n      {\r\n        \"Sg\": \"sg-test-0\",\r\n        \"SgLocal\": \"sg-test-1\",\r\n        \"logs\": true,\r\n        \"trace\": true,\r\n        \"traffic\": \"Ingress\",\r\n        \"ICMP\": {  \r\n          \"IPv\": \"IPv4\",\r\n          \"Types\": [100]\r\n        },\r\n        \"action\": \"DROP\",\r\n        \"priority\": {\r\n                    \"some\": -32768\r\n                }\r\n      },\r\n      {\r\n        \"Sg\": \"sg-test-0\",\r\n        \"SgLocal\": \"sg-test-2\",\r\n        \"logs\": false,\r\n        \"trace\": false,\r\n        \"traffic\": \"Egress\",\r\n        \"ICMP\": {  \r\n          \"IPv\": \"IPv4\",\r\n          \"Types\": [110,111,112]\r\n        },\r\n        \"action\": \"ACCEPT\",\r\n        \"priority\": {\r\n                    \"some\": 32767\r\n                }\r\n      },\r\n      {\r\n        \"Sg\": \"sg-test-0\",\r\n        \"SgLocal\": \"sg-test-3\",\r\n        \"logs\": true,\r\n        \"trace\": false,\r\n        \"traffic\": \"Ingress\",\r\n        \"ICMP\": {  \r\n          \"IPv\": \"IPv6\",\r\n          \"Types\": [120,122,125]\r\n        },\r\n        \"action\": \"DROP\",\r\n        \"priority\": {\r\n                    \"some\": 100\r\n                }\r\n      },\r\n      {\r\n        \"Sg\": \"sg-test-1\",\r\n        \"SgLocal\": \"sg-test-3\",\r\n        \"logs\": false,\r\n        \"trace\": true,\r\n        \"traffic\": \"Egress\",\r\n        \"ICMP\": {  \r\n          \"IPv\": \"IPv6\",\r\n          \"Types\": [126]\r\n        },\r\n        \"action\": \"ACCEPT\"\r\n      }\r\n    ]\r\n  },\r\n  \"syncOp\": \"FullSync\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -11424,7 +12637,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n      \"cidrSgRules\": {\r\n    \"rules\": [\r\n      {\r\n        \"CIDR\": \"10.150.0.208/28\",\r\n        \"SG\": \"sg-test-0\",\r\n        \"logs\": true,\r\n        \"ports\": [\r\n          {\r\n            \"s\": \"40025\",\r\n            \"d\": \"40026\"\r\n\r\n          }\r\n        ],\r\n        \"trace\": true,\r\n        \"traffic\": \"Ingress\",\r\n        \"transport\": \"TCP\",\r\n        \"action\": \"DROP\"\r\n      }\r\n    ]\r\n  },\r\n  \t\"syncOp\": \"FullSync\"\r\n}",
+									"raw": "{\r\n      \"cidrSgRules\": {\r\n    \"rules\": [\r\n      {\r\n        \"CIDR\": \"10.150.0.208/28\",\r\n        \"SG\": \"sg-test-0\",\r\n        \"logs\": true,\r\n        \"ports\": [\r\n          {\r\n            \"s\": \"40025\",\r\n            \"d\": \"40026\"\r\n\r\n          }\r\n        ],\r\n        \"trace\": true,\r\n        \"traffic\": \"Ingress\",\r\n        \"transport\": \"TCP\",\r\n        \"action\": \"DROP\",\r\n        \"priority\": {\r\n                    \"some\": 300\r\n                }\r\n      }\r\n    ]\r\n  },\r\n  \t\"syncOp\": \"FullSync\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -11469,7 +12682,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n   \"cidrSgIcmpRules\": {\r\n       \"rules\":[\r\n            {\r\n               \"CIDR\": \"188.234.0.0/17\",\r\n               \"SG\": \"sg-test-0\",\r\n               \"logs\": true,\r\n               \"trace\": true,\r\n               \"ICMP\": {\r\n                   \"IPv\": \"IPv4\",\r\n                   \"Types\": [1,2,3]\r\n               },\r\n                \"traffic\": \"Ingress\",\r\n                \"action\": \"DROP\"\r\n            },\r\n            {\r\n               \"CIDR\": \"188.234.6.0/23\",\r\n               \"SG\": \"sg-test-1\",\r\n               \"logs\": true,\r\n               \"trace\": false,\r\n               \"ICMP\": {\r\n                   \"IPv\": \"IPv4\",\r\n                   \"Types\": [6,7,8]\r\n               },\r\n                \"traffic\": \"Egress\",\r\n                \"action\": \"ACCEPT\"\r\n            },\r\n            {\r\n               \"CIDR\": \"2001:0db8:85a3:0000::/50\",\r\n               \"SG\": \"sg-test-2\",\r\n               \"logs\": false,\r\n               \"trace\": true,\r\n               \"ICMP\": {\r\n                   \"IPv\": \"IPv6\",\r\n                   \"Types\": [10]\r\n               },\r\n                \"traffic\": \"Ingress\",\r\n                \"action\": \"ACCEPT\"\r\n            },\r\n            {\r\n               \"CIDR\": \"2001:0d00::/24\",\r\n               \"SG\": \"sg-test-3\",\r\n               \"logs\": false,\r\n               \"trace\": false,\r\n               \"ICMP\": {\r\n                   \"IPv\": \"IPv6\",\r\n                   \"Types\": [155,255]\r\n               },\r\n                \"traffic\": \"Egress\",\r\n                \"action\": \"DROP\"\r\n            }          \r\n       ]\r\n   },\r\n   \"syncOp\": \"FullSync\" \r\n}",
+									"raw": "{\r\n   \"cidrSgIcmpRules\": {\r\n       \"rules\":[\r\n            {\r\n               \"CIDR\": \"188.234.0.0/17\",\r\n               \"SG\": \"sg-test-0\",\r\n               \"logs\": true,\r\n               \"trace\": true,\r\n               \"ICMP\": {\r\n                   \"IPv\": \"IPv4\",\r\n                   \"Types\": [1,2,3]\r\n               },\r\n                \"traffic\": \"Ingress\",\r\n                \"action\": \"DROP\",\r\n                \"priority\": {\r\n                    \"some\": -32768\r\n                }\r\n            },\r\n            {\r\n               \"CIDR\": \"188.234.6.0/23\",\r\n               \"SG\": \"sg-test-1\",\r\n               \"logs\": true,\r\n               \"trace\": false,\r\n               \"ICMP\": {\r\n                   \"IPv\": \"IPv4\",\r\n                   \"Types\": [6,7,8]\r\n               },\r\n                \"traffic\": \"Egress\",\r\n                \"action\": \"ACCEPT\",\r\n                \"priority\": {\r\n                    \"some\": 32767\r\n                }\r\n            },\r\n            {\r\n               \"CIDR\": \"2001:0db8:85a3:0000::/50\",\r\n               \"SG\": \"sg-test-2\",\r\n               \"logs\": false,\r\n               \"trace\": true,\r\n               \"ICMP\": {\r\n                   \"IPv\": \"IPv6\",\r\n                   \"Types\": [10]\r\n               },\r\n                \"traffic\": \"Ingress\",\r\n                \"action\": \"ACCEPT\",\r\n                \"priority\": {\r\n                    \"some\": 200\r\n                }\r\n            },\r\n            {\r\n               \"CIDR\": \"2001:0d00::/24\",\r\n               \"SG\": \"sg-test-3\",\r\n               \"logs\": false,\r\n               \"trace\": false,\r\n               \"ICMP\": {\r\n                   \"IPv\": \"IPv6\",\r\n                   \"Types\": [155,255]\r\n               },\r\n                \"traffic\": \"Egress\",\r\n                \"action\": \"DROP\"\r\n            }          \r\n       ]\r\n   },\r\n   \"syncOp\": \"FullSync\" \r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -11519,7 +12732,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n   \"cidrSgIcmpRules\": {\r\n       \"rules\":[\r\n            {\r\n               \"CIDR\": \"188.234.0.0/17\",\r\n               \"SG\": \"sg-test-0\",\r\n               \"logs\": true,\r\n               \"trace\": true,\r\n               \"ICMP\": {\r\n                   \"IPv\": \"IPv4\",\r\n                   \"Types\": [1,2,3]\r\n               },\r\n                \"traffic\": \"Ingress\",\r\n                \"action\": \"DROP\"\r\n            },\r\n            {\r\n               \"CIDR\": \"188.234.6.0/23\",\r\n               \"SG\": \"sg-test-1\",\r\n               \"logs\": true,\r\n               \"trace\": false,\r\n               \"ICMP\": {\r\n                   \"IPv\": \"IPv4\",\r\n                   \"Types\": [6,7,8]\r\n               },\r\n                \"traffic\": \"Egress\",\r\n                \"action\": \"ACCEPT\"\r\n            },\r\n            {\r\n               \"CIDR\": \"2001:0db8:85a3:0000::/50\",\r\n               \"SG\": \"sg-test-2\",\r\n               \"logs\": false,\r\n               \"trace\": true,\r\n               \"ICMP\": {\r\n                   \"IPv\": \"IPv6\",\r\n                   \"Types\": [10]\r\n               },\r\n                \"traffic\": \"Ingress\",\r\n                \"action\": \"ACCEPT\"\r\n            },\r\n            {\r\n               \"CIDR\": \"2001:0d00::/24\",\r\n               \"SG\": \"sg-test-3\",\r\n               \"logs\": false,\r\n               \"trace\": false,\r\n               \"ICMP\": {\r\n                   \"IPv\": \"IPv6\",\r\n                   \"Types\": [155,255]\r\n               },\r\n                \"traffic\": \"Egress\",\r\n                \"action\": \"DROP\"\r\n            }          \r\n       ]\r\n   },\r\n   \"syncOp\": \"Delete\" \r\n}",
+									"raw": "{\r\n   \"cidrSgIcmpRules\": {\r\n       \"rules\":[\r\n            {\r\n               \"CIDR\": \"188.234.0.0/17\",\r\n               \"SG\": \"sg-test-0\",\r\n               \"logs\": true,\r\n               \"trace\": true,\r\n               \"ICMP\": {\r\n                   \"IPv\": \"IPv4\",\r\n                   \"Types\": [1,2,3]\r\n               },\r\n                \"traffic\": \"Ingress\",\r\n                \"action\": \"DROP\",\r\n                \"priority\": {\r\n                    \"some\": -32768\r\n                }\r\n            },\r\n            {\r\n               \"CIDR\": \"188.234.6.0/23\",\r\n               \"SG\": \"sg-test-1\",\r\n               \"logs\": true,\r\n               \"trace\": false,\r\n               \"ICMP\": {\r\n                   \"IPv\": \"IPv4\",\r\n                   \"Types\": [6,7,8]\r\n               },\r\n                \"traffic\": \"Egress\",\r\n                \"action\": \"ACCEPT\",\r\n                \"priority\": {\r\n                    \"some\": 32767\r\n                }\r\n            },\r\n            {\r\n               \"CIDR\": \"2001:0db8:85a3:0000::/50\",\r\n               \"SG\": \"sg-test-2\",\r\n               \"logs\": false,\r\n               \"trace\": true,\r\n               \"ICMP\": {\r\n                   \"IPv\": \"IPv6\",\r\n                   \"Types\": [10]\r\n               },\r\n                \"traffic\": \"Ingress\",\r\n                \"action\": \"ACCEPT\",\r\n                \"priority\": {\r\n                    \"some\": 200\r\n                }\r\n            },\r\n            {\r\n               \"CIDR\": \"2001:0d00::/24\",\r\n               \"SG\": \"sg-test-3\",\r\n               \"logs\": false,\r\n               \"trace\": false,\r\n               \"ICMP\": {\r\n                   \"IPv\": \"IPv6\",\r\n                   \"Types\": [155,255]\r\n               },\r\n                \"traffic\": \"Egress\",\r\n                \"action\": \"DROP\"\r\n            }          \r\n       ]\r\n   },\r\n   \"syncOp\": \"Delete\" \r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -11564,7 +12777,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"cidrSgRules\": {\r\n    \"rules\": [\r\n      {\r\n        \"CIDR\": \"10.150.0.208/28\",\r\n        \"SG\": \"sg-test-0\",\r\n        \"logs\": true,\r\n        \"ports\": [\r\n          {\r\n            \"s\": \"40025\",\r\n            \"d\": \"40026\"\r\n\r\n          }\r\n        ],\r\n        \"trace\": true,\r\n        \"traffic\": \"Ingress\",\r\n        \"transport\": \"TCP\",\r\n        \"action\": \"DROP\"\r\n      }\r\n    ]\r\n  },\r\n  \t\"syncOp\": \"Delete\"\r\n}",
+									"raw": "{\r\n      \"cidrSgRules\": {\r\n    \"rules\": [\r\n      {\r\n        \"CIDR\": \"10.150.0.208/28\",\r\n        \"SG\": \"sg-test-0\",\r\n        \"logs\": true,\r\n        \"ports\": [\r\n          {\r\n            \"s\": \"40025\",\r\n            \"d\": \"40026\"\r\n\r\n          }\r\n        ],\r\n        \"trace\": true,\r\n        \"traffic\": \"Ingress\",\r\n        \"transport\": \"TCP\",\r\n        \"action\": \"DROP\",\r\n        \"priority\": {\r\n                    \"some\": 300\r\n                }\r\n      }\r\n    ]\r\n  },\r\n  \t\"syncOp\": \"Delete\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -11609,7 +12822,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n  \"sgSgRules\": {\r\n    \"rules\": [\r\n      {\r\n        \"Sg\": \"sg-test-0\",\r\n        \"SgLocal\": \"sg-test-1\",\r\n        \"logs\": false,\r\n        \"ports\": [\r\n          {\r\n            \"d\": \"\",\r\n            \"s\": \"59901\"\r\n          }\r\n        ],\r\n        \"trace\": false,\r\n        \"traffic\": \"Ingress\",\r\n        \"transport\": \"TCP\",\r\n        \"action\": \"DROP\"\r\n      },\r\n      {\r\n        \"Sg\": \"sg-test-0\",\r\n        \"SgLocal\": \"sg-test-1\",\r\n        \"logs\": true,\r\n        \"ports\": [\r\n          {\r\n            \"d\": \"45000-46000\",\r\n            \"s\": \"50000,50001\"\r\n          },\r\n          {\r\n            \"d\": \"46001-46100\",\r\n            \"s\": \"50002-50100\"\r\n          },\r\n          {\r\n            \"d\": \"46101,46102\",\r\n            \"s\": \"50101,50102\"\r\n          }\r\n        ],\r\n        \"trace\": true,\r\n        \"traffic\": \"Egress\",\r\n        \"transport\": \"TCP\",\r\n        \"action\": \"ACCEPT\"\r\n      },\r\n      {\r\n        \"Sg\": \"sg-test-1\",\r\n        \"SgLocal\": \"sg-test-2\",\r\n        \"logs\": true,\r\n        \"ports\": [\r\n          {\r\n            \"d\": \"46103-46200,46201\",\r\n            \"s\": \"50103-50200,50201\"\r\n          }\r\n        ],\r\n        \"trace\": false,\r\n        \"traffic\": \"Ingress\",\r\n        \"transport\": \"UDP\",\r\n        \"action\": \"DROP\"\r\n      },\r\n      {\r\n        \"Sg\": \"sg-test-1\",\r\n        \"SgLocal\": \"sg-test-2\",\r\n        \"logs\": false,\r\n        \"ports\": [\r\n          {\r\n            \"d\": \"46202,46300-47000\",\r\n            \"s\": \"50202,51000-52000\"\r\n          }\r\n        ],\r\n        \"trace\": true,\r\n        \"traffic\": \"Egress\",\r\n        \"transport\": \"UDP\",\r\n        \"action\": \"ACCEPT\"\r\n      }\r\n    ]\r\n  },\r\n  \"syncOp\": \"Delete\"\r\n}",
+									"raw": "{\r\n  \"sgSgRules\": {\r\n    \"rules\": [\r\n      {\r\n        \"Sg\": \"sg-test-0\",\r\n        \"SgLocal\": \"sg-test-1\",\r\n        \"logs\": false,\r\n        \"ports\": [\r\n          {\r\n            \"d\": \"\",\r\n            \"s\": \"59901\"\r\n          }\r\n        ],\r\n        \"trace\": false,\r\n        \"traffic\": \"Ingress\",\r\n        \"transport\": \"TCP\",\r\n        \"action\": \"DROP\",\r\n        \"priority\": {\r\n                    \"some\": -32768\r\n                }\r\n      },\r\n      {\r\n        \"Sg\": \"sg-test-0\",\r\n        \"SgLocal\": \"sg-test-1\",\r\n        \"logs\": true,\r\n        \"ports\": [\r\n          {\r\n            \"d\": \"45000-46000\",\r\n            \"s\": \"50000,50001\"\r\n          },\r\n          {\r\n            \"d\": \"46001-46100\",\r\n            \"s\": \"50002-50100\"\r\n          },\r\n          {\r\n            \"d\": \"46101,46102\",\r\n            \"s\": \"50101,50102\"\r\n          }\r\n        ],\r\n        \"trace\": true,\r\n        \"traffic\": \"Egress\",\r\n        \"transport\": \"TCP\",\r\n        \"action\": \"ACCEPT\",\r\n        \"priority\": {\r\n                    \"some\": 32767\r\n                }\r\n      },\r\n      {\r\n        \"Sg\": \"sg-test-1\",\r\n        \"SgLocal\": \"sg-test-2\",\r\n        \"logs\": true,\r\n        \"ports\": [\r\n          {\r\n            \"d\": \"46103-46200,46201\",\r\n            \"s\": \"50103-50200,50201\"\r\n          }\r\n        ],\r\n        \"trace\": false,\r\n        \"traffic\": \"Ingress\",\r\n        \"transport\": \"UDP\",\r\n        \"action\": \"DROP\",\r\n        \"priority\": {\r\n                    \"some\": 0\r\n                }\r\n      },\r\n      {\r\n        \"Sg\": \"sg-test-1\",\r\n        \"SgLocal\": \"sg-test-2\",\r\n        \"logs\": false,\r\n        \"ports\": [\r\n          {\r\n            \"d\": \"46202,46300-47000\",\r\n            \"s\": \"50202,51000-52000\"\r\n          }\r\n        ],\r\n        \"trace\": true,\r\n        \"traffic\": \"Egress\",\r\n        \"transport\": \"UDP\",\r\n        \"action\": \"ACCEPT\"\r\n      }\r\n    ]\r\n  },\r\n  \"syncOp\": \"Delete\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -11654,7 +12867,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n   \"sgSgIcmpRules\": {\r\n       \"rules\":[\r\n           {\r\n               \"ICMP\": {\r\n                   \"IPv\": \"IPv4\",\r\n                   \"Types\": [0, 8]\r\n               },\r\n               \"SgFrom\": \"sg-test-0\",\r\n               \"SgTo\": \"sg-test-1\",\r\n               \"logs\": true,\r\n               \"trace\": true,\r\n               \"action\": \"DROP\"\r\n           },\r\n           {\r\n               \"ICMP\": {\r\n                   \"IPv\": \"IPv6\",\r\n                   \"Types\": [0, 8]\r\n               },\r\n               \"SgFrom\": \"sg-test-0\",\r\n               \"SgTo\": \"sg-test-1\",\r\n               \"logs\": true,\r\n               \"trace\": true,\r\n               \"action\": \"ACCEPT\"\r\n           },\r\n           {\r\n               \"ICMP\": {\r\n                   \"IPv\": \"IPv4\",\r\n                   \"Types\": [255,254,253]\r\n               },\r\n               \"SgFrom\": \"sg-test-2\",\r\n               \"SgTo\": \"sg-test-3\",\r\n               \"logs\": false,\r\n               \"trace\": false,\r\n               \"action\": \"ACCEPT\"\r\n           },\r\n           {\r\n               \"ICMP\": {\r\n                   \"IPv\": \"IPv4\",\r\n                   \"Types\": [255,254,253]\r\n               },\r\n               \"SgFrom\": \"sg-test-3\",\r\n               \"SgTo\": \"sg-test-0\",\r\n               \"logs\": false,\r\n               \"trace\": true,\r\n               \"action\": \"DROP\"\r\n           }                                    \r\n       ]\r\n   },\r\n   \"syncOp\": \"Delete\" \r\n}",
+									"raw": "{\r\n   \"sgSgIcmpRules\": {\r\n       \"rules\":[\r\n           {\r\n               \"ICMP\": {\r\n                   \"IPv\": \"IPv4\",\r\n                   \"Types\": [0, 8]\r\n               },\r\n               \"SgFrom\": \"sg-test-0\",\r\n               \"SgTo\": \"sg-test-1\",\r\n               \"logs\": true,\r\n               \"trace\": true,\r\n               \"action\": \"DROP\",\r\n               \"priority\": {\r\n                    \"some\": 32767\r\n                }\r\n           },\r\n           {\r\n               \"ICMP\": {\r\n                   \"IPv\": \"IPv6\",\r\n                   \"Types\": [0, 8]\r\n               },\r\n               \"SgFrom\": \"sg-test-0\",\r\n               \"SgTo\": \"sg-test-1\",\r\n               \"logs\": true,\r\n               \"trace\": true,\r\n               \"action\": \"ACCEPT\",\r\n               \"priority\": {\r\n                    \"some\": -32768\r\n                }\r\n           },\r\n           {\r\n               \"ICMP\": {\r\n                   \"IPv\": \"IPv4\",\r\n                   \"Types\": [255,254,253]\r\n               },\r\n               \"SgFrom\": \"sg-test-2\",\r\n               \"SgTo\": \"sg-test-3\",\r\n               \"logs\": false,\r\n               \"trace\": false,\r\n               \"action\": \"ACCEPT\",\r\n               \"priority\": {\r\n                    \"some\": 32767\r\n                }\r\n           },\r\n           {\r\n               \"ICMP\": {\r\n                   \"IPv\": \"IPv4\",\r\n                   \"Types\": [255,254,253]\r\n               },\r\n               \"SgFrom\": \"sg-test-3\",\r\n               \"SgTo\": \"sg-test-0\",\r\n               \"logs\": false,\r\n               \"trace\": true,\r\n               \"action\": \"DROP\"\r\n           }                                    \r\n       ]\r\n   },\r\n   \"syncOp\": \"Delete\" \r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -11699,7 +12912,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n  \"ieSgSgIcmpRules\": {\r\n    \"rules\": [\r\n      {\r\n        \"Sg\": \"sg-test-0\",\r\n        \"SgLocal\": \"sg-test-1\",\r\n        \"logs\": true,\r\n        \"trace\": true,\r\n        \"traffic\": \"Ingress\",\r\n        \"ICMP\": {  \r\n          \"IPv\": \"IPv4\",\r\n          \"Types\": [100]\r\n        },\r\n        \"action\": \"DROP\"\r\n      },\r\n      {\r\n        \"Sg\": \"sg-test-0\",\r\n        \"SgLocal\": \"sg-test-2\",\r\n        \"logs\": false,\r\n        \"trace\": false,\r\n        \"traffic\": \"Egress\",\r\n        \"ICMP\": {  \r\n          \"IPv\": \"IPv4\",\r\n          \"Types\": [110,111,112]\r\n        },\r\n        \"action\": \"ACCEPT\"\r\n      },\r\n      {\r\n        \"Sg\": \"sg-test-0\",\r\n        \"SgLocal\": \"sg-test-3\",\r\n        \"logs\": true,\r\n        \"trace\": false,\r\n        \"traffic\": \"Ingress\",\r\n        \"ICMP\": {  \r\n          \"IPv\": \"IPv6\",\r\n          \"Types\": [120,122,125]\r\n        },\r\n        \"action\": \"DROP\"\r\n      },\r\n      {\r\n        \"Sg\": \"sg-test-1\",\r\n        \"SgLocal\": \"sg-test-3\",\r\n        \"logs\": false,\r\n        \"trace\": true,\r\n        \"traffic\": \"Egress\",\r\n        \"ICMP\": {  \r\n          \"IPv\": \"IPv6\",\r\n          \"Types\": [126]\r\n        },\r\n        \"action\": \"ACCEPT\"\r\n      }\r\n    ]\r\n  },\r\n  \"syncOp\": \"Delete\"\r\n}",
+									"raw": "{\r\n  \"ieSgSgIcmpRules\": {\r\n    \"rules\": [\r\n      {\r\n        \"Sg\": \"sg-test-0\",\r\n        \"SgLocal\": \"sg-test-1\",\r\n        \"logs\": true,\r\n        \"trace\": true,\r\n        \"traffic\": \"Ingress\",\r\n        \"ICMP\": {  \r\n          \"IPv\": \"IPv4\",\r\n          \"Types\": [100]\r\n        },\r\n        \"action\": \"DROP\",\r\n        \"priority\": {\r\n                    \"some\": -32768\r\n                }\r\n      },\r\n      {\r\n        \"Sg\": \"sg-test-0\",\r\n        \"SgLocal\": \"sg-test-2\",\r\n        \"logs\": false,\r\n        \"trace\": false,\r\n        \"traffic\": \"Egress\",\r\n        \"ICMP\": {  \r\n          \"IPv\": \"IPv4\",\r\n          \"Types\": [110,111,112]\r\n        },\r\n        \"action\": \"ACCEPT\",\r\n        \"priority\": {\r\n                    \"some\": 32767\r\n                }\r\n      },\r\n      {\r\n        \"Sg\": \"sg-test-0\",\r\n        \"SgLocal\": \"sg-test-3\",\r\n        \"logs\": true,\r\n        \"trace\": false,\r\n        \"traffic\": \"Ingress\",\r\n        \"ICMP\": {  \r\n          \"IPv\": \"IPv6\",\r\n          \"Types\": [120,122,125]\r\n        },\r\n        \"action\": \"DROP\",\r\n        \"priority\": {\r\n                    \"some\": 100\r\n                }\r\n      },\r\n      {\r\n        \"Sg\": \"sg-test-1\",\r\n        \"SgLocal\": \"sg-test-3\",\r\n        \"logs\": false,\r\n        \"trace\": true,\r\n        \"traffic\": \"Egress\",\r\n        \"ICMP\": {  \r\n          \"IPv\": \"IPv6\",\r\n          \"Types\": [126]\r\n        },\r\n        \"action\": \"ACCEPT\"\r\n      }\r\n    ]\r\n  },\r\n  \"syncOp\": \"Delete\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -11766,51 +12979,6 @@
 							"response": []
 						},
 						{
-							"name": "[RULE-CIDR-S-ICMP] Rules Delete",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"pm.test(\"Status code is 200\", () => {\r",
-											"    pm.response.to.have.status(200);\r",
-											"});\r",
-											"\r",
-											"pm.test(\"Body is empty\", () => {\r",
-											"    pm.expect(pm.response.json()).to.be.empty\r",
-											"});"
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n   \"cidrSgIcmpRules\": {\r\n       \"rules\":[\r\n            {\r\n               \"CIDR\": \"188.234.0.0/17\",\r\n               \"SG\": \"sg-test-0\",\r\n               \"logs\": true,\r\n               \"trace\": true,\r\n               \"ICMP\": {\r\n                   \"IPv\": \"IPv4\",\r\n                   \"Types\": [1,2,3]\r\n               },\r\n                \"traffic\": \"Ingress\",\r\n                \"action\": \"DROP\"\r\n            },\r\n            {\r\n               \"CIDR\": \"188.234.6.0/23\",\r\n               \"SG\": \"sg-test-1\",\r\n               \"logs\": true,\r\n               \"trace\": false,\r\n               \"ICMP\": {\r\n                   \"IPv\": \"IPv4\",\r\n                   \"Types\": [6,7,8]\r\n               },\r\n                \"traffic\": \"Egress\",\r\n                \"action\": \"ACCEPT\"\r\n            },\r\n            {\r\n               \"CIDR\": \"2001:0db8:85a3:0000::/50\",\r\n               \"SG\": \"sg-test-2\",\r\n               \"logs\": false,\r\n               \"trace\": true,\r\n               \"ICMP\": {\r\n                   \"IPv\": \"IPv6\",\r\n                   \"Types\": [10]\r\n               },\r\n                \"traffic\": \"Ingress\",\r\n                \"action\": \"ACCEPT\"\r\n            },\r\n            {\r\n               \"CIDR\": \"2001:0d00::/24\",\r\n               \"SG\": \"sg-test-3\",\r\n               \"logs\": false,\r\n               \"trace\": false,\r\n               \"ICMP\": {\r\n                   \"IPv\": \"IPv6\",\r\n                   \"Types\": [155,255]\r\n               },\r\n                \"traffic\": \"Egress\",\r\n                \"action\": \"DROP\"\r\n            }          \r\n       ]\r\n   },\r\n   \"syncOp\": \"Delete\" \r\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{HOST}}:{{PORT}}/v1/sync",
-									"host": [
-										"{{HOST}}"
-									],
-									"port": "{{PORT}}",
-									"path": [
-										"v1",
-										"sync"
-									]
-								}
-							},
-							"response": []
-						},
-						{
 							"name": "[RULE-FQDN] Rules Delete",
 							"event": [
 								{
@@ -11834,7 +13002,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"fqdnRules\": {\r\n        \"rules\": [\r\n            {\r\n                \"ports\": [\r\n                    {\r\n                    \"s\": \"\",\r\n                    \"d\": \"40000-45000\"\r\n                    }\r\n                ],\r\n                \"sgFrom\": \"sg-test-0\",\r\n                \"FQDN\": \"google.com\",\r\n                \"transport\": \"TCP\",\r\n                \"logs\": true,\r\n                \"protocols\": [],\r\n                \"action\": \"DROP\"\r\n            },\r\n            {\r\n                \"ports\": [\r\n                    {\r\n                    \"s\": \"50000\",\r\n                    \"d\": \"35000\"\r\n                    }\r\n                ],\r\n                \"sgFrom\": \"sg-test-1\",\r\n                \"FQDN\": \"google.com\",\r\n                \"transport\": \"TCP\",\r\n                \"logs\": false,\r\n                \"protocols\": [\"asd\"],\r\n                \"action\": \"ACCEPT\"\r\n            },\r\n            {\r\n                \"ports\": [\r\n                    {\r\n                    \"s\": \"30000-31000\",\r\n                    \"d\": \"55000-56000\"\r\n                    }\r\n                ],\r\n                \"sgFrom\": \"sg-test-2\",\r\n                \"FQDN\": \"google.com\",\r\n                \"transport\": \"TCP\",\r\n                \"protocols\": [\"asdasd\", \"asdasd_q1\"],\r\n                \"action\": \"DROP\"\r\n            },\r\n            {\r\n                \"ports\": [\r\n                    {\r\n                    \"s\": \"5000, 6000-7000\",\r\n                    \"d\": \"55000-56000\"\r\n                    }\r\n                ],\r\n                \"sgFrom\": \"sg-test-3\",\r\n                \"FQDN\": \"google.com\",\r\n                \"transport\": \"TCP\",\r\n                \"action\": \"ACCEPT\"\r\n            },\r\n                        {\r\n                \"ports\": [\r\n                    {\r\n                    \"s\": \"\",\r\n                    \"d\": \"4444\"\r\n                    }\r\n                ],\r\n                \"sgFrom\": \"sg-test-1\",\r\n                \"FQDN\": \"google.com\",\r\n                \"transport\": \"UDP\",\r\n                \"action\": \"DROP\"\r\n            }\r\n        ]\r\n    },\r\n    \"syncOp\": \"Delete\"\r\n}",
+									"raw": "{\r\n    \"fqdnRules\": {\r\n        \"rules\": [\r\n            {\r\n                \"ports\": [\r\n                    {\r\n                    \"s\": \"\",\r\n                    \"d\": \"40000-45000\"\r\n                    }\r\n                ],\r\n                \"sgFrom\": \"sg-test-0\",\r\n                \"FQDN\": \"google.com\",\r\n                \"transport\": \"TCP\",\r\n                \"logs\": true,\r\n                \"protocols\": [],\r\n                \"action\": \"DROP\",\r\n                \"priority\": {\r\n                    \"some\": 0\r\n                }\r\n            },\r\n            {\r\n                \"ports\": [\r\n                    {\r\n                    \"s\": \"50000\",\r\n                    \"d\": \"35000\"\r\n                    }\r\n                ],\r\n                \"sgFrom\": \"sg-test-1\",\r\n                \"FQDN\": \"google.com\",\r\n                \"transport\": \"TCP\",\r\n                \"logs\": false,\r\n                \"protocols\": [\"asd\"],\r\n                \"action\": \"ACCEPT\",\r\n                \"priority\": {\r\n                    \"some\": -32768\r\n                }\r\n            },\r\n            {\r\n                \"ports\": [\r\n                    {\r\n                    \"s\": \"30000-31000\",\r\n                    \"d\": \"55000-56000\"\r\n                    }\r\n                ],\r\n                \"sgFrom\": \"sg-test-2\",\r\n                \"FQDN\": \"google.com\",\r\n                \"transport\": \"TCP\",\r\n                \"protocols\": [\"asdasd\", \"asdasd_q1\"],\r\n                \"action\": \"DROP\",\r\n                \"priority\": {\r\n                    \"some\": 32767\r\n                }\r\n            },\r\n            {\r\n                \"ports\": [\r\n                    {\r\n                    \"s\": \"5000, 6000-7000\",\r\n                    \"d\": \"55000-56000\"\r\n                    }\r\n                ],\r\n                \"sgFrom\": \"sg-test-3\",\r\n                \"FQDN\": \"google.com\",\r\n                \"transport\": \"TCP\",\r\n                \"action\": \"ACCEPT\",\r\n                \"priority\": {\r\n                    \"some\": 100\r\n                }\r\n            },\r\n                        {\r\n                \"ports\": [\r\n                    {\r\n                    \"s\": \"\",\r\n                    \"d\": \"4444\"\r\n                    }\r\n                ],\r\n                \"sgFrom\": \"sg-test-1\",\r\n                \"FQDN\": \"google.com\",\r\n                \"transport\": \"UDP\",\r\n                \"action\": \"DROP\"\r\n            }\r\n        ]\r\n    },\r\n    \"syncOp\": \"Delete\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -11879,7 +13047,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"sgRules\": {\r\n        \"rules\": [\r\n            {\r\n                \"ports\": [\r\n                    {\r\n                    \"s\": \"\",\r\n                    \"d\": \"40000-45000\"\r\n                    }\r\n                ],\r\n                \"sgFrom\": \"sg-test-0\",\r\n                \"sgTo\": \"sg-test-1\",\r\n                \"transport\": \"TCP\",\r\n                \"logs\": true\r\n            },\r\n            {\r\n                \"ports\": [\r\n                    {\r\n                    \"s\": \"50000\",\r\n                    \"d\": \"35000\"\r\n                    }\r\n                ],\r\n                \"sgFrom\": \"sg-test-1\",\r\n                \"sgTo\": \"sg-test-2\",\r\n                \"transport\": \"TCP\",\r\n                \"logs\": false\r\n            },\r\n            {\r\n                \"ports\": [\r\n                    {\r\n                    \"s\": \"30000-31000\",\r\n                    \"d\": \"55000-56000\"\r\n                    }\r\n                ],\r\n                \"sgFrom\": \"sg-test-2\",\r\n                \"sgTo\": \"sg-test-3\",\r\n                \"transport\": \"TCP\"\r\n            },\r\n            {\r\n                \"ports\": [\r\n                    {\r\n                    \"s\": \"5000, 6000-7000\",\r\n                    \"d\": \"55000-56000\"\r\n                    }\r\n                ],\r\n                \"sgFrom\": \"sg-test-3\",\r\n                \"sgTo\": \"sg-test-0\",\r\n                \"transport\": \"TCP\"\r\n            },\r\n                        {\r\n                \"ports\": [\r\n                    {\r\n                    \"s\": \"\",\r\n                    \"d\": \"4444\"\r\n                    }\r\n                ],\r\n                \"sgFrom\": \"sg-test-1\",\r\n                \"sgTo\": \"sg-test-3\",\r\n                \"transport\": \"UDP\"\r\n            }\r\n        ]\r\n    },\r\n    \"syncOp\": \"Delete\"\r\n}",
+									"raw": "{\r\n    \"sgRules\": {\r\n        \"rules\": [\r\n            {\r\n                \"ports\": [\r\n                    {\r\n                    \"s\": \"\",\r\n                    \"d\": \"40000-45000\"\r\n                    }\r\n                ],\r\n                \"sgFrom\": \"sg-test-0\",\r\n                \"sgTo\": \"sg-test-1\",\r\n                \"transport\": \"TCP\",\r\n                \"logs\": true,\r\n                \"action\": \"DROP\",\r\n                \"priority\": {\r\n                    \"some\": 32767\r\n                }\r\n            },\r\n            {\r\n                \"ports\": [\r\n                    {\r\n                    \"s\": \"50000\",\r\n                    \"d\": \"35000\"\r\n                    }\r\n                ],\r\n                \"sgFrom\": \"sg-test-1\",\r\n                \"sgTo\": \"sg-test-2\",\r\n                \"transport\": \"TCP\",\r\n                \"logs\": false,\r\n                \"action\": \"ACCEPT\",\r\n                \"priority\": {\r\n                    \"some\": -32768\r\n                }\r\n            },\r\n            {\r\n                \"ports\": [\r\n                    {\r\n                    \"s\": \"30000-31000\",\r\n                    \"d\": \"55000-56000\"\r\n                    }\r\n                ],\r\n                \"sgFrom\": \"sg-test-2\",\r\n                \"sgTo\": \"sg-test-3\",\r\n                \"transport\": \"TCP\",\r\n                \"action\": \"DROP\",\r\n                \"priority\": {\r\n                    \"some\": -200\r\n                }\r\n            },\r\n            {\r\n                \"ports\": [\r\n                    {\r\n                    \"s\": \"5000, 6000-7000\",\r\n                    \"d\": \"55000-56000\"\r\n                    }\r\n                ],\r\n                \"sgFrom\": \"sg-test-3\",\r\n                \"sgTo\": \"sg-test-0\",\r\n                \"transport\": \"TCP\",\r\n                \"action\": \"ACCEPT\"\r\n            },\r\n                        {\r\n                \"ports\": [\r\n                    {\r\n                    \"s\": \"\",\r\n                    \"d\": \"4444\"\r\n                    }\r\n                ],\r\n                \"sgFrom\": \"sg-test-1\",\r\n                \"sgTo\": \"sg-test-3\",\r\n                \"transport\": \"UDP\",\r\n                \"action\": \"DROP\"\r\n            }\r\n        ]\r\n    },\r\n    \"syncOp\": \"Delete\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -12101,7 +13269,7 @@
 		},
 		{
 			"key": "rulesResponseJsonSchema",
-			"value": "{\n    \"type\" : \"object\",\n    \"properties\" : {\n        \"rules\" : {\n            \"type\" : \"array\",\n            \"items\" : {\n                \"type\" : \"object\",\n                \"properties\" : {\n                    \"sgFrom\" : { \"type\" : \"string\" },\n                    \"sgTo\" : { \"type\" : \"string\" },\n                    \"transport\": { \"type\" : \"string\" },\n                    \"ports\" : {\n                        \"type\" : \"array\",\n                        \"items\": {\n                            \"type\" : \"object\",\n                            \"properties\" : {\n                                \"s\" : { \"type\" : \"string\" },\n                                \"d\" : { \"type\" : \"string\" }\n                            },\n                            \"additionalProperties\": false\n                        }\n                    },\n\t\t\t\t\t\"logs\" : {\"type\" : \"boolean\"},\n                    \"action\":{ \n                                    \"type\": \"string\",\n                                    \"enum\":[\"DROP\",\"ACCEPT\"]\n                                }\n                },\n                \"additionalProperties\": false\n            }\n        }\n    },\n    \"required\": [\"rules\"],\n    \"additionalProperties\": false\n}",
+			"value": "{\n    \"type\" : \"object\",\n    \"properties\" : {\n        \"rules\" : {\n            \"type\" : \"array\",\n            \"items\" : {\n                \"type\" : \"object\",\n                \"properties\" : {\n                    \"sgFrom\" : { \"type\" : \"string\" },\n                    \"sgTo\" : { \"type\" : \"string\" },\n                    \"transport\": { \"type\" : \"string\" },\n                    \"ports\" : {\n                        \"type\" : \"array\",\n                        \"items\": {\n                            \"type\" : \"object\",\n                            \"properties\" : {\n                                \"s\" : { \"type\" : \"string\" },\n                                \"d\" : { \"type\" : \"string\" }\n                            },\n                            \"additionalProperties\": false\n                        }\n                    },\n\t\t\t\t\t\"logs\" : {\"type\" : \"boolean\"},\n                    \"action\":{ \n                            \"type\": \"string\",\n                            \"enum\":[\"DROP\",\"ACCEPT\"]\n                    },\n                    \"priority\": { \n                        \"type\" : \"object\",\n                        \"properties\": {\n                            \"some\" : {\"type\" : \"number\"}\n                        }\n                    }\n                },\n                \"additionalProperties\": false\n            }\n        }\n    },\n    \"required\": [\"rules\"],\n    \"additionalProperties\": false\n}",
 			"type": "string"
 		},
 		{
@@ -12121,7 +13289,7 @@
 		},
 		{
 			"key": "rulesFqdnResponseJsonSchema",
-			"value": "{\n    \"type\" : \"object\",\n    \"properties\" : {\n        \"rules\" : {\n            \"type\" : \"array\",\n            \"items\" : {\n                \"type\" : \"object\",\n                \"properties\" : {\n                    \"sgFrom\" : { \"type\" : \"string\" },\n                    \"FQDN\" : { \"type\" : \"string\" },\n                    \"transport\": { \"type\" : \"string\" },\n                    \"ports\" : {\n                        \"type\" : \"array\",\n                        \"items\": {\n                            \"type\" : \"object\",\n                            \"properties\" : {\n                                \"s\" : { \"type\" : \"string\" },\n                                \"d\" : { \"type\" : \"string\" }\n                            },\n                            \"additionalProperties\": false\n                        }\n                    },\n\t\t\t\t\t\"logs\" : {\"type\" : \"boolean\"},\n\t\t\t\t\t\"protocols\": {\n\t\t\t\t\t\t\"type\": \"array\",\n\t\t\t\t\t\t\"items\": {\n\t\t\t\t\t\t\t\"type\": \"string\"\n\t\t\t\t\t\t}\n\t\t\t\t\t},\n                    \"action\":{ \n                                    \"type\": \"string\",\n                                    \"enum\":[\"DROP\",\"ACCEPT\"]\n                                }\n                },\n                \"additionalProperties\": false\n            }\n        }\n    },\n    \"required\": [\"rules\"],\n    \"additionalProperties\": false\n}",
+			"value": "{\n    \"type\" : \"object\",\n    \"properties\" : {\n        \"rules\" : {\n            \"type\" : \"array\",\n            \"items\" : {\n                \"type\" : \"object\",\n                \"properties\" : {\n                    \"sgFrom\" : { \"type\" : \"string\" },\n                    \"FQDN\" : { \"type\" : \"string\" },\n                    \"transport\": { \"type\" : \"string\" },\n                    \"ports\" : {\n                        \"type\" : \"array\",\n                        \"items\": {\n                            \"type\" : \"object\",\n                            \"properties\" : {\n                                \"s\" : { \"type\" : \"string\" },\n                                \"d\" : { \"type\" : \"string\" }\n                            },\n                            \"additionalProperties\": false\n                        }\n                    },\n\t\t\t\t\t\"logs\" : {\"type\" : \"boolean\"},\n\t\t\t\t\t\"protocols\": {\n\t\t\t\t\t\t\"type\": \"array\",\n\t\t\t\t\t\t\"items\": {\n\t\t\t\t\t\t\t\"type\": \"string\"\n\t\t\t\t\t\t}\n\t\t\t\t\t},\n                    \"action\":{ \n                                    \"type\": \"string\",\n                                    \"enum\":[\"DROP\",\"ACCEPT\"]\n                                },\n                    \"priority\": { \n                        \"type\" : \"object\",\n                        \"properties\": {\n                            \"some\" : {\"type\" : \"number\"},\n                            \"additionalProperties\": false\n                        }\n                    }\n                },\n                \"additionalProperties\": false\n            }\n        }\n    },\n    \"required\": [\"rules\"],\n    \"additionalProperties\": false\n}",
 			"type": "string"
 		},
 		{
@@ -12131,27 +13299,27 @@
 		},
 		{
 			"key": "rulesIcmpSgSgResponseJsonSchema",
-			"value": "{\n\t\"type\": \"object\",\n\t\"properties\": {\n\t\t\"rules\": {\n\t\t\t\"type\": \"array\",\n\t\t\t\"items\": {\n\t\t\t\t\"type\": \"object\",\n\t\t\t\t\"properties\": {\n\t\t\t\t\t\"ICMP\": {\n\t\t\t\t\t\t\"type\": \"object\",\n\t\t\t\t\t\t\"properties\": {\n\t\t\t\t\t\t\t\"IPv\": {\n\t\t\t\t\t\t\t\t\"type\": \"string\",\n\t\t\t\t\t\t\t\t\"enum\": [\"IPv4\", \"IPv6\"]\n\t\t\t\t\t\t\t},\n\t\t\t\t\t\t\t\"Types\": {\n\t\t\t\t\t\t\t\t\"type\": \"array\",\n\t\t\t\t\t\t\t\t\"items\": { \"type\": \"number\" }\n\t\t\t\t\t\t\t}\n\t\t\t\t\t\t},\n\t\t\t\t\t\t\"additionalProperties\": false\n\t\t\t\t\t},\n\t\t\t\t\t\"SgFrom\": { \"type\": \"string\" },\n\t\t\t\t\t\"SgTo\": { \"type\": \"string\" },\n\t\t\t\t\t\"logs\": { \"type\": \"boolean\" },\n\t\t\t\t\t\"trace\": { \"type\": \"boolean\" },\n                    \"action\":{ \n                                    \"type\": \"string\",\n                                    \"enum\":[\"DROP\",\"ACCEPT\"]\n                                }\n\t\t\t\t},\n\t\t\t\t\"additionalProperties\": false\n\t\t\t}\n\t\t}\n\t},\n\t\"required\": [\"rules\"],\n    \"additionalProperties\": false\n}",
+			"value": "{\n\t\"type\": \"object\",\n\t\"properties\": {\n\t\t\"rules\": {\n\t\t\t\"type\": \"array\",\n\t\t\t\"items\": {\n\t\t\t\t\"type\": \"object\",\n\t\t\t\t\"properties\": {\n\t\t\t\t\t\"ICMP\": {\n\t\t\t\t\t\t\"type\": \"object\",\n\t\t\t\t\t\t\"properties\": {\n\t\t\t\t\t\t\t\"IPv\": {\n\t\t\t\t\t\t\t\t\"type\": \"string\",\n\t\t\t\t\t\t\t\t\"enum\": [\"IPv4\", \"IPv6\"]\n\t\t\t\t\t\t\t},\n\t\t\t\t\t\t\t\"Types\": {\n\t\t\t\t\t\t\t\t\"type\": \"array\",\n\t\t\t\t\t\t\t\t\"items\": { \"type\": \"number\" }\n\t\t\t\t\t\t\t}\n\t\t\t\t\t\t},\n\t\t\t\t\t\t\"additionalProperties\": false\n\t\t\t\t\t},\n\t\t\t\t\t\"SgFrom\": { \"type\": \"string\" },\n\t\t\t\t\t\"SgTo\": { \"type\": \"string\" },\n\t\t\t\t\t\"logs\": { \"type\": \"boolean\" },\n\t\t\t\t\t\"trace\": { \"type\": \"boolean\" },\n                    \"action\":{ \n                                    \"type\": \"string\",\n                                    \"enum\":[\"DROP\",\"ACCEPT\"]\n                                },\n                    \"priority\": { \n                        \"type\" : \"object\",\n                        \"properties\": {\n                            \"some\" : {\"type\" : \"number\"},\n                            \"additionalProperties\": false\n                        }\n                    }\n\t\t\t\t},\n\t\t\t\t\"additionalProperties\": false\n\t\t\t}\n\t\t}\n\t},\n\t\"required\": [\"rules\"],\n    \"additionalProperties\": false\n}",
 			"type": "string"
 		},
 		{
 			"key": "ruleCidrSgResponseJsonSchema",
-			"value": "{\n    \"type\": \"object\",\n    \"properties\": {\n        \"rules\": {\n            \"type\": \"array\",\n            \"items\": {\n                \"type\": \"object\",\n                \"properties\": {\n                    \"transport\": { \n                        \"type\": \"string\",\n                        \"enum\": [\"TCP\", \"UDP\"]\n                    },\n                    \"CIDR\": { \"type\": \"string\" },\n                    \"SG\": { \"type\": \"string\" },\n                    \"traffic\": {\n                        \"type\": \"string\",\n                        \"enum\": [\"Ingress\", \"Egress\"]\n                    },\n                    \"logs\": { \"type\": \"boolean\" },\n                    \"trace\": { \"type\": \"boolean\" },\n                    \"ports\": {\n                        \"type\": \"array\",\n                        \"items\": {\n                            \"type\": \"object\",\n                            \"properties\": {\n                                \"s\": { \"type\": \"string\" },\n                                \"d\": { \"type\": \"string\" }\n                            },\n                            \"additionalProperties\": false\n                        }\n                    },\n                    \"action\":{ \n                                \"type\": \"string\",\n                                \"enum\":[\"DROP\",\"ACCEPT\"]\n                            }   \n                },\n                \"additionalProperties\": false\n            }\n        }\n    },\n    \"required\": [\"rules\"],\n    \"additionalProperties\": false\n}",
+			"value": "{\n    \"type\": \"object\",\n    \"properties\": {\n        \"rules\": {\n            \"type\": \"array\",\n            \"items\": {\n                \"type\": \"object\",\n                \"properties\": {\n                    \"transport\": { \n                        \"type\": \"string\",\n                        \"enum\": [\"TCP\", \"UDP\"]\n                    },\n                    \"CIDR\": { \"type\": \"string\" },\n                    \"SG\": { \"type\": \"string\" },\n                    \"traffic\": {\n                        \"type\": \"string\",\n                        \"enum\": [\"Ingress\", \"Egress\"]\n                    },\n                    \"logs\": { \"type\": \"boolean\" },\n                    \"trace\": { \"type\": \"boolean\" },\n                    \"ports\": {\n                        \"type\": \"array\",\n                        \"items\": {\n                            \"type\": \"object\",\n                            \"properties\": {\n                                \"s\": { \"type\": \"string\" },\n                                \"d\": { \"type\": \"string\" }\n                            },\n                            \"additionalProperties\": false\n                        }\n                    },\n                    \"action\":{ \n                                \"type\": \"string\",\n                                \"enum\":[\"DROP\",\"ACCEPT\"]\n                            },\n                    \"priority\": { \n                        \"type\" : \"object\",\n                        \"properties\": {\n                            \"some\" : {\"type\" : \"number\"},\n                            \"additionalProperties\": false\n                        }\n                    }\n                },\n                \"additionalProperties\": false\n            }\n        }\n    },\n    \"required\": [\"rules\"],\n    \"additionalProperties\": false\n}",
 			"type": "string"
 		},
 		{
 			"key": "ruleIeSgSgResponseJsonSchema",
-			"value": "{\n    \"type\": \"object\",\n    \"properties\": {\n        \"rules\": {\n            \"type\": \"array\",\n            \"items\": {\n                \"type\": \"object\",\n                \"properties\": {\n                    \"transport\": { \n                        \"type\": \"string\",\n                        \"enum\": [\"TCP\", \"UDP\"]\n                    },\n                    \"Sg\": { \"type\": \"string\" },\n                    \"SgLocal\": { \"type\": \"string\" },\n                    \"traffic\": {\n                        \"type\": \"string\",\n                        \"enum\": [\"Ingress\", \"Egress\"]\n                    },\n                    \"ports\": {\n                        \"type\": \"array\",\n                        \"items\": {\n                            \"type\": \"object\",\n                            \"properties\": {\n                                \"s\": { \"type\": \"string\" },\n                                \"d\": { \"type\": \"string\" }\n                            },\n                            \"additionalProperties\": false\n                        }\n                    },\n                    \"logs\": { \"type\": \"boolean\" },\n                    \"trace\": { \"type\": \"boolean\" },\n                    \"action\":{  \n                                \"type\": \"string\",\n                                \"enum\":[\"DROP\",\"ACCEPT\"]\n                                }\n                },\n                \"additionalProperties\": false\n            }\n        }\n    },\n    \"required\": [\"rules\"],\n    \"additionalProperties\": false\n}",
+			"value": "{\n    \"type\": \"object\",\n    \"properties\": {\n        \"rules\": {\n            \"type\": \"array\",\n            \"items\": {\n                \"type\": \"object\",\n                \"properties\": {\n                    \"transport\": { \n                        \"type\": \"string\",\n                        \"enum\": [\"TCP\", \"UDP\"]\n                    },\n                    \"Sg\": { \"type\": \"string\" },\n                    \"SgLocal\": { \"type\": \"string\" },\n                    \"traffic\": {\n                        \"type\": \"string\",\n                        \"enum\": [\"Ingress\", \"Egress\"]\n                    },\n                    \"ports\": {\n                        \"type\": \"array\",\n                        \"items\": {\n                            \"type\": \"object\",\n                            \"properties\": {\n                                \"s\": { \"type\": \"string\" },\n                                \"d\": { \"type\": \"string\" }\n                            },\n                            \"additionalProperties\": false\n                        }\n                    },\n                    \"logs\": { \"type\": \"boolean\" },\n                    \"trace\": { \"type\": \"boolean\" },\n                    \"action\":{  \n                                \"type\": \"string\",\n                                \"enum\":[\"DROP\",\"ACCEPT\"]\n                                },\n                    \"priority\": { \n                        \"type\" : \"object\",\n                        \"properties\": {\n                            \"some\" : {\"type\" : \"number\"},\n                            \"additionalProperties\": false\n                        }\n                    }\n                },\n                \"additionalProperties\": false\n            }\n        }\n    },\n    \"required\": [\"rules\"],\n    \"additionalProperties\": false\n}",
 			"type": "string"
 		},
 		{
 			"key": "ruleCidrSgIcmpResponseJsonSchema",
-			"value": "{\n    \"type\": \"object\",\n    \"properties\": {\n        \"rules\": {\n            \"type\": \"array\",\n            \"items\": {\n                \"type\": \"object\",\n                \"properties\": {\n                    \"CIDR\":{ \"type\": \"string\" },\n                    \"SG\":{ \"type\": \"string\" },\n                    \"logs\": { \"type\": \"boolean\" },\n                    \"trace\": { \"type\": \"boolean\" },\n                    \"ICMP\": {\n\t\t\t\t\t\t\"type\": \"object\",\n\t\t\t\t\t\t\"properties\": {\n\t\t\t\t\t\t\t\"IPv\": {\n\t\t\t\t\t\t\t\t\"type\": \"string\",\n\t\t\t\t\t\t\t\t\"enum\": [\"IPv4\", \"IPv6\"]\n\t\t\t\t\t\t\t},\n\t\t\t\t\t\t\t\"Types\": {\n\t\t\t\t\t\t\t\t\"type\": \"array\",\n\t\t\t\t\t\t\t\t\"items\": { \"type\": \"number\" }\n\t\t\t\t\t\t\t}\n\t\t\t\t\t\t},\n\t\t\t\t\t\t\"additionalProperties\": false\n\t\t\t\t\t},\n                    \"traffic\": {\n                        \"type\": \"string\",\n                        \"enum\": [\"Ingress\", \"Egress\"]\n                    },\n                    \"action\":{  \n                                \"type\": \"string\",\n                                \"enum\":[\"DROP\",\"ACCEPT\"]\n                    }\n                },\n                \"additionalProperties\": false\n            }\n        }\n    },\n    \"required\": [\"rules\"],\n    \"additionalProperties\": false\n}",
+			"value": "{\n    \"type\": \"object\",\n    \"properties\": {\n        \"rules\": {\n            \"type\": \"array\",\n            \"items\": {\n                \"type\": \"object\",\n                \"properties\": {\n                    \"CIDR\":{ \"type\": \"string\" },\n                    \"SG\":{ \"type\": \"string\" },\n                    \"logs\": { \"type\": \"boolean\" },\n                    \"trace\": { \"type\": \"boolean\" },\n                    \"ICMP\": {\n\t\t\t\t\t\t\"type\": \"object\",\n\t\t\t\t\t\t\"properties\": {\n\t\t\t\t\t\t\t\"IPv\": {\n\t\t\t\t\t\t\t\t\"type\": \"string\",\n\t\t\t\t\t\t\t\t\"enum\": [\"IPv4\", \"IPv6\"]\n\t\t\t\t\t\t\t},\n\t\t\t\t\t\t\t\"Types\": {\n\t\t\t\t\t\t\t\t\"type\": \"array\",\n\t\t\t\t\t\t\t\t\"items\": { \"type\": \"number\" }\n\t\t\t\t\t\t\t}\n\t\t\t\t\t\t},\n\t\t\t\t\t\t\"additionalProperties\": false\n\t\t\t\t\t},\n                    \"traffic\": {\n                        \"type\": \"string\",\n                        \"enum\": [\"Ingress\", \"Egress\"]\n                    },\n                    \"action\":{  \n                                \"type\": \"string\",\n                                \"enum\":[\"DROP\",\"ACCEPT\"]\n                    },\n                    \"priority\": { \n                        \"type\" : \"object\",\n                        \"properties\": {\n                            \"some\" : {\"type\" : \"number\"},\n                            \"additionalProperties\": false\n                        }\n                    }\n                },\n                \"additionalProperties\": false\n            }\n        }\n    },\n    \"required\": [\"rules\"],\n    \"additionalProperties\": false\n}",
 			"type": "string"
 		},
 		{
 			"key": "ruleIeSgSgIcmpResponseJsonSchema",
-			"value": "{\n    \"type\": \"object\",\n    \"properties\": {\n        \"rules\": {\n            \"type\": \"array\",\n            \"items\": {\n                \"type\": \"object\",\n                \"properties\": {\n                    \"Sg\": { \"type\": \"string\" },\n                    \"SgLocal\": { \"type\": \"string\" },\n                    \"traffic\": {\n                        \"type\": \"string\",\n                        \"enum\": [\"Ingress\", \"Egress\"]\n                    },\n                    \"ICMP\": {\n                        \"type\": \"object\",\n                        \"items\": {\n                            \"type\": \"object\",\n                            \"properties\": {\n                                \"IPv\":{ \n                                    \"type\": \"string\",\n                                    \"enum\":[\"IPv4\",\"IPv6\"]\n                                },\n                                \"Types\":{\n                                    \"type\": \"array\",\n                                    \"items\": { \"type\": \"number\" }\n                                }    \n                            },\n                            \"additionalProperties\": false\n                        }\n                    },\n                    \"logs\": { \"type\": \"boolean\" },\n                    \"trace\": { \"type\": \"boolean\" },\n                    \"action\":{  \n                                \"type\": \"string\",\n                                \"enum\":[\"DROP\",\"ACCEPT\"]\n                            }\n                },\n                \"additionalProperties\": false\n            }\n        }\n    },\n    \"required\": [\"rules\"],\n    \"additionalProperties\": false\n}",
+			"value": "{\n    \"type\": \"object\",\n    \"properties\": {\n        \"rules\": {\n            \"type\": \"array\",\n            \"items\": {\n                \"type\": \"object\",\n                \"properties\": {\n                    \"Sg\": { \"type\": \"string\" },\n                    \"SgLocal\": { \"type\": \"string\" },\n                    \"traffic\": {\n                        \"type\": \"string\",\n                        \"enum\": [\"Ingress\", \"Egress\"]\n                    },\n                    \"ICMP\": {\n                        \"type\": \"object\",\n                        \"items\": {\n                            \"type\": \"object\",\n                            \"properties\": {\n                                \"IPv\":{ \n                                    \"type\": \"string\",\n                                    \"enum\":[\"IPv4\",\"IPv6\"]\n                                },\n                                \"Types\":{\n                                    \"type\": \"array\",\n                                    \"items\": { \"type\": \"number\" }\n                                }    \n                            },\n                            \"additionalProperties\": false\n                        }\n                    },\n                    \"logs\": { \"type\": \"boolean\" },\n                    \"trace\": { \"type\": \"boolean\" },\n                    \"action\":{  \n                                \"type\": \"string\",\n                                \"enum\":[\"DROP\",\"ACCEPT\"]\n                            },\n                    \"priority\": { \n                        \"type\" : \"object\",\n                        \"properties\": {\n                            \"some\" : {\"type\" : \"number\"},\n                            \"additionalProperties\": false\n                        }\n                    }\n                },\n                \"additionalProperties\": false\n            }\n        }\n    },\n    \"required\": [\"rules\"],\n    \"additionalProperties\": false\n}",
 			"type": "string"
 		}
 	]
