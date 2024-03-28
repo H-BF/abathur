@@ -12,7 +12,7 @@
                 ('nw-4', '10.150.0.224/32', (SELECT id FROM sgroups.tbl_sg WHERE name = 'sg-3')),
                 ('nw-5', '20.150.0.224/28', (SELECT id FROM sgroups.tbl_sg WHERE name = 'sg-4'));
             INSERT INTO
-                sgroups.tbl_ie_sg_sg_icmp_rule(ip_v, types, sg_local, sg, traffic, logs, trace, action)
+                sgroups.tbl_ie_sg_sg_icmp_rule(ip_v, types, sg_local, sg, traffic, logs, trace, action, priority)
             VALUES
                 (
                     'IPv4',
@@ -22,7 +22,8 @@
                     'ingress',
                     true,
                     true,
-                    'DROP'
+                    'DROP',
+                    -100
                 ),
                 (
                     'IPv4',
@@ -32,7 +33,8 @@
                     'egress',
                     false,
                     false,
-                    'ACCEPT'
+                    'ACCEPT',
+                    32767
                 ),
                 (
                     'IPv6',
@@ -42,7 +44,8 @@
                     'ingress',
                     false,
                     true,
-                    'ACCEPT'
+                    'ACCEPT',
+                    -32768
                 ),
                (
                     'IPv6',
@@ -52,10 +55,11 @@
                     'egress',
                     true,
                     false,
-                    'DROP'
+                    'DROP',
+                    NULL
                 );
             INSERT INTO
-                sgroups.tbl_cidr_sg_icmp_rule(ip_v, types, cidr, sg, traffic, logs, trace, action)
+                sgroups.tbl_cidr_sg_icmp_rule(ip_v, types, cidr, sg, traffic, logs, trace, action, priority)
             VALUES
                 (
                     'IPv4',
@@ -65,7 +69,8 @@
                     'ingress',
                     true,
                     true,
-                    'ACCEPT'
+                    'ACCEPT',
+                    200
                 ),
                 (
                     'IPv4',
@@ -75,7 +80,8 @@
                     'egress',
                     true,
                     false,
-                    'DROP'
+                    'DROP',
+                    1000
                 ),
                 (
                     'IPv6',
@@ -85,7 +91,8 @@
                     'ingress',
                     false,
                     true,
-                    'ACCEPT'
+                    'ACCEPT',
+                    -1000
                 ),
                (
                     'IPv6',
@@ -95,10 +102,11 @@
                     'egress',
                     false,
                     false,
-                    'DROP'
+                    'DROP',
+                    NULL
                 );
             INSERT INTO
-                sgroups.tbl_ie_sg_sg_rule(proto, sg_local, sg, traffic, ports, logs, trace, action)
+                sgroups.tbl_ie_sg_sg_rule(proto, sg_local, sg, traffic, ports, logs, trace, action, priority)
             VALUES
                 (
                     'tcp',
@@ -110,7 +118,8 @@
                     ]::sgroups.sg_rule_ports[],
                     true,
                     true,
-                    'DROP'
+                    'DROP',
+                    0
                 ),
                 (
                     'tcp',
@@ -124,7 +133,8 @@
                     ]::sgroups.sg_rule_ports[],
                     true,
                     false,
-                    'ACCEPT'
+                    'ACCEPT',
+                    0
                 ),
                 (
                     'udp',
@@ -136,7 +146,8 @@
                     ]::sgroups.sg_rule_ports[],
                     false,
                     true,
-                    'ACCEPT'
+                    'ACCEPT',
+                    -32768
                 ),
                 (
                     'udp',
@@ -149,7 +160,8 @@
                     ]::sgroups.sg_rule_ports[],
                     false,
                     false,
-                    'DROP'
+                    'DROP',
+                    32767
                 ),
                 (
                     'tcp',
@@ -161,10 +173,11 @@
                     ]::sgroups.sg_rule_ports[],
                     true,
                     true,
-                    'DROP'
+                    'DROP',
+                    NULL
                 );
             INSERT INTO
-                sgroups.tbl_sg_rule(sg_from, sg_to, proto, ports, action)
+                sgroups.tbl_sg_rule(sg_from, sg_to, proto, ports, action, priority)
             VALUES
                 (
                     (SELECT id FROM sgroups.tbl_sg WHERE name = 'sg-1'),
@@ -173,7 +186,8 @@
                     ARRAY[
                         ((int4multirange(int4range(NULL))), (int4multirange(int4range(5000, 5001))))
                     ]::sgroups.sg_rule_ports[],
-                    'ACCEPT'
+                    'ACCEPT',
+                    -200
                 ),
                 (
                     (SELECT id FROM sgroups.tbl_sg WHERE name = 'sg-1'),
@@ -182,7 +196,8 @@
                     ARRAY[
                         ((int4multirange(int4range(NULL))), (int4multirange(int4range(5600, 5901))))
                     ]::sgroups.sg_rule_ports[],
-                    'DROP'
+                    'DROP',
+                    -200
                 ),
                 (
                     (SELECT id FROM sgroups.tbl_sg WHERE name = 'sg-0'),
@@ -193,7 +208,8 @@
                         ((int4multirange(int4range(4445, 4446))), (int4multirange(int4range(7300, 7501)))),
                         ((int4multirange(int4range(4446, 4447))), (int4multirange(int4range(7600, 7701), int4range(7800, 7801))))
                     ]::sgroups.sg_rule_ports[],
-                    'DROP'
+                    'DROP',
+                    1
                 ),
                 (
                     (SELECT id FROM sgroups.tbl_sg WHERE name = 'sg-3'),
@@ -202,7 +218,8 @@
                     ARRAY[
                         ((int4multirange(int4range(9999, 10051))), (int4multirange(int4range(23000, 23501))))
                     ]::sgroups.sg_rule_ports[],
-                    'ACCEPT'
+                    'ACCEPT',
+                    2
                 ),
                 (
                     (SELECT id FROM sgroups.tbl_sg WHERE name = 'sg-3'),
@@ -212,10 +229,11 @@
                         ((int4multirange(int4range(8888, 8889), int4range(1000, 2001))), (int4multirange(int4range(55000, 55001), int4range(56000, 57001)))),
                         ((int4multirange(int4range(7777, 7778), int4range(45000, 46001))), (int4multirange(int4range(60000, 60001))))
                     ]::sgroups.sg_rule_ports[],
-                    'DROP'
+                    'DROP',
+                    NULL
                 );
             INSERT INTO
-                sgroups.tbl_fqdn_rule(sg_from, fqdn_to, proto, ports, logs, ndpi_protocols, action)
+                sgroups.tbl_fqdn_rule(sg_from, fqdn_to, proto, ports, logs, ndpi_protocols, action, priority)
             VALUES
                 (
                     (SELECT id FROM sgroups.tbl_sg WHERE name = 'sg-0'),
@@ -226,7 +244,8 @@
                     ]::sgroups.sg_rule_ports[],
                     true,
                     ARRAY['http', 'ssh']::citext[],
-                    'DROP'
+                    'DROP',
+                    100
                 ),
                 (
                     (SELECT id FROM sgroups.tbl_sg WHERE name = 'sg-1'),
@@ -238,7 +257,8 @@
                     ]::sgroups.sg_rule_ports[],
                     false,
                     '{}'::citext[],
-                    'ACCEPT'
+                    'ACCEPT',
+                    5000
                 );
             INSERT INTO
                 sgroups.tbl_sg_icmp_rule (ip_v, types, sg, logs, trace, action)
@@ -248,7 +268,7 @@
                 ('IPv6', '{0,8,100}'::sgroups.icmp_types, (SELECT id FROM sgroups.tbl_sg WHERE name = 'sg-0'), false, true, 'DROP'),
                 ('IPv6', '{15}'::sgroups.icmp_types, (SELECT id FROM sgroups.tbl_sg WHERE name = 'sg-2'), false, false, 'ACCEPT');
             INSERT INTO
-                sgroups.tbl_sg_sg_icmp_rule (ip_v, types, sg_from, sg_to, logs, trace, action)
+                sgroups.tbl_sg_sg_icmp_rule (ip_v, types, sg_from, sg_to, logs, trace, action, priority)
             VALUES
                 (
                     'IPv4',
@@ -257,7 +277,8 @@
                     (SELECT id FROM sgroups.tbl_sg WHERE name = 'sg-1'),
                     true,
                     true,
-                    'ACCEPT'
+                    'ACCEPT',
+                    -32768
                 ),
                 (
                     'IPv6',
@@ -266,7 +287,8 @@
                     (SELECT id FROM sgroups.tbl_sg WHERE name = 'sg-1'),
                     true,
                     false,
-                    'DROP'
+                    'DROP',
+                    32767
                 ),
                 (
                     'IPv4',
@@ -275,7 +297,8 @@
                     (SELECT id FROM sgroups.tbl_sg WHERE name = 'sg-2'),
                     false,
                     true,
-                    'ACCEPT'
+                    'ACCEPT',
+                    -300
                 ),
                 (
                     'IPv6',
@@ -284,7 +307,8 @@
                     (SELECT id FROM sgroups.tbl_sg WHERE name = 'sg-3'),
                     false,
                     false,
-                    'ACCEPT'
+                    'ACCEPT',
+                    -300
                 ),
                 (
                     'IPv4',
@@ -293,10 +317,11 @@
                     (SELECT id FROM sgroups.tbl_sg WHERE name = 'sg-0'),
                     true,
                     true,
-                    'DROP'
+                    'DROP',
+                    NULL
                 );
             INSERT INTO
-                sgroups.tbl_cidr_sg_rule (proto, cidr, sg, traffic, ports, logs, trace, action)
+                sgroups.tbl_cidr_sg_rule (proto, cidr, sg, traffic, ports, logs, trace, action, priority)
             VALUES
                 (
                     'tcp',
@@ -308,7 +333,8 @@
                     ]::sgroups.sg_rule_ports[],
                     true,
                     true,
-                    'DROP'
+                    'DROP',
+                    300
                 ),
                 (
                     'tcp',
@@ -322,7 +348,8 @@
                     ]::sgroups.sg_rule_ports[],
                     true,
                     false,
-                    'ACCEPT'
+                    'ACCEPT',
+                    -32000
                 ),
                 (
                     'udp',
@@ -334,7 +361,8 @@
                     ]::sgroups.sg_rule_ports[],
                     false,
                     true,
-                    'ACCEPT'
+                    'ACCEPT',
+                    300
                 ),
                 (
                     'udp',
@@ -347,7 +375,8 @@
                     ]::sgroups.sg_rule_ports[],
                     false,
                     false,
-                    'DROP'
+                    'DROP',
+                    0
                 );
             COMMIT;
         END $$;
